@@ -38,6 +38,10 @@ export default function RootLayout() {
           >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="profile/personal-data"
+              options={{ title: "Datos personales" }}
+            />
           </Stack>
           <StatusBar style="dark" />
         </View>

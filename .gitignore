@@ -42,3 +42,5 @@ yarn-error.*
 
 # variables de entorno locales
 .env
+
+coverage/

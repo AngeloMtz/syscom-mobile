@@ -1,0 +1,30 @@
+
+> syscom-mobile@1.0.0 test
+> jest --watchAll=false --coverage
+
+PASS src/__tests__/validation.test.ts
+PASS src/__tests__/errorMessage.test.ts
+PASS src/__tests__/session.test.ts
+---------------------|---------|----------|---------|---------|-------------------
+File                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------|---------|----------|---------|---------|-------------------
+All files            |   94.18 |    91.42 |    92.3 |   95.83 |                   
+ features/auth       |     100 |      100 |     100 |     100 |                   
+  validation.ts      |     100 |      100 |     100 |     100 |                   
+ features/profile    |   89.47 |    85.71 |     100 |     100 |                   
+  validation.ts      |   89.47 |    85.71 |     100 |     100 | 19-21             
+ shared/api          |     100 |    93.33 |     100 |     100 |                   
+  errorMessage.ts    |     100 |    93.33 |     100 |     100 | 17                
+  secureToken.ts     |     100 |      100 |     100 |     100 |                   
+ shared/storage      |      75 |      100 |   66.66 |      75 |                   
+  onboarding.ts      |      75 |      100 |   66.66 |      75 | 31-32             
+ shared/store        |   94.11 |      100 |    87.5 |   93.33 |                   
+  authStore.ts       |      90 |      100 |      80 |   88.88 | 31                
+  onboardingStore.ts |     100 |      100 |     100 |     100 |                   
+---------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 3 passed, 3 total
+Tests:       39 passed, 39 total
+Snapshots:   0 total
+Time:        15.901 s
+Ran all test suites.

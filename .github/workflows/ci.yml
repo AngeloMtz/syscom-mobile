@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+jobs:
+  lint-and-typecheck:
+    name: Lint, type-check y auditoría de seguridad
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Análisis estático (ESLint)
+        run: npx expo lint
+
+      - name: Verificación de tipos (TypeScript)
+        run: npx tsc --noEmit
+
+      - name: Auditoría de seguridad de dependencias
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Pruebas unitarias
+        run: npm test -- --watchAll=false
+        continue-on-error: true

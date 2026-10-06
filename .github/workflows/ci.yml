@@ -7,8 +7,8 @@ on:
     branches: [develop, main]
 
 jobs:
-  lint-and-typecheck:
-    name: Lint, type-check y auditoría de seguridad
+  analisis-estatico:
+    name: Análisis estático
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
@@ -17,7 +17,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Instalar dependencias
@@ -29,10 +29,28 @@ jobs:
       - name: Verificación de tipos (TypeScript)
         run: npx tsc --noEmit
 
-      - name: Auditoría de seguridad de dependencias
+      - name: Auditoría de seguridad (bloquea con vulnerabilidades críticas)
+        run: npm audit --audit-level=critical
+
+      - name: Auditoría de seguridad (informativa, nivel alto)
         run: npm audit --audit-level=high
         continue-on-error: true
 
-      - name: Pruebas unitarias
-        run: npm test -- --watchAll=false
-        continue-on-error: true
+  pruebas-unitarias:
+    name: Pruebas unitarias
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Pruebas unitarias (Jest)
+        run: npx jest --ci --coverage

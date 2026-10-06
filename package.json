@@ -44,6 +44,10 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
     },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/src/__tests__/fixtures/"
+    ],
     "collectCoverageFrom": [
       "src/**/validation.ts",
       "src/shared/api/errorMessage.ts",

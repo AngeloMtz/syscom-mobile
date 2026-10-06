@@ -1,12 +1,14 @@
 import { getPrincipalImageUrl, getTotalStock } from "@/features/catalog/selectors";
 import { formatPrice } from "@/shared/utils/format";
+import { makeProduct, makeProductImage, makeProductVariant } from "./fixtures";
 
-const img = (id: number, url: string, es_principal: boolean) => ({ id, url, es_principal, orden: id });
-const variante = (stock: number) => ({ id: 1, nombre: "Estándar", precio_extra: 0, stock, estado: "activa" });
+const img = (id: number, url: string, es_principal: boolean) =>
+  makeProductImage({ id, url, es_principal, orden: id });
+const variante = (stock: number) => makeProductVariant({ stock });
 
 describe("getPrincipalImageUrl", () => {
   it("prefiere la imagen marcada como principal", () => {
-    const p = { imagenes: [img(1, "a.jpg", false), img(2, "b.jpg", true)] };
+    const p = makeProduct({ imagenes: [img(1, "a.jpg", false), img(2, "b.jpg", true)] });
     expect(getPrincipalImageUrl(p)).toBe("b.jpg");
   });
   it("usa la primera si ninguna es principal", () => {

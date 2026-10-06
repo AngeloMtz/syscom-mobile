@@ -1,18 +1,7 @@
 import { selectRootProductCategories } from "@/features/catalog/selectors";
-import type { Category } from "@/features/catalog/types";
+import { makeCategory } from "./fixtures";
 
-const cat = (over: Partial<Category>): Category => ({
-  id: 1,
-  nombre: "Cat",
-  descripcion: null,
-  tipo: "producto",
-  estado: "activa",
-  imagen_url: null,
-  es_padre: true,
-  id_padre: null,
-  cantidad_productos: 0,
-  ...over,
-});
+const cat = makeCategory;
 
 describe("selectRootProductCategories", () => {
   it("conserva solo las categorías raíz de productos", () => {

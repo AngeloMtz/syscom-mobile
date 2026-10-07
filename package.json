@@ -25,9 +25,11 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@testing-library/react-native": "^14.0.1",
     "@types/react": "~19.2.2",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~57.0.2",
+    "test-renderer": "^1.3.0",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -46,10 +48,12 @@
     },
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "<rootDir>/src/__tests__/fixtures/"
+      "<rootDir>/src/__tests__/fixtures/",
+      "<rootDir>/src/__tests__/utils/"
     ],
     "collectCoverageFrom": [
       "src/**/validation.ts",
+      "src/features/auth/hooks/*.ts",
       "src/features/auth/repositories/authRepository.ts",
       "src/shared/api/client.ts",
       "src/shared/api/errorMessage.ts",

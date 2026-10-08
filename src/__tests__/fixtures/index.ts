@@ -8,4 +8,4 @@ export {
   makeProductImage,
   makeProductVariant,
 } from "./product";
-export { makeProfile, makeUser } from "./user";
+export { makeProfile, makeUpdateProfileDTO, makeUser } from "./user";

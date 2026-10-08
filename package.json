@@ -38,9 +38,13 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "test": "jest"
+    "test": "jest",
+    "verificar-entorno": "node scripts/verificar-entorno.mjs"
   },
   "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "jest": {
     "preset": "jest-expo",
     "moduleNameMapper": {

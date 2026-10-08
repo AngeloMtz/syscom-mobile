@@ -65,6 +65,14 @@
       "src/shared/api/secureToken.ts",
       "src/shared/store/*.ts",
       "src/shared/storage/*.ts"
-    ]
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 80,
+        "statements": 80,
+        "functions": 80,
+        "branches": 70
+      }
+    }
   }
 }

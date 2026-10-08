@@ -1,4 +1,10 @@
-import type { ProductImage, ProductListItem, ProductVariant } from "@/features/catalog/types";
+import type {
+  PaginatedProducts,
+  Pagination,
+  ProductImage,
+  ProductListItem,
+  ProductVariant,
+} from "@/features/catalog/types";
 
 export function makeProductImage(over: Partial<ProductImage> = {}): ProductImage {
   return { id: 1, url: "https://example.com/producto-1.jpg", es_principal: true, orden: 1, ...over };
@@ -31,4 +37,15 @@ export function makeProduct(over: Partial<ProductListItem> = {}): ProductListIte
     en_promocion: false,
     ...over,
   };
+}
+
+export function makePagination(over: Partial<Pagination> = {}): Pagination {
+  return { page: 1, limit: 20, total: 1, pages: 1, ...over };
+}
+
+/** Respuesta de una página de productos del repository. */
+export function makePaginatedProducts(
+  over: Partial<PaginatedProducts> = {},
+): PaginatedProducts {
+  return { data: [makeProduct()], pagination: makePagination(), ...over };
 }

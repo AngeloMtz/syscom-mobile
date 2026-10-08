@@ -55,6 +55,8 @@
       "src/**/validation.ts",
       "src/features/auth/hooks/*.ts",
       "src/features/auth/repositories/authRepository.ts",
+      "src/features/catalog/hooks/*.ts",
+      "src/features/catalog/repositories/*.ts",
       "src/shared/api/client.ts",
       "src/shared/api/errorMessage.ts",
       "src/shared/api/queryClient.ts",

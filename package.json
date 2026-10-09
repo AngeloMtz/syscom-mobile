@@ -70,7 +70,8 @@
       "src/shared/api/secureToken.ts",
       "src/shared/hooks/*.ts",
       "src/shared/store/*.ts",
-      "src/shared/storage/*.ts"
+      "src/shared/storage/*.ts",
+      "src/shared/utils/format.ts"
     ],
     "coverageThreshold": {
       "global": {

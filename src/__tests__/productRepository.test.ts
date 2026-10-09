@@ -92,11 +92,10 @@ describe("productRepository.getById", () => {
     await expect(productRepository.getById(1)).rejects.toThrow();
   });
 
-  it("rechaza con el error 404 de la API", async () => {
-    const error = makeApiError({ status: 404, error: "Producto no encontrado" });
-    adapter.mockRejectedValueOnce(error);
+  it("devuelve null si la API responde 404 (producto no encontrado)", async () => {
+    adapter.mockRejectedValueOnce(makeApiError({ status: 404, error: "Producto no encontrado" }));
 
-    await expect(productRepository.getById(999)).rejects.toBe(error);
+    await expect(productRepository.getById(999)).resolves.toBeNull();
   });
 
   it("rechaza con el error 500 de la API", async () => {

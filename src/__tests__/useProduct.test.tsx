@@ -39,13 +39,14 @@ describe("useProduct", () => {
     expect(result.current.isLoading).toBe(false);
   });
 
-  it("marca no encontrado ante un 404 y no reintenta", async () => {
-    repo.getById.mockRejectedValue(makeApiError({ status: 404, error: "Producto no encontrado" }));
+  it("marca no encontrado cuando el repository devuelve null (404)", async () => {
+    repo.getById.mockResolvedValueOnce(null);
     const { result } = await renderHook(() => ({ ...useProduct("999") }), { wrapper });
 
-    await waitFor(() => expect(result.current.isError).toBe(true));
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.notFound).toBe(true);
+    expect(result.current.isError).toBe(false);
     expect(repo.getById).toHaveBeenCalledTimes(1);
   });
 

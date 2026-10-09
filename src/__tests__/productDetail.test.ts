@@ -158,6 +158,18 @@ describe("cleanDescription", () => {
   it("quita etiquetas HTML y deja su texto", () => {
     expect(cleanDescription("<p>Laptop <b>potente</b></p>")).toBe("Laptop potente");
   });
+  it.each([
+    "Consumo <5W, voltaje >3V",
+    "a < b y c > d",
+    "temperatura < 40 °C",
+  ])("conserva comparaciones que no son etiquetas: %p", (texto) => {
+    expect(cleanDescription(texto)).toBe(texto);
+  });
+  it("quita etiquetas reales (con atributos y de cierre) y conserva las comparaciones", () => {
+    expect(cleanDescription('<div><a href="https://x.com/a?b=1">Ver</a></div>')).toBe("Ver");
+    expect(cleanDescription("<p>Consumo <5W</p><b>voltaje >3V</b>")).toBe("Consumo <5Wvoltaje >3V");
+    expect(cleanDescription("Línea<br/>dos <br />tres")).toBe("Línea\ndos \ntres");
+  });
   it("elimina por completo el contenido de script y style", () => {
     expect(cleanDescription("Hola<script>alert(1)</script><style>a{}</style>")).toBe("Hola");
   });

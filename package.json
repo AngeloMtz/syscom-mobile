@@ -68,7 +68,8 @@
       "src/shared/api/queryClient.ts",
       "src/shared/api/secureToken.ts",
       "src/shared/store/*.ts",
-      "src/shared/storage/*.ts"
+      "src/shared/storage/*.ts",
+      "src/shared/utils/format.ts"
     ],
     "coverageThreshold": {
       "global": {

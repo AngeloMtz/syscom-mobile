@@ -79,7 +79,7 @@ export function cleanDescription(raw: string | null | undefined): string | null 
     .replace(/\r\n?/g, "\n")
     .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "")
     .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]*>/g, "")
+    .replace(/<\/?[a-zA-Z][^>]*>/g, "")
     .replace(/&(?:amp|lt|gt|quot|nbsp|#39);/g, (e) => ENTITIES[e])
     .replace(/\n{3,}/g, "\n\n")
     .trim();

@@ -24,6 +24,7 @@ import { validatePriceRange } from "@/features/catalog/validation";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
+import { formatPrice } from "@/shared/utils/format";
 
 export default function SearchScreen() {
   const c = useColors();
@@ -31,6 +32,7 @@ export default function SearchScreen() {
   const [minTxt, setMinTxt] = useState("");
   const [maxTxt, setMaxTxt] = useState("");
   const [categoria, setCategoria] = useState<number | undefined>(undefined);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const { data: categorias } = useRootCategories();
 
@@ -47,6 +49,22 @@ export default function SearchScreen() {
     [debounced.minTxt, debounced.maxTxt],
   );
   const priceError = errors.min ?? errors.max ?? errors.rango;
+
+  // Resumen del precio aplicado, visible aunque el panel de filtros esté cerrado.
+  const { precioMin, precioMax } = filters;
+  const priceSummary =
+    precioMin !== undefined && precioMax !== undefined
+      ? `${formatPrice(precioMin)} – ${formatPrice(precioMax)}`
+      : precioMin !== undefined
+        ? `Desde ${formatPrice(precioMin)}`
+        : precioMax !== undefined
+          ? `Hasta ${formatPrice(precioMax)}`
+          : undefined;
+  const filtersLabel = priceError
+    ? "Filtros, hay un error en el precio"
+    : priceSummary
+      ? `Filtros, precio aplicado: ${priceSummary}`
+      : "Filtros";
 
   // Con un precio inválido no se consulta, aunque haya texto o categoría.
   const active = canSearch({ ...debounced, categoria });
@@ -75,56 +93,87 @@ export default function SearchScreen() {
 
   const form = (
     <View style={[styles.form, { backgroundColor: c.card, borderColor: c.border }]}>
-      <View style={[styles.searchRow, { backgroundColor: c.inputBg, borderColor: c.border }]}>
-        <Ionicons name="search-outline" size={20} color={c.textMuted} />
-        <TextInput
-          value={texto}
-          onChangeText={setTexto}
-          placeholder="Buscar productos"
-          placeholderTextColor={c.textMuted}
-          style={[styles.searchInput, { color: c.text }]}
-          returnKeyType="search"
-          autoCorrect={false}
-          autoFocus
-          accessibilityLabel="Buscar productos"
-        />
-        {texto !== "" ? (
-          <Pressable
-            onPress={() => setTexto("")}
-            hitSlop={8}
-            accessibilityRole="button"
-            accessibilityLabel="Borrar texto"
-          >
-            <Ionicons name="close-circle" size={20} color={c.textMuted} />
-          </Pressable>
-        ) : null}
+      <View style={styles.topRow}>
+        <View style={[styles.searchRow, styles.searchGrow, { backgroundColor: c.inputBg, borderColor: c.border }]}>
+          <Ionicons name="search-outline" size={20} color={c.textMuted} />
+          <TextInput
+            value={texto}
+            onChangeText={setTexto}
+            placeholder="Buscar productos"
+            placeholderTextColor={c.textMuted}
+            style={[styles.searchInput, { color: c.text }]}
+            returnKeyType="search"
+            autoCorrect={false}
+            autoFocus
+            accessibilityLabel="Buscar productos"
+          />
+          {texto !== "" ? (
+            <Pressable
+              onPress={() => setTexto("")}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel="Borrar texto"
+            >
+              <Ionicons name="close-circle" size={20} color={c.textMuted} />
+            </Pressable>
+          ) : null}
+        </View>
+
+        <Pressable
+          onPress={() => setFiltersOpen((open) => !open)}
+          accessibilityRole="button"
+          accessibilityLabel={filtersLabel}
+          accessibilityState={{ expanded: filtersOpen }}
+          style={[
+            styles.filterButton,
+            { borderColor: filtersOpen ? c.brandPrimary : c.border, backgroundColor: c.inputBg },
+          ]}
+        >
+          <Ionicons name="options-outline" size={20} color={filtersOpen ? c.brandPrimary : c.text} />
+          <Text style={{ color: filtersOpen ? c.brandPrimary : c.text, fontSize: 13, fontWeight: "600" }}>
+            Filtros
+          </Text>
+          {priceError || priceSummary ? (
+            <View style={[styles.dot, { backgroundColor: priceError ? c.danger : c.brandPrimary }]} />
+          ) : null}
+        </Pressable>
       </View>
 
-      <View style={styles.priceRow}>
-        <TextInput
-          value={minTxt}
-          onChangeText={setMinTxt}
-          placeholder="Precio mín."
-          placeholderTextColor={c.textMuted}
-          keyboardType="decimal-pad"
-          style={[...inputStyle, styles.priceInput]}
-          accessibilityLabel="Precio mínimo"
-        />
-        <Text style={{ color: c.textMuted }}>–</Text>
-        <TextInput
-          value={maxTxt}
-          onChangeText={setMaxTxt}
-          placeholder="Precio máx."
-          placeholderTextColor={c.textMuted}
-          keyboardType="decimal-pad"
-          style={[...inputStyle, styles.priceInput]}
-          accessibilityLabel="Precio máximo"
-        />
-      </View>
-      {priceError ? (
-        <Text style={[styles.error, { color: c.danger }]} accessibilityRole="alert">
-          {priceError}
+      {!filtersOpen && (priceError || priceSummary) ? (
+        <Text style={[styles.summary, { color: priceError ? c.danger : c.textMuted }]}>
+          {priceError ? `Precio: ${priceError}` : `Precio: ${priceSummary}`}
         </Text>
+      ) : null}
+
+      {filtersOpen ? (
+        <>
+          <View style={styles.priceRow}>
+            <TextInput
+              value={minTxt}
+              onChangeText={setMinTxt}
+              placeholder="Precio mín."
+              placeholderTextColor={c.textMuted}
+              keyboardType="decimal-pad"
+              style={[...inputStyle, styles.priceInput]}
+              accessibilityLabel="Precio mínimo"
+            />
+            <Text style={{ color: c.textMuted }}>–</Text>
+            <TextInput
+              value={maxTxt}
+              onChangeText={setMaxTxt}
+              placeholder="Precio máx."
+              placeholderTextColor={c.textMuted}
+              keyboardType="decimal-pad"
+              style={[...inputStyle, styles.priceInput]}
+              accessibilityLabel="Precio máximo"
+            />
+          </View>
+          {priceError ? (
+            <Text style={[styles.error, { color: c.danger }]} accessibilityRole="alert">
+              {priceError}
+            </Text>
+          ) : null}
+        </>
       ) : null}
 
       {categorias && categorias.length > 0 ? (
@@ -259,6 +308,19 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   form: { padding: spacing.lg, gap: spacing.md, borderBottomWidth: StyleSheet.hairlineWidth },
+  topRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  searchGrow: { flex: 1 },
+  filterButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+    borderWidth: 1,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+  },
+  dot: { position: "absolute", top: 4, right: 6, width: 9, height: 9, borderRadius: 5 },
+  summary: { fontSize: 12, fontWeight: "600" },
   searchRow: {
     flexDirection: "row",
     alignItems: "center",

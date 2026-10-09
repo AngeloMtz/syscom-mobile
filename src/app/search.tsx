@@ -26,6 +26,9 @@ import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import { formatPrice } from "@/shared/utils/format";
 
+// Búsqueda ágil: más corto que el valor por defecto del hook (400 ms).
+const SEARCH_DEBOUNCE_MS = 300;
+
 export default function SearchScreen() {
   const c = useColors();
   const [texto, setTexto] = useState("");
@@ -38,7 +41,7 @@ export default function SearchScreen() {
 
   // Los tres campos de texto comparten el mismo retardo; la categoría es un toque y va directa.
   const typed = useMemo(() => ({ texto, minTxt, maxTxt }), [texto, minTxt, maxTxt]);
-  const debounced = useDebouncedValue(typed);
+  const debounced = useDebouncedValue(typed, SEARCH_DEBOUNCE_MS);
 
   const filters = useMemo(
     () => buildProductFilters({ ...debounced, categoria }),
@@ -75,11 +78,12 @@ export default function SearchScreen() {
     error,
     refetch,
     isRefetching,
+    isPlaceholderData,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isFetchNextPageError,
-  } = useInfiniteProducts(filters, active);
+  } = useInfiniteProducts(filters, active, true);
 
   const clearAll = () => {
     setTexto("");
@@ -250,49 +254,57 @@ export default function SearchScreen() {
   } else {
     const productos = data?.data ?? [];
     body = (
-      <FlatList
-        data={productos}
-        keyExtractor={(item) => String(item.id)}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={styles.list}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        renderItem={({ item }) => <ProductCard product={item} />}
-        onRefresh={refetch}
-        refreshing={isRefetching && !isFetchingNextPage}
-        onEndReached={() => {
-          if (hasNextPage && !isFetchingNextPage) fetchNextPage();
-        }}
-        onEndReachedThreshold={0.4}
-        ListHeaderComponent={
-          productos.length > 0 ? (
-            <Text style={[styles.count, { color: c.textMuted }]}>
-              {data?.total} {data?.total === 1 ? "resultado" : "resultados"}
-            </Text>
-          ) : null
-        }
-        ListEmptyComponent={
-          <View style={styles.center}>
-            <Ionicons name="cube-outline" size={44} color={c.textMuted} />
-            <Text style={[styles.title, { color: c.text }]}>Sin resultados</Text>
-            <Text style={[styles.hint, { color: c.textMuted }]}>
-              Prueba con otro texto o ajusta los filtros.
-            </Text>
-          </View>
-        }
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <ActivityIndicator style={styles.footer} color={c.brandPrimary} />
-          ) : isFetchNextPageError ? (
-            <Pressable onPress={() => fetchNextPage()} style={styles.footer} accessibilityRole="button">
-              <Text style={{ color: c.brandPrimary, fontWeight: "700" }}>
-                No se pudo cargar más. Toca para reintentar
+      <View style={styles.results}>
+        <FlatList
+          data={productos}
+          keyExtractor={(item) => String(item.id)}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          contentContainerStyle={styles.list}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          renderItem={({ item }) => <ProductCard product={item} />}
+          onRefresh={refetch}
+          refreshing={isRefetching && !isFetchingNextPage}
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+          }}
+          onEndReachedThreshold={0.4}
+          ListHeaderComponent={
+            productos.length > 0 ? (
+              <Text style={[styles.count, { color: c.textMuted }]}>
+                {data?.total} {data?.total === 1 ? "resultado" : "resultados"}
               </Text>
-            </Pressable>
-          ) : null
-        }
-      />
+            ) : null
+          }
+          ListEmptyComponent={
+            <View style={styles.center}>
+              <Ionicons name="cube-outline" size={44} color={c.textMuted} />
+              <Text style={[styles.title, { color: c.text }]}>Sin resultados</Text>
+              <Text style={[styles.hint, { color: c.textMuted }]}>
+                Prueba con otro texto o ajusta los filtros.
+              </Text>
+            </View>
+          }
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <ActivityIndicator style={styles.footer} color={c.brandPrimary} />
+            ) : isFetchNextPageError ? (
+              <Pressable onPress={() => fetchNextPage()} style={styles.footer} accessibilityRole="button">
+                <Text style={{ color: c.brandPrimary, fontWeight: "700" }}>
+                  No se pudo cargar más. Toca para reintentar
+                </Text>
+              </Pressable>
+            ) : null
+          }
+        />
+      {/* Los resultados anteriores se quedan a la vista mientras llegan los nuevos. */}
+      {isPlaceholderData ? (
+        <View style={[styles.updating, { backgroundColor: c.card, borderColor: c.border }]} pointerEvents="none">
+          <ActivityIndicator size="small" color={c.brandPrimary} accessibilityLabel="Actualizando resultados" />
+        </View>
+      ) : null}
+      </View>
     );
   }
 
@@ -337,6 +349,15 @@ const styles = StyleSheet.create({
   chips: { gap: spacing.sm },
   chip: { borderWidth: 1, borderRadius: radius.pill, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
   clear: { alignSelf: "flex-start" },
+  results: { flex: 1 },
+  updating: {
+    position: "absolute",
+    top: spacing.sm,
+    alignSelf: "center",
+    padding: spacing.sm,
+    borderRadius: radius.pill,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: spacing.xl, gap: spacing.sm },
   title: { fontSize: 17, fontWeight: "700", textAlign: "center" },
   hint: { fontSize: 13, textAlign: "center" },

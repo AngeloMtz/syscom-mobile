@@ -90,14 +90,17 @@ describe("useDebouncedValue", () => {
   });
 
   it("al desmontar cancela el temporizador pendiente", async () => {
+    const clearSpy = jest.spyOn(global, "clearTimeout");
     const { rerender, unmount } = await renderHook(
       ({ v }: { v: string }) => useDebouncedValue(v, 400),
       { initialProps: { v: "a" } },
     );
 
     await rerender({ v: "b" });
+    clearSpy.mockClear();
     await unmount();
 
-    expect(jest.getTimerCount()).toBe(0);
+    expect(clearSpy).toHaveBeenCalledTimes(1);
+    clearSpy.mockRestore();
   });
 });

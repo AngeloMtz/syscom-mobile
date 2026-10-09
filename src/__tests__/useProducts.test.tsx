@@ -109,3 +109,62 @@ describe("useInfiniteProducts", () => {
     expect(result.current.data).toBeUndefined();
   });
 });
+
+describe("useInfiniteProducts · keepPrevious", () => {
+  type Props = { f: { search: string }; keep?: boolean };
+
+  /** Resultado de la segunda consulta, que se resuelve cuando la prueba lo decide. */
+  const consultaPendiente = () => {
+    let resolver!: (v: ReturnType<typeof pagina2>) => void;
+    const promesa = new Promise<ReturnType<typeof pagina2>>((r) => {
+      resolver = r;
+    });
+    return { promesa, resolver };
+  };
+
+  const montar = async (keep?: boolean) => {
+    repo.getPage.mockResolvedValueOnce(pagina1());
+    const hook = await renderHook(
+      ({ f, keep: k }: Props) => ({ ...useInfiniteProducts(f, true, k) }),
+      { wrapper, initialProps: { f: { search: "router" }, keep } as Props },
+    );
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
+    return hook;
+  };
+
+  it("con keepPrevious conserva los resultados anteriores mientras llega la nueva consulta", async () => {
+    const { promesa, resolver } = consultaPendiente();
+    const { result, rerender } = await montar(true);
+    repo.getPage.mockReturnValueOnce(promesa);
+
+    await rerender({ f: { search: "cable" }, keep: true });
+
+    await waitFor(() => expect(repo.getPage).toHaveBeenCalledTimes(2));
+    expect(result.current.data?.data.map((p) => p.id)).toEqual([1, 2]);
+    expect(result.current.isPlaceholderData).toBe(true);
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isFetching).toBe(true);
+
+    await act(async () => {
+      resolver(pagina2());
+    });
+    await waitFor(() => expect(result.current.isPlaceholderData).toBe(false));
+    expect(result.current.data?.data.map((p) => p.id)).toEqual([3]);
+  });
+
+  it.each([
+    ["sin indicarlo", undefined],
+    ["con false", false],
+  ])("%s, al cambiar los filtros no hay datos y vuelve a cargar", async (_nombre, keep) => {
+    const { promesa } = consultaPendiente();
+    const { result, rerender } = await montar(keep);
+    repo.getPage.mockReturnValueOnce(promesa);
+
+    await rerender({ f: { search: "cable" }, keep });
+
+    await waitFor(() => expect(repo.getPage).toHaveBeenCalledTimes(2));
+    expect(result.current.data).toBeUndefined();
+    expect(result.current.isPlaceholderData).toBe(false);
+    expect(result.current.isLoading).toBe(true);
+  });
+});

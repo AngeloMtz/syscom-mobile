@@ -1,4 +1,4 @@
-import { buildProductFilters, hasActiveFilters } from "@/features/catalog/searchFilters";
+import { buildProductFilters, canSearch, hasActiveFilters } from "@/features/catalog/searchFilters";
 
 const vacio = { texto: "", minTxt: "", maxTxt: "" };
 
@@ -95,5 +95,59 @@ describe("catalog/searchFilters", () => {
     it("un texto vacío no cuenta", () => {
       expect(hasActiveFilters({ search: "" })).toBe(false);
     });
+  });
+});
+
+describe("catalog/searchFilters · canSearch", () => {
+  it("sin criterios: no busca", () => {
+    expect(canSearch(vacio)).toBe(false);
+  });
+
+  it("texto de solo espacios: no busca", () => {
+    expect(canSearch({ ...vacio, texto: "   " })).toBe(false);
+  });
+
+  it("solo texto: busca", () => {
+    expect(canSearch({ ...vacio, texto: "router" })).toBe(true);
+  });
+
+  it("solo categoría: busca", () => {
+    expect(canSearch({ ...vacio, categoria: 4 })).toBe(true);
+  });
+
+  it("texto con rango inválido (mín > máx): no busca", () => {
+    expect(canSearch({ texto: "router", minTxt: "900", maxTxt: "100" })).toBe(false);
+  });
+
+  it("texto con precio no numérico: no busca", () => {
+    expect(canSearch({ texto: "router", minTxt: "abc", maxTxt: "" })).toBe(false);
+  });
+
+  it("categoría con rango inválido: no busca", () => {
+    expect(canSearch({ ...vacio, categoria: 4, minTxt: "900", maxTxt: "100" })).toBe(false);
+  });
+
+  it("categoría con precio con coma decimal: no busca", () => {
+    expect(canSearch({ ...vacio, categoria: 4, maxTxt: "1500,5" })).toBe(false);
+  });
+
+  it("solo precios válidos: busca", () => {
+    expect(canSearch({ ...vacio, minTxt: "100", maxTxt: "500" })).toBe(true);
+  });
+
+  it("solo precio mínimo 0: busca", () => {
+    expect(canSearch({ ...vacio, minTxt: "0" })).toBe(true);
+  });
+
+  it("solo precios inválidos: no busca", () => {
+    expect(canSearch({ ...vacio, minTxt: "-5", maxTxt: "x" })).toBe(false);
+  });
+
+  it("precio enorme: no busca", () => {
+    expect(canSearch({ ...vacio, maxTxt: "99999999999" })).toBe(false);
+  });
+
+  it("rango válido con texto: busca", () => {
+    expect(canSearch({ texto: "cable", minTxt: "10", maxTxt: "200", categoria: 2 })).toBe(true);
   });
 });

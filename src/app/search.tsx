@@ -19,7 +19,7 @@ import {
 import ProductCard from "@/features/catalog/components/ProductCard";
 import { useRootCategories } from "@/features/catalog/hooks/useCategories";
 import { useInfiniteProducts } from "@/features/catalog/hooks/useProducts";
-import { buildProductFilters, hasActiveFilters } from "@/features/catalog/searchFilters";
+import { buildProductFilters, canSearch } from "@/features/catalog/searchFilters";
 import { validatePriceRange } from "@/features/catalog/validation";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
@@ -48,7 +48,8 @@ export default function SearchScreen() {
   );
   const priceError = errors.min ?? errors.max ?? errors.rango;
 
-  const active = hasActiveFilters(filters);
+  // Con un precio inválido no se consulta, aunque haya texto o categoría.
+  const active = canSearch({ ...debounced, categoria });
   const {
     data,
     isLoading,

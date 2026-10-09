@@ -36,3 +36,11 @@ export function hasActiveFilters(filters: ProductFilters): boolean {
     filters.precioMax !== undefined
   );
 }
+
+/**
+ * Se puede consultar la API solo con un criterio activo Y un rango de precios
+ * válido: con un precio inválido no se busca, aunque haya texto o categoría.
+ */
+export function canSearch(criteria: SearchCriteria): boolean {
+  return validatePriceRange(criteria.minTxt, criteria.maxTxt).valid && hasActiveFilters(buildProductFilters(criteria));
+}

@@ -1,6 +1,6 @@
 import { PRODUCTS_PAGE_SIZE, productRepository } from "@/features/catalog/repositories/productRepository";
 
-import { makeApiError, makePagination, makeProduct } from "./fixtures";
+import { makeApiError, makePagination, makeProduct, makeProductDetail } from "./fixtures";
 import { crearAxiosFalso } from "./utils/axiosFake";
 
 jest.mock("expo-secure-store", () => ({
@@ -71,5 +71,38 @@ describe("productRepository.getPage", () => {
     adapter.mockRejectedValueOnce(error);
 
     await expect(productRepository.getPage({}, 1)).rejects.toBe(error);
+  });
+});
+
+describe("productRepository.getById", () => {
+  it("envía GET /catalog/products/:id y devuelve el producto", async () => {
+    const detalle = makeProductDetail({ id: 42 });
+    responde({ data: detalle });
+
+    const resultado = await productRepository.getById(42);
+
+    const { metodo, ruta } = ultimaPeticion();
+    expect({ metodo, ruta }).toEqual({ metodo: "get", ruta: "/catalog/products/42" });
+    expect(resultado).toEqual(detalle);
+  });
+
+  it("rechaza si la respuesta no trae el producto", async () => {
+    responde({});
+
+    await expect(productRepository.getById(1)).rejects.toThrow();
+  });
+
+  it("rechaza con el error 404 de la API", async () => {
+    const error = makeApiError({ status: 404, error: "Producto no encontrado" });
+    adapter.mockRejectedValueOnce(error);
+
+    await expect(productRepository.getById(999)).rejects.toBe(error);
+  });
+
+  it("rechaza con el error 500 de la API", async () => {
+    const error = makeApiError({ status: 500, error: "Error al obtener producto" });
+    adapter.mockRejectedValueOnce(error);
+
+    await expect(productRepository.getById(1)).rejects.toBe(error);
   });
 });

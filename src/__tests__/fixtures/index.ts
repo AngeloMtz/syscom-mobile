@@ -5,6 +5,8 @@ export {
   makePaginatedProducts,
   makePagination,
   makeProduct,
+  makeProductAttribute,
+  makeProductDetail,
   makeProductImage,
   makeProductVariant,
 } from "./product";

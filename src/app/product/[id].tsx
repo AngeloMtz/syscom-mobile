@@ -10,6 +10,8 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 
 import ImageCarousel from "@/features/catalog/components/ImageCarousel";
 import VariantSelector from "@/features/catalog/components/VariantSelector";
+import FavoriteButton from "@/features/favorites/components/FavoriteButton";
+import { toFavoriteProduct } from "@/features/favorites/favoriteSelectors";
 import { useProduct } from "@/features/catalog/hooks/useProduct";
 import {
   cleanDescription,
@@ -105,9 +107,12 @@ export default function ProductDetailScreen() {
           {product.marca ? (
             <Text style={[styles.brand, { color: c.textMuted }]}>{product.marca.nombre}</Text>
           ) : null}
-          <Text style={[styles.name, { color: c.text }]} accessibilityRole="header">
-            {product.nombre}
-          </Text>
+          <View style={styles.nameRow}>
+            <Text style={[styles.name, { color: c.text }]} accessibilityRole="header">
+              {product.nombre}
+            </Text>
+            <FavoriteButton product={toFavoriteProduct(product)} />
+          </View>
           {product.modelo ? (
             <Text style={[styles.model, { color: c.textMuted }]}>Modelo: {product.modelo}</Text>
           ) : null}
@@ -221,7 +226,8 @@ const styles = StyleSheet.create({
   hint: { fontSize: 13, textAlign: "center" },
   body: { padding: spacing.lg, gap: spacing.sm },
   brand: { fontSize: 12, fontWeight: "700", textTransform: "uppercase" },
-  name: { fontSize: 20, fontWeight: "800" },
+  nameRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: spacing.md },
+  name: { flex: 1, fontSize: 20, fontWeight: "800" },
   model: { fontSize: 13 },
   priceRow: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", columnGap: spacing.sm, marginTop: spacing.sm },
   price: { fontSize: 26, fontWeight: "800" },

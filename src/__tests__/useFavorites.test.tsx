@@ -80,6 +80,8 @@ describe("useFavorites / useFavoriteIds", () => {
 
 describe("useToggleFavorite", () => {
   const producto = makeFavoriteProduct({ id_producto: 20, nombre: "Nuevo" });
+  const idsDe = (data?: { items: { productos: { id_producto: number } }[] }) =>
+    data?.items.map((i) => i.productos.id_producto);
 
   async function montar(inicial = makeFavoritesResult({ items: [makeFavoriteItemFor(1)], total: 1 })) {
     repo.getAll.mockResolvedValue(inicial);
@@ -96,39 +98,36 @@ describe("useToggleFavorite", () => {
     repo.add.mockReturnValueOnce(new Promise<void>((r) => (terminar = r)));
     const { result } = await montar();
 
-    act(() => {
-      result.current.toggle.mutate({ product: producto, favorite: true });
+    let pendiente!: Promise<void>;
+    await act(async () => {
+      pendiente = result.current.toggle.mutateAsync({ product: producto, favorite: true });
     });
 
-    await waitFor(() =>
-      expect(result.current.lista.data?.items.map((i) => i.productos.id_producto)).toEqual([20, 1]),
-    );
-    expect(repo.add).toHaveBeenCalledWith(20);
-    expect(result.current.toggle.isPending).toBe(true);
+    // El servidor aún no respondió y la lista ya refleja el cambio.
+    expect(repo.add).toHaveBeenCalledTimes(1);
+    expect(repo.add.mock.calls[0][0]).toBe(20);
+    expect(idsDe(result.current.lista.data)).toEqual([20, 1]);
+    expect(result.current.lista.data?.total).toBe(2);
 
-    repo.getAll.mockResolvedValue(
-      makeFavoritesResult({ items: [makeFavoriteItemFor(20), makeFavoriteItemFor(1)], total: 2 }),
-    );
     await act(async () => {
       terminar();
+      await pendiente;
     });
-    await waitFor(() => expect(result.current.toggle.isSuccess).toBe(true));
   });
 
-  it("quitar actualiza la lista al instante y llama a remove", async () => {
+  it("quitar actualiza la lista y llama a remove", async () => {
     repo.remove.mockResolvedValueOnce(undefined);
     const { result } = await montar(
       makeFavoritesResult({ items: [makeFavoriteItemFor(1), makeFavoriteItemFor(20)], total: 2 }),
     );
-
     repo.getAll.mockResolvedValue(makeFavoritesResult({ items: [makeFavoriteItemFor(1)], total: 1 }));
+
     await act(async () => {
-      result.current.toggle.mutate({ product: producto, favorite: false });
+      await result.current.toggle.mutateAsync({ product: producto, favorite: false });
     });
 
-    await waitFor(() => expect(result.current.toggle.isSuccess).toBe(true));
-    expect(repo.remove).toHaveBeenCalledWith(20);
-    expect(result.current.lista.data?.items.map((i) => i.productos.id_producto)).toEqual([1]);
+    expect(repo.remove.mock.calls[0][0]).toBe(20);
+    expect(idsDe(result.current.lista.data)).toEqual([1]);
   });
 
   it("si la API falla revierte la lista y expone el error", async () => {
@@ -137,12 +136,11 @@ describe("useToggleFavorite", () => {
     const { result } = await montar();
 
     await act(async () => {
-      result.current.toggle.mutate({ product: producto, favorite: true });
+      await result.current.toggle.mutateAsync({ product: producto, favorite: true }).catch(() => undefined);
     });
 
-    await waitFor(() => expect(result.current.toggle.isError).toBe(true));
     expect(result.current.toggle.error).toBe(error);
-    expect(result.current.lista.data?.items.map((i) => i.productos.id_producto)).toEqual([1]);
+    expect(idsDe(result.current.lista.data)).toEqual([1]);
     expect(result.current.lista.data?.total).toBe(1);
   });
 
@@ -152,7 +150,7 @@ describe("useToggleFavorite", () => {
     expect(repo.getAll).toHaveBeenCalledTimes(1);
 
     await act(async () => {
-      result.current.toggle.mutate({ product: producto, favorite: true });
+      await result.current.toggle.mutateAsync({ product: producto, favorite: true });
     });
 
     await waitFor(() => expect(repo.getAll).toHaveBeenCalledTimes(2));

@@ -3,14 +3,18 @@
 // useInfiniteProducts. El scroll infinito pide la siguiente página al llegar
 // al final de la lista.
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 import ProductCard from "@/features/catalog/components/ProductCard";
 import { useInfiniteProducts } from "@/features/catalog/hooks/useProducts";
+import type { ProductListItem } from "@/features/catalog/types";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { spacing, useColors } from "@/shared/theme/useColors";
+
+const openProduct = (product: ProductListItem) =>
+  router.push({ pathname: "/product/[id]", params: { id: String(product.id) } });
 
 export default function CategoryProductsScreen() {
   const c = useColors();
@@ -72,7 +76,7 @@ export default function CategoryProductsScreen() {
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.list}
         style={{ backgroundColor: c.background }}
-        renderItem={({ item }) => <ProductCard product={item} />}
+        renderItem={({ item }) => <ProductCard product={item} onPress={openProduct} />}
         onRefresh={refetch}
         refreshing={isRefetching && !isFetchingNextPage}
         onEndReached={() => {

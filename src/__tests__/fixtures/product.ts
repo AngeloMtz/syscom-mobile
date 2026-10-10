@@ -1,6 +1,8 @@
 import type {
   PaginatedProducts,
   Pagination,
+  ProductAttribute,
+  ProductDetail,
   ProductImage,
   ProductListItem,
   ProductVariant,
@@ -48,4 +50,25 @@ export function makePaginatedProducts(
   over: Partial<PaginatedProducts> = {},
 ): PaginatedProducts {
   return { data: [makeProduct()], pagination: makePagination(), ...over };
+}
+
+export function makeProductAttribute(over: Partial<ProductAttribute> = {}): ProductAttribute {
+  return { id: 1, nombre: "RAM", valor: "16", grupo: "Especificaciones", unidad: "GB", ...over };
+}
+
+/** Producto de detalle (GET /catalog/products/:id) sin promoción ni atributos. */
+export function makeProductDetail(over: Partial<ProductDetail> = {}): ProductDetail {
+  return {
+    ...makeProduct(),
+    tipo_producto: "equipo",
+    descripcion: "Laptop de prueba para empresa.",
+    atributos: [],
+    garantia_duracion: "1 año",
+    garantia_tipo: "fabricante",
+    garantia_extendida: false,
+    envio_dias_estimados: null,
+    promocion_id: null,
+    promocion_nombre: null,
+    ...over,
+  };
 }

@@ -62,6 +62,7 @@
       "src/features/catalog/hooks/*.ts",
       "src/features/catalog/repositories/*.ts",
       "src/features/catalog/searchFilters.ts",
+      "src/features/catalog/productDetail.ts",
       "src/features/profile/hooks/*.ts",
       "src/features/profile/repositories/*.ts",
       "src/shared/api/client.ts",

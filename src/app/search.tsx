@@ -3,7 +3,7 @@
 // features/catalog (validation, searchFilters) y la paginación en useInfiniteProducts.
 // Texto y precios pasan por un debounce para no pedir a la API en cada tecla.
 import { Ionicons } from "@expo/vector-icons";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -20,6 +20,7 @@ import ProductCard from "@/features/catalog/components/ProductCard";
 import { useRootCategories } from "@/features/catalog/hooks/useCategories";
 import { useInfiniteProducts } from "@/features/catalog/hooks/useProducts";
 import { buildProductFilters, canSearch } from "@/features/catalog/searchFilters";
+import type { ProductListItem } from "@/features/catalog/types";
 import { validatePriceRange } from "@/features/catalog/validation";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
@@ -28,6 +29,9 @@ import { formatPrice } from "@/shared/utils/format";
 
 // Búsqueda ágil: más corto que el valor por defecto del hook (400 ms).
 const SEARCH_DEBOUNCE_MS = 300;
+
+const openProduct = (product: ProductListItem) =>
+  router.push({ pathname: "/product/[id]", params: { id: String(product.id) } });
 
 export default function SearchScreen() {
   const c = useColors();
@@ -263,7 +267,7 @@ export default function SearchScreen() {
           contentContainerStyle={styles.list}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
-          renderItem={({ item }) => <ProductCard product={item} />}
+          renderItem={({ item }) => <ProductCard product={item} onPress={openProduct} />}
           onRefresh={refetch}
           refreshing={isRefetching && !isFetchingNextPage}
           onEndReached={() => {

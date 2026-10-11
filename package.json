@@ -57,6 +57,12 @@
     ],
     "collectCoverageFrom": [
       "src/**/validation.ts",
+      "src/features/addresses/addressErrors.ts",
+      "src/features/addresses/addressSelectors.ts",
+      "src/features/addresses/addressValidation.ts",
+      "src/features/addresses/checkoutStore.ts",
+      "src/features/addresses/hooks/*.ts",
+      "src/features/addresses/repositories/*.ts",
       "src/features/auth/hooks/*.ts",
       "src/features/auth/repositories/authRepository.ts",
       "src/features/cart/cartSelectors.ts",

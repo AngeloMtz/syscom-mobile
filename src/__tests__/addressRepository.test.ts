@@ -87,6 +87,21 @@ describe("addressRepository.create", () => {
     expect((await addressRepository.create(payload)).referencias).toBeNull();
   });
 
+  it("completa con texto vacío los campos que el servidor no devuelva", async () => {
+    responde({ data: { id_direccion: 9 } });
+
+    expect(await addressRepository.create(payload)).toEqual({
+      id_direccion: 9,
+      calle: "",
+      colonia: "",
+      ciudad: "",
+      estado: "",
+      codigo_postal: "",
+      referencias: null,
+      created_at: "",
+    });
+  });
+
   it("rechaza si la respuesta no trae la dirección", async () => {
     responde({});
 

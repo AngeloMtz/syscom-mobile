@@ -35,6 +35,12 @@ export function cartTotalCents(items: CartItem[]): number {
   return items.reduce((sum, item) => sum + (lineSubtotalCents(item) ?? 0), 0);
 }
 
+/** Total a mostrar en pesos: el del servidor; si no es válido, la suma local. */
+export function getCartTotal(cart: CartResult | undefined): number {
+  if (!cart) return 0;
+  return (toCents(cart.totalPrice) ?? cartTotalCents(cart.items)) / 100;
+}
+
 /** Unidades totales del carrito. */
 export function cartUnits(items: CartItem[]): number {
   return items.reduce((sum, item) => sum + item.cantidad, 0);

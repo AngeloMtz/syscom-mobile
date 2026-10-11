@@ -7,6 +7,7 @@ import {
   cartUnits,
   centsToPriceString,
   classifyAddError,
+  getCartTotal,
   getItemStatus,
   getItemStock,
   lineSubtotalCents,
@@ -172,6 +173,29 @@ describe("toCartLineData", () => {
       precioUnitario: null,
       subtotal: null,
     });
+  });
+});
+
+describe("getCartTotal", () => {
+  it("usa el total del servidor, en pesos", () => {
+    const cart = makeCartResult({
+      items: [makeCartItemFor(1, { cantidad: 1, precio_unitario: "10.00" })],
+      totalPrice: "1234.56",
+    });
+    expect(getCartTotal(cart)).toBe(1234.56);
+  });
+  it("si el total del servidor no es válido suma las líneas locales", () => {
+    const cart = makeCartResult({
+      items: [
+        makeCartItemFor(1, { cantidad: 2, precio_unitario: "10.00" }),
+        makeCartItemFor(2, { cantidad: 1, precio_unitario: "5.50" }),
+      ],
+      totalPrice: "n/d",
+    });
+    expect(getCartTotal(cart)).toBe(25.5);
+  });
+  it("es 0 sin datos", () => {
+    expect(getCartTotal(undefined)).toBe(0);
   });
 });
 

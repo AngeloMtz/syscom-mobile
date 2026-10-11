@@ -16,7 +16,7 @@
 | Rendimiento | No aplica en este sprint | — |
 | Aceptación (manual) | Validada por Angel en Expo Go: 12/12 criterios OK; 7 con alguna captura (3 de ellas parciales) y 5 sin captura (ver sección 5) | #31 |
 
-Lo que **no** se ejecutó para este reporte: el pipeline de CI y `npm audit` (corren en GitHub Actions al abrir el PR). Los resultados de este documento son de una ejecución local.
+Resultado de CI (GitHub Actions, PR #89, commit `a6e5acb`): los checks **Análisis estático** y **Pruebas unitarias** salieron en **success**. El job de análisis estático incluye `npm audit --audit-level=critical` (bloqueante), que también pasó; la auditoría de nivel alto es informativa (`continue-on-error`) y no bloquea. `npm audit` **sigue sin ejecutarse en local**. Los resultados de las secciones 2 y 3 son de la ejecución local.
 
 ## 2. Análisis estático (#29)
 
@@ -109,7 +109,7 @@ Total: 15 pruebas, 15 pasan. Se corrieron en serie (`--detectOpenHandles`, 3 vec
 
 | Historia | Criterio | Resultado | Evidencia |
 |---|---|---|---|
-| #6 | Carga categorías desde la API con estado de loading | OK (validado por Angel) | [hu6-categorías.jpeg](evidencia/sprint-2/hu6-categor%C3%ADas.jpeg): categorías cargadas. Estado de loading: sin captura |
+| #6 | Carga categorías desde la API con estado de loading | OK (validado por Angel) | [hu6-categorias.jpeg](evidencia/sprint-2/hu6-categorias.jpeg): categorías cargadas. Estado de loading: sin captura |
 | #6 | Tap en categoría navega al listado de productos filtrado | OK (validado por Angel) | [hu7-catalogo.jpeg](evidencia/sprint-2/hu7-catalogo.jpeg): listado resultante de "Computadoras y Laptops" |
 | #7 | Muestra imagen, nombre y precio de cada producto | OK (validado por Angel) | [hu7-catalogo.jpeg](evidencia/sprint-2/hu7-catalogo.jpeg): 15 productos con imagen, marca, nombre y precio |
 | #7 | Paginación o infinite scroll funcional | OK (validado por Angel, sin captura) | — |
@@ -122,10 +122,10 @@ Total: 15 pruebas, 15 pasan. Se corrieron en serie (`--detectOpenHandles`, 3 vec
 | #10 | Ícono de corazón alterna estado favorito | OK (validado por Angel) | [hu10-favoritos.jpeg](evidencia/sprint-2/hu10-favoritos.jpeg) (corazón lleno en la lista) y [hu7-catalogo.jpeg](evidencia/sprint-2/hu7-catalogo.jpeg) (un corazón lleno entre tarjetas). La alternancia paso a paso: sin captura |
 | #10 | Lista de favoritos persiste entre sesiones | OK (validado por Angel, sin captura) | [hu10-favoritos.jpeg](evidencia/sprint-2/hu10-favoritos.jpeg) muestra la lista; la persistencia al reabrir la app no tiene captura |
 
-Capturas disponibles en `docs/pruebas/evidencia/sprint-2/`: `hu6-categorías.jpeg` (#6), `hu7-catalogo.jpeg` (#7, y muestra corazones de #10), `hu8-busqueda.jpeg` (#8), `hu9-detalle.jpeg` (#9), `hu10-favoritos.jpeg` (#10).
+Capturas disponibles en `docs/pruebas/evidencia/sprint-2/`: `hu6-categorias.jpeg` (#6), `hu7-catalogo.jpeg` (#7, y muestra corazones de #10), `hu8-busqueda.jpeg` (#8), `hu9-detalle.jpeg` (#9), `hu10-favoritos.jpeg` (#10).
 
 ## 6. Cierre
 
 - Los issues #28, #29, #30 y #31 se cierran con el PR de esta rama (`Closes`), pero GitHub solo cierra al llegar a la rama por defecto (`main`): se cerrarán al fusionar el release del Sprint 2.
-- Pendiente de validar por CI: lint, tsc, Jest y auditoría en GitHub Actions al abrir el PR.
+- CI (GitHub Actions, PR #89, commit `a6e5acb`): **Análisis estático** y **Pruebas unitarias** en success (ver sección 1). `npm audit` sigue sin ejecutarse en local.
 - Pendiente de confirmar con el backend: forma real de `GET /favorites` y tipo de `precio_base` (número o texto); pregunta abierta sobre si `precio_extra` debe sumarse (HU #9 / carrito HU #11).

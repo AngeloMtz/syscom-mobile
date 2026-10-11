@@ -1,5 +1,6 @@
 export { makeLoginPayload, makeRegisterPayload } from "./auth";
 export { makeApiError, makeNetworkError } from "./apiError";
+export { makeCartItem, makeCartItemFor, makeCartPage, makeCartProduct, makeCartResult } from "./cart";
 export { makeCategory } from "./category";
 export {
   makeFavoriteItem,

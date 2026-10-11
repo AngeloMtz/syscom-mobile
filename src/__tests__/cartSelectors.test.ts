@@ -83,6 +83,11 @@ describe("getItemStock / maxQuantity", () => {
     expect(getItemStock(item)).toBeNull();
     expect(maxQuantity(item)).toBe(MAX_ITEM_QUANTITY);
   });
+  it("tolera un ítem sin la lista de variantes (respuesta incompleta)", () => {
+    const item = makeCartItemFor(1);
+    (item.productos as { variantes_producto?: unknown }).variantes_producto = undefined;
+    expect(getItemStock(item)).toBeNull();
+  });
   it("la cantidad máxima es el menor entre 99 y el stock", () => {
     expect(maxQuantity(makeCartItemFor(1, { producto: { variantes_producto: [{ stock: 5 }] } }))).toBe(5);
     expect(maxQuantity(makeCartItemFor(1, { producto: { variantes_producto: [{ stock: 500 }] } }))).toBe(99);
@@ -274,6 +279,13 @@ describe("applyQuantityChange", () => {
     const result = applyQuantityChange(actual, 1, 4);
     expect(result.items[0].cantidad).toBe(4);
     expect(result.totalPrice).toBe("80.00");
+  });
+  it("si el total del servidor no es válido parte de la suma local de las líneas", () => {
+    const actual = makeCartResult({
+      items: [makeCartItemFor(1, { cantidad: 2, precio_unitario: "100.00" })],
+      totalPrice: "n/d",
+    });
+    expect(applyQuantityChange(actual, 1, 3).totalPrice).toBe("300.00");
   });
   it("el total nunca queda negativo", () => {
     const actual = makeCartResult({

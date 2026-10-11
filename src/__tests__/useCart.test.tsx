@@ -223,6 +223,32 @@ describe("useRemoveCartItem", () => {
     await waitFor(() => expect(repo.getAll).toHaveBeenCalledTimes(2));
   });
 
+  it("con otra mutación en vuelo no vuelve a pedir el carrito hasta que termine la última", async () => {
+    const liberar: (() => void)[] = [];
+    repo.remove.mockImplementation(() => new Promise<void>((r) => liberar.push(r)));
+    const { result } = await montar();
+
+    let a!: Promise<void>;
+    let b!: Promise<void>;
+    await act(async () => {
+      a = result.current.remove.mutateAsync(1);
+      b = result.current.remove.mutateAsync(2);
+    });
+    await waitFor(() => expect(liberar).toHaveLength(2));
+
+    await act(async () => {
+      liberar[0]();
+      await a;
+    });
+    expect(repo.getAll).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      liberar[1]();
+      await b;
+    });
+    await waitFor(() => expect(repo.getAll).toHaveBeenCalledTimes(2));
+  });
+
   it("si la API falla devuelve la línea y el total", async () => {
     const error = makeApiError({ status: 500, message: "Error" });
     repo.remove.mockRejectedValueOnce(error);

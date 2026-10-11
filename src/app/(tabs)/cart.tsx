@@ -6,8 +6,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
+import {
+  canProceedToPayment,
+  formatAddressLine,
+  resolveSelectedAddress,
+} from "@/features/addresses/addressSelectors";
+import { useCheckoutStore } from "@/features/addresses/checkoutStore";
+import { useAddresses } from "@/features/addresses/hooks/useAddresses";
 import RequireAuth from "@/features/auth/components/RequireAuth";
-import { canCheckout, cartUnits, getCartTotal, toCartLineData } from "@/features/cart/cartSelectors";
+import { cartUnits, getCartTotal, toCartLineData } from "@/features/cart/cartSelectors";
 import CartItemRow from "@/features/cart/components/CartItemRow";
 import CartSummary from "@/features/cart/components/CartSummary";
 import { useCart } from "@/features/cart/hooks/useCart";
@@ -25,6 +32,17 @@ function CartContent() {
   const { data, isLoading, isError, error, refetch, isRefetching } = useCart();
   const update = useUpdateCartItem();
   const remove = useRemoveCartItem();
+
+  // Dirección de envío: la elegida, o la más reciente (el backend no tiene "por defecto").
+  const addresses = useAddresses();
+  const selectedAddressId = useCheckoutStore((s) => s.selectedAddressId);
+  const address = resolveSelectedAddress(addresses.data, selectedAddressId);
+  const addressState = addresses.isLoading ? "loading" : addresses.isError && !addresses.data ? "error" : "ready";
+  const changeAddress = () => {
+    if (addressState === "error") addresses.refetch();
+    else if (address) router.push({ pathname: "/addresses", params: { select: "1" } });
+    else router.push("/addresses/form");
+  };
 
   const fail = (e: unknown) =>
     Alert.alert("No se pudo actualizar tu carrito", apiErrorMessage(e));
@@ -117,8 +135,11 @@ function CartContent() {
       <CartSummary
         total={getCartTotal(data)}
         units={cartUnits(items)}
-        canCheckout={canCheckout(data)}
+        canCheckout={canProceedToPayment(data, address)}
         blockingCount={blockingCount}
+        addressState={addressState}
+        addressLine={address ? formatAddressLine(address) : null}
+        onChangeAddress={changeAddress}
       />
     </View>
   );

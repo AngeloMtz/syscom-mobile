@@ -77,7 +77,12 @@ function ClientDashboard() {
       />
       <DashboardOption icon="lock-closed-outline" label="Cambiar contraseña" disabled />
       <DashboardOption icon="shield-checkmark-outline" label="Autenticación 2FA" disabled />
-      <DashboardOption icon="location-outline" label="Mis direcciones" disabled />
+      <DashboardOption
+        icon="location-outline"
+        label="Mis direcciones"
+        description="Dónde recibes tus pedidos"
+        onPress={() => router.push("/addresses")}
+      />
 
       <Text style={[styles.seccion, { color: c.textMuted }]} accessibilityRole="header">
         COMPRAS

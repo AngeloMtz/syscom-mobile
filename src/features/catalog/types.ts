@@ -62,6 +62,30 @@ export interface ProductListItem {
   en_promocion: boolean;
 }
 
+export interface ProductAttribute {
+  id: number;
+  nombre: string;
+  valor: string;
+  grupo: string;
+  unidad: string | null;
+}
+
+/**
+ * Producto de GET /catalog/products/:id. Suma al de listado la descripción,
+ * los atributos y la garantía. `variantes` trae solo las activas.
+ */
+export interface ProductDetail extends ProductListItem {
+  tipo_producto: string;
+  descripcion: string | null;
+  atributos: ProductAttribute[];
+  garantia_duracion: string | null;
+  garantia_tipo: string | null;
+  garantia_extendida: boolean;
+  envio_dias_estimados: string | null;
+  promocion_id: number | null;
+  promocion_nombre: string | null;
+}
+
 export interface Pagination {
   page: number;
   limit: number;

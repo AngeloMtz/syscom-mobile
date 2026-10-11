@@ -84,7 +84,12 @@ function ClientDashboard() {
       </Text>
 
       <DashboardOption icon="bag-outline" label="Mis pedidos" disabled />
-      <DashboardOption icon="heart-outline" label="Favoritos" disabled />
+      <DashboardOption
+        icon="heart-outline"
+        label="Favoritos"
+        description="Productos que guardaste"
+        onPress={() => router.push("/favorites")}
+      />
       <DashboardOption icon="star-outline" label="Mis reseñas" disabled />
       <DashboardOption icon="card-outline" label="Métodos de pago" disabled />
       <DashboardOption icon="document-text-outline" label="Facturación" disabled />

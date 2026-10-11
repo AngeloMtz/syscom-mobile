@@ -3,6 +3,7 @@
 // las llamadas HTTP viven en features/auth/repositories.
 import { create } from "zustand";
 
+import { queryClient } from "@/shared/api/queryClient";
 import { clearToken, getTokenSync, restoreToken, saveToken } from "@/shared/api/secureToken";
 import type { User } from "@/features/auth/types";
 
@@ -32,6 +33,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: async () => {
     await clearToken();
+    // Otra cuenta podría entrar en este dispositivo: sus consultas no deben ver
+    // la caché de la anterior ("me", "profile", etc.).
+    queryClient.clear();
     set({ user: null, isAuthenticated: false });
   },
 

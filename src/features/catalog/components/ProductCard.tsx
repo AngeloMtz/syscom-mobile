@@ -7,6 +7,8 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { getPrincipalImageUrl, getTotalStock } from "@/features/catalog/selectors";
 import type { ProductListItem } from "@/features/catalog/types";
+import FavoriteButton from "@/features/favorites/components/FavoriteButton";
+import { toFavoriteProduct } from "@/features/favorites/favoriteSelectors";
 import { formatPrice } from "@/shared/utils/format";
 import { cardShadow, radius, spacing, useColors } from "@/shared/theme/useColors";
 
@@ -51,6 +53,7 @@ export default function ProductCard({ product, onPress }: Props) {
             <Text style={styles.badgeText}>-{Math.round(product.porcentaje_descuento)}%</Text>
           </View>
         ) : null}
+        <FavoriteButton product={toFavoriteProduct(product)} style={styles.heart} />
       </View>
 
       <View style={styles.body}>
@@ -90,6 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
   },
   badgeText: { color: "#fff", fontSize: 11, fontWeight: "800" },
+  heart: { position: "absolute", top: spacing.sm, right: spacing.sm },
   body: { padding: spacing.md, gap: 2 },
   brand: { fontSize: 11, fontWeight: "600", textTransform: "uppercase" },
   name: { fontSize: 13, fontWeight: "600", minHeight: 34 },

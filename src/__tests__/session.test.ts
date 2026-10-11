@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
+import { queryClient } from "@/shared/api/queryClient";
 import { TOKEN_KEY, clearToken, getTokenSync, restoreToken, saveToken } from "@/shared/api/secureToken";
 import { isOnboardingCompleted, setOnboardingCompleted } from "@/shared/storage/onboarding";
 import { useAuthStore } from "@/shared/store/authStore";
@@ -25,6 +26,11 @@ beforeEach(async () => {
   await clearToken();
   useAuthStore.setState({ user: null, isAuthenticated: false, isHydrating: true });
   useOnboardingStore.setState({ completed: false, isChecking: true });
+  queryClient.clear();
+});
+
+afterEach(() => {
+  queryClient.clear();
 });
 
 describe("secureToken", () => {
@@ -61,6 +67,18 @@ describe("authStore", () => {
     await useAuthStore.getState().logout();
     expect(useAuthStore.getState()).toMatchObject({ user: null, isAuthenticated: false });
     expect(getTokenSync()).toBeNull();
+  });
+  it("logout vacía la caché de consultas para que otra cuenta no vea datos de la anterior", async () => {
+    await useAuthStore.getState().setSession(user, "jwt-7");
+    queryClient.setQueryData(["me"], { id_usuario: 1, nombre: "Angel" });
+    queryClient.setQueryData(["profile"], { nombre: "Angel" });
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(2);
+
+    await useAuthStore.getState().logout();
+
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(0);
+    expect(queryClient.getQueryData(["me"])).toBeUndefined();
+    expect(queryClient.getQueryData(["profile"])).toBeUndefined();
   });
   it("hydrate reconoce la sesión por la presencia del token", async () => {
     secure.getItemAsync.mockResolvedValueOnce("jwt-6");

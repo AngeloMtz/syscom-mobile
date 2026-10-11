@@ -1,0 +1,96 @@
+PASS src/__tests__/productDetail.test.ts (6.444 s)
+PASS src/__tests__/categoryRepository.test.ts (9.898 s)
+PASS src/__tests__/profileRepository.test.ts (9.967 s)
+PASS src/__tests__/productRepository.test.ts (10.204 s)
+PASS src/__tests__/authRepository.test.ts (10.22 s)
+PASS src/__tests__/session.test.ts (7.442 s)
+PASS src/__tests__/apiClient.test.ts (11.283 s)
+PASS src/__tests__/useResendCode.test.tsx (9.911 s)
+PASS src/__tests__/useRegister.test.tsx (10.41 s)
+PASS src/__tests__/useMe.test.tsx (10.468 s)
+PASS src/__tests__/useLogin.test.tsx (10.515 s)
+PASS src/__tests__/useUpdateProfile.test.tsx (10.578 s)
+PASS src/__tests__/useVerifyRegistration.test.tsx (10.71 s)
+PASS src/__tests__/useConfirm2FA.test.tsx (10.686 s)
+PASS src/__tests__/useProfile.test.tsx (10.672 s)
+PASS src/__tests__/useProduct.test.tsx (5.005 s)
+PASS src/__tests__/useProducts.test.tsx (5.083 s)
+PASS src/__tests__/favoriteRepository.test.ts
+PASS src/__tests__/useDebouncedValue.test.tsx
+PASS src/__tests__/favoriteSelectors.test.ts
+PASS src/__tests__/validation.test.ts
+PASS src/__tests__/integration/catalogoApi.test.tsx (6.994 s)
+PASS src/__tests__/useCategories.test.tsx (5.277 s)
+PASS src/__tests__/integration/favoritosApi.test.tsx (7.125 s)
+PASS src/__tests__/searchFilters.test.ts
+PASS src/__tests__/usePasswordRecovery.test.tsx (5.054 s)
+PASS src/__tests__/products.test.ts
+PASS src/__tests__/errorMessage.test.ts
+PASS src/__tests__/useFavorites.test.tsx
+PASS src/__tests__/integration/sesionCache.test.tsx (7.845 s)
+PASS src/__tests__/categories.test.ts
+PASS src/__tests__/priceValidation.test.ts
+PASS src/__tests__/queryClient.test.ts
+---------------------------------|---------|----------|---------|---------|-------------------
+File                             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------------------|---------|----------|---------|---------|-------------------
+All files                        |   98.93 |     97.2 |   99.34 |   99.35 |                   
+ features/auth                   |     100 |      100 |     100 |     100 |                   
+  validation.ts                  |     100 |      100 |     100 |     100 |                   
+ features/auth/hooks             |     100 |      100 |     100 |     100 |                   
+  useConfirm2FA.ts               |     100 |      100 |     100 |     100 |                   
+  useLogin.ts                    |     100 |      100 |     100 |     100 |                   
+  useMe.ts                       |     100 |      100 |     100 |     100 |                   
+  usePasswordRecovery.ts         |     100 |      100 |     100 |     100 |                   
+  useRegister.ts                 |     100 |      100 |     100 |     100 |                   
+  useResendCode.ts               |     100 |      100 |     100 |     100 |                   
+  useVerifyRegistration.ts       |     100 |      100 |     100 |     100 |                   
+ features/auth/repositories      |     100 |    85.71 |     100 |     100 |                   
+  authRepository.ts              |     100 |    85.71 |     100 |     100 | 21                
+ features/catalog                |     100 |    98.79 |     100 |     100 |                   
+  productDetail.ts               |     100 |    97.61 |     100 |     100 | 34                
+  searchFilters.ts               |     100 |      100 |     100 |     100 |                   
+  validation.ts                  |     100 |      100 |     100 |     100 |                   
+ features/catalog/hooks          |     100 |     90.9 |     100 |     100 |                   
+  useCategories.ts               |     100 |      100 |     100 |     100 |                   
+  useProduct.ts                  |     100 |      100 |     100 |     100 |                   
+  useProducts.ts                 |     100 |     87.5 |     100 |     100 | 22                
+ features/catalog/repositories   |     100 |      100 |     100 |     100 |                   
+  categoryRepository.ts          |     100 |      100 |     100 |     100 |                   
+  productRepository.ts           |     100 |      100 |     100 |     100 |                   
+ features/favorites              |     100 |      100 |     100 |     100 |                   
+  favoriteSelectors.ts           |     100 |      100 |     100 |     100 |                   
+ features/favorites/hooks        |     100 |      100 |     100 |     100 |                   
+  useFavorites.ts                |     100 |      100 |     100 |     100 |                   
+  useToggleFavorite.ts           |     100 |      100 |     100 |     100 |                   
+ features/favorites/repositories |     100 |      100 |     100 |     100 |                   
+  favoriteRepository.ts          |     100 |      100 |     100 |     100 |                   
+ features/profile                |   89.47 |    85.71 |     100 |     100 |                   
+  validation.ts                  |   89.47 |    85.71 |     100 |     100 | 19-21             
+ features/profile/hooks          |     100 |      100 |     100 |     100 |                   
+  useProfile.ts                  |     100 |      100 |     100 |     100 |                   
+  useUpdateProfile.ts            |     100 |      100 |     100 |     100 |                   
+ features/profile/repositories   |     100 |      100 |     100 |     100 |                   
+  profileRepository.ts           |     100 |      100 |     100 |     100 |                   
+ shared/api                      |     100 |    95.23 |     100 |     100 |                   
+  client.ts                      |     100 |      100 |     100 |     100 |                   
+  errorMessage.ts                |     100 |    94.11 |     100 |     100 | 19                
+  queryClient.ts                 |     100 |      100 |     100 |     100 |                   
+  secureToken.ts                 |     100 |      100 |     100 |     100 |                   
+ shared/hooks                    |     100 |      100 |     100 |     100 |                   
+  useDebouncedValue.ts           |     100 |      100 |     100 |     100 |                   
+ shared/storage                  |      75 |      100 |   66.66 |      75 |                   
+  onboarding.ts                  |      75 |      100 |   66.66 |      75 | 31-32             
+ shared/store                    |     100 |      100 |     100 |     100 |                   
+  authStore.ts                   |     100 |      100 |     100 |     100 |                   
+  onboardingStore.ts             |     100 |      100 |     100 |     100 |                   
+ shared/utils                    |     100 |      100 |     100 |     100 |                   
+  format.ts                      |     100 |      100 |     100 |     100 |                   
+---------------------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 33 passed, 33 total
+Tests:       349 passed, 349 total
+Snapshots:   0 total
+Time:        20.352 s
+Ran all test suites.
+EXIT=0

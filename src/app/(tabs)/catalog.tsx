@@ -56,6 +56,17 @@ export default function CatalogScreen() {
       contentContainerStyle={styles.list}
       style={{ backgroundColor: c.background }}
       renderItem={({ item }) => <CategoryCard category={item} onPress={openCategory} />}
+      ListHeaderComponent={
+        <Pressable
+          onPress={() => router.push("/search")}
+          accessibilityRole="search"
+          accessibilityLabel="Buscar productos"
+          style={[styles.search, { backgroundColor: c.inputBg, borderColor: c.border }]}
+        >
+          <Ionicons name="search-outline" size={20} color={c.textMuted} />
+          <Text style={[styles.searchText, { color: c.textMuted }]}>Buscar productos…</Text>
+        </Pressable>
+      }
       onRefresh={refetch}
       refreshing={isRefetching}
       ListEmptyComponent={
@@ -74,6 +85,17 @@ const styles = StyleSheet.create({
   hint: { fontSize: 13, textAlign: "center" },
   list: { padding: spacing.lg, flexGrow: 1 },
   row: { gap: spacing.md, marginBottom: spacing.md },
+  search: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    marginBottom: spacing.md,
+  },
+  searchText: { fontSize: 14 },
   retry: { marginTop: spacing.md, paddingHorizontal: spacing.xl, paddingVertical: spacing.md, borderRadius: 999 },
   retryText: { color: "#fff", fontWeight: "700" },
 });

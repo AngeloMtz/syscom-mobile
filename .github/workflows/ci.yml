@@ -17,8 +17,11 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
+
+      - name: Verificar entorno
+        run: npm run verificar-entorno -- --ci
 
       - name: Instalar dependencias
         run: npm ci
@@ -46,7 +49,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Instalar dependencias

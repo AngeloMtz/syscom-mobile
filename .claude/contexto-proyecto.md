@@ -46,7 +46,7 @@ Los issues de prueba son sub-issues de la última historia de su bloque. Título
 
 ## Herramientas de prueba
 - Análisis estático: `npx expo lint` y `npx tsc --noEmit`
-- Unitarias: Jest con `jest-expo` + React Native Testing Library (instalar con `npx expo install`)
+- Unitarias: Jest con `jest-expo` + React Native Testing Library (ya instaladas; los hooks se prueban con `renderHook`)
 - Aceptación: manual contra los criterios de aceptación de cada issue (Expo Go / emulador)
 - CI: `.github/workflows/ci.yml` (lint, tsc, audit, tests) corre en cada PR
 
@@ -55,6 +55,16 @@ Los issues de prueba son sub-issues de la última historia de su bloque. Título
 - Evidencia (capturas, logs) en `docs/pruebas/evidencia/sprint-N/`
 - Lo que Claude no pueda ejecutar (probar en dispositivo, capturas) se deja como
   "PENDIENTE DE VALIDACIÓN MANUAL" con instrucciones claras para el usuario.
+
+## Definición de terminado
+- Toda función nueva o modificada incluye su prueba unitaria en el mismo PR.
+- Una historia de usuario no está terminada si sus pruebas no pasan en CI
+  (checks "Análisis estático" y "Pruebas unitarias" en verde).
+- En el checklist de cada historia: "Pruebas unitarias de sus funciones: pasan en CI"
+  (la casilla en GitHub Projects la marca el equipo a mano).
+- Regla para Claude: antes de dar una función por terminada, escribir su prueba unitaria,
+  correrla y mostrar el resultado real (suites y pruebas que pasan). Si no se pudo correr,
+  decirlo y no dar la función por terminada.
 
 ## Reglas de trabajo para Claude
 - Antes de cualquier cambio de código de producción, explicar qué se va a corregir y por qué.

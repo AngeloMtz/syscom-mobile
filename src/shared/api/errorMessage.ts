@@ -3,7 +3,7 @@
 // el backend responde siempre con la forma { success, message }.
 
 /**
- * El backend responde { success: false, message } y, en validaciones, a veces
+ * El backend responde { success: false, message } (o `error` con texto) y, en validaciones, a veces
  * { errors: [...] }.
  */
 export function apiErrorMessage(
@@ -12,6 +12,8 @@ export function apiErrorMessage(
 ): string {
   const data = error?.response?.data;
   if (typeof data?.message === "string") return data.message;
+  // Algunos endpoints del catálogo responden { success: false, error: "texto" }.
+  if (typeof data?.error === "string") return data.error;
   if (Array.isArray(data?.errors) && data.errors.length > 0) {
     const first = data.errors[0];
     return typeof first === "string" ? first : (first?.message ?? fallback);

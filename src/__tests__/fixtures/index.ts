@@ -19,4 +19,5 @@ export {
   makeProductImage,
   makeProductVariant,
 } from "./product";
+export { makeOrderAddress, makeOrderDetail, makeOrderItem, makeOrderPayment } from "./order";
 export { makeProfile, makeUpdateProfileDTO, makeUser } from "./user";

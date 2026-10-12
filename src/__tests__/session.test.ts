@@ -80,6 +80,17 @@ describe("authStore", () => {
     expect(queryClient.getQueryData(["me"])).toBeUndefined();
     expect(queryClient.getQueryData(["profile"])).toBeUndefined();
   });
+  it("logout vacía también el historial y el detalle de pedidos", async () => {
+    await useAuthStore.getState().setSession(user, "jwt-8");
+    queryClient.setQueryData(["orders"], { pages: [{ data: [{ id_pedido: 8 }] }], pageParams: [1] });
+    queryClient.setQueryData(["order", 8], { id_pedido: 8 });
+
+    await useAuthStore.getState().logout();
+
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(0);
+    expect(queryClient.getQueryData(["orders"])).toBeUndefined();
+    expect(queryClient.getQueryData(["order", 8])).toBeUndefined();
+  });
   it("hydrate reconoce la sesión por la presencia del token", async () => {
     secure.getItemAsync.mockResolvedValueOnce("jwt-6");
     await useAuthStore.getState().hydrate();

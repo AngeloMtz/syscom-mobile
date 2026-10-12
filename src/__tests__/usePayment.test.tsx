@@ -122,6 +122,29 @@ describe("usePayment: pago correcto", () => {
   });
 });
 
+describe("usePayment: historial de pedidos", () => {
+  it("al pagar invalida el historial de pedidos para que aparezca el pedido nuevo", async () => {
+    repo.getOrderStatus.mockResolvedValue(PEDIDO);
+    const { result } = await montar();
+    result.current.queryClient.setQueryData(["orders"], { pages: [], pageParams: [] });
+
+    await pagar(result);
+
+    expect(result.current.payment.state.phase).toBe("paid");
+    expect(result.current.queryClient.getQueryState(["orders"])?.isInvalidated).toBe(true);
+  });
+
+  it("un pago que no se completa no invalida el historial", async () => {
+    presentPaymentSheet.mockResolvedValueOnce({ error: { code: "Canceled", message: "x" } });
+    const { result } = await montar();
+    result.current.queryClient.setQueryData(["orders"], { pages: [], pageParams: [] });
+
+    await pagar(result);
+
+    expect(result.current.queryClient.getQueryState(["orders"])?.isInvalidated).toBe(false);
+  });
+});
+
 describe("usePayment: la hoja termina sin pagar", () => {
   it("cancelar: mensaje de no cobro y sin consultar el pedido", async () => {
     presentPaymentSheet.mockResolvedValueOnce({ error: { code: "Canceled", message: "canceled" } });

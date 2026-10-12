@@ -67,6 +67,17 @@ function CheckoutView({ payment, stripeConfigured }: { payment: PaymentApi; stri
   const total = getCartTotal(cart.data);
   const lines = (cart.data?.items ?? []).map(toCartLineData);
 
+  // Pago confirmado: se reemplaza esta pantalla por la confirmación del pedido
+  // (router.replace no agrega a la pila, así que "atrás" no vuelve al pago).
+  useEffect(() => {
+    if (state.phase === "paid" && state.orderId !== null) {
+      router.replace({
+        pathname: "/orders/[id]",
+        params: { id: String(state.orderId), confirmed: "1" },
+      });
+    }
+  }, [state.phase, state.orderId]);
+
   // El botón "atrás" de Android no sale de la pantalla mientras se paga.
   useEffect(() => {
     if (!busy) return;
@@ -97,22 +108,12 @@ function CheckoutView({ payment, stripeConfigured }: { payment: PaymentApi; stri
   }
 
   if (state.phase === "paid") {
+    // Un instante mientras router.replace abre la confirmación.
     return (
       <View style={[styles.center, { backgroundColor: c.background }]}>
         {title}
-        <Ionicons name="checkmark-circle" size={64} color={c.brandPrimary} />
-        <Text style={[styles.titleText, { color: c.text }]}>¡Pago exitoso!</Text>
-        <Text style={[styles.hint, { color: c.textMuted }]}>
-          Tu pedido #{state.orderId} fue confirmado. Te enviaremos un correo con el detalle.
-        </Text>
-        <Pressable
-          onPress={() => router.replace("/")}
-          accessibilityRole="button"
-          accessibilityLabel="Volver al inicio"
-          style={[styles.primary, { backgroundColor: c.brandPrimary }]}
-        >
-          <Text style={styles.primaryText}>Volver al inicio</Text>
-        </Pressable>
+        <ActivityIndicator size="large" color={c.brandPrimary} />
+        <Text style={[styles.hint, { color: c.textMuted }]}>Abriendo tu confirmación…</Text>
       </View>
     );
   }

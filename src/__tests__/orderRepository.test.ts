@@ -56,6 +56,15 @@ describe("orderRepository.getById", () => {
     });
   });
 
+  it("si faltan el estado y el total usa texto vacío y cero", async () => {
+    responde({ data: { id_pedido: 6 } });
+
+    const resultado = await orderRepository.getById(6);
+
+    expect(resultado?.estado).toBe("");
+    expect(resultado?.total).toBe("0");
+  });
+
   it("conserva dirección, ítems y pago cuando vienen", async () => {
     const pedido = makeOrderDetail({
       direccion: makeOrderAddress({ referencias: "Junto al parque" }),

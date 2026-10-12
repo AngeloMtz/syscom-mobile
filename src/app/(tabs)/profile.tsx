@@ -88,7 +88,12 @@ function ClientDashboard() {
         COMPRAS
       </Text>
 
-      <DashboardOption icon="bag-outline" label="Mis pedidos" disabled />
+      <DashboardOption
+        icon="bag-outline"
+        label="Mis pedidos"
+        description="Tus compras y su estado"
+        onPress={() => router.push("/orders")}
+      />
       <DashboardOption
         icon="heart-outline"
         label="Favoritos"

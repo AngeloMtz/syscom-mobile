@@ -15,8 +15,7 @@ import { formatOrderFolio, parseOrderId } from "@/features/orders/orderFormat";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 
 const goHome = () => router.replace("/");
-// La lista de pedidos llega con la HU #15: mientras tanto lleva a Perfil.
-const goOrders = () => router.replace("/profile");
+const goOrders = () => router.replace("/orders");
 const openProduct = (productId: number) =>
   router.push({ pathname: "/product/[id]", params: { id: String(productId) } });
 

@@ -3,6 +3,8 @@ import type {
   OrderDetail,
   OrderItem,
   OrderPayment,
+  OrderSummary,
+  OrdersPage,
 } from "@/features/orders/types";
 
 // Forma tomada del código del backend (orders.service.ts, getMyOrderDetail);
@@ -65,4 +67,23 @@ export function makeOrderDetail(over: Partial<OrderDetail> = {}): OrderDetail {
     pago: makeOrderPayment(),
     ...over,
   };
+}
+
+/** Pedido de la lista (GET /orders): vista resumida. */
+export function makeOrderSummary(over: Partial<OrderSummary> = {}): OrderSummary {
+  return {
+    id_pedido: 8,
+    estado: "confirmado",
+    total: "500.00",
+    fecha_pedido: "2026-10-12T03:20:00.000Z",
+    total_items: 2,
+    primer_producto: "Mouse inalámbrico",
+    imagen_preview: "https://example.com/mouse.jpg",
+    ...over,
+  };
+}
+
+/** Página como la entrega el repository (ya sin la envoltura de la API). */
+export function makeOrdersPage(over: Partial<OrdersPage> = {}): OrdersPage {
+  return { data: [makeOrderSummary()], total: 1, page: 1, limit: 10, totalPages: 1, ...over };
 }

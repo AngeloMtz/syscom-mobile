@@ -78,6 +78,7 @@
       "src/features/favorites/repositories/*.ts",
       "src/features/orders/hooks/*.ts",
       "src/features/orders/orderFormat.ts",
+      "src/features/orders/orderList.ts",
       "src/features/orders/repositories/*.ts",
       "src/features/payments/hooks/*.ts",
       "src/features/payments/paymentConfig.ts",

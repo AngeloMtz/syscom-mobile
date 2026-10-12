@@ -13,6 +13,7 @@ import { useStripe } from "@stripe/stripe-react-native";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 
 import { CART_KEY } from "@/features/cart/hooks/useCart";
+import { ORDERS_KEY } from "@/features/orders/hooks/useOrders";
 import { getReturnUrl } from "@/features/payments/paymentConfig";
 import {
   checkoutErrorMessage,
@@ -82,8 +83,9 @@ export const usePayment = () => {
   const onPaid = useCallback(
     (orderId: number) => {
       dispatch({ type: "ORDER_FOUND", orderId });
-      // El webhook ya vació el carrito del servidor.
+      // El webhook ya vació el carrito del servidor y creó un pedido nuevo.
       void queryClient.invalidateQueries({ queryKey: CART_KEY });
+      void queryClient.invalidateQueries({ queryKey: ORDERS_KEY });
     },
     [queryClient],
   );

@@ -3,11 +3,33 @@
 // filtra por id_pedido Y id_usuario: un pedido ajeno responde 404.
 // Forma tomada del código del backend; sin verificar con una respuesta viva.
 import api from "@/shared/api/client";
-import type { OrderDetail } from "@/features/orders/types";
+import type { OrderDetail, OrderSummary, OrdersPage } from "@/features/orders/types";
+
+/** Pedidos por página (el backend acepta de 1 a 50; por defecto 10). */
+export const ORDERS_PAGE_SIZE = 10;
 
 const status = (error: unknown) => (error as { response?: { status?: number } } | null)?.response?.status;
 
 export const orderRepository = {
+  /**
+   * Una página del historial, del pedido más reciente al más antiguo. El backend
+   * pagina por número de página: { data, meta: { total, page, limit, totalPages } }.
+   */
+  getPage: (page = 1, limit: number = ORDERS_PAGE_SIZE): Promise<OrdersPage> =>
+    api.get("/orders", { params: { page, limit } }).then((r) => {
+      const meta = r.data?.meta;
+      const num = (v: unknown, fallback: number) => (typeof v === "number" && Number.isFinite(v) ? v : fallback);
+      return {
+        data: Array.isArray(r.data?.data)
+          ? (r.data.data as OrderSummary[]).filter((o) => typeof o?.id_pedido === "number")
+          : [],
+        total: num(meta?.total, 0),
+        page: num(meta?.page, page),
+        limit: num(meta?.limit, limit),
+        totalPages: num(meta?.totalPages, 0),
+      };
+    }),
+
   /** Detalle de un pedido del usuario, o null si no existe o no es suyo (404). */
   getById: (id: number): Promise<OrderDetail | null> =>
     api.get(`/orders/${id}`).then(

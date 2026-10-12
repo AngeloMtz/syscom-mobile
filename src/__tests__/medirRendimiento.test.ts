@@ -9,12 +9,29 @@ const http = require("node:http");
 const os = require("node:os");
 const path = require("node:path");
 
-const SCRIPT = path.resolve(__dirname, "../../scripts/medir-rendimiento.mjs");
+const SCRIPT = path.resolve(process.cwd(), "scripts/medir-rendimiento.mjs");
 const TOKEN = "token-secreto-de-prueba-123";
 
 type Peticion = { metodo: string; ruta: string; auth: string | undefined; cliente: string | undefined };
 
-let server: import("node:http").Server;
+interface Req {
+  url?: string;
+  method?: string;
+  headers: Record<string, string | string[] | undefined>;
+  resume(): void;
+  on(evento: "end", fn: () => void): void;
+}
+interface Res {
+  writeHead(status: number, headers: Record<string, string>): void;
+  end(cuerpo: string): void;
+}
+interface Servidor {
+  listen(puerto: number, host: string, fn: () => void): void;
+  close(fn: () => void): void;
+  address(): { port: number };
+}
+
+let server: Servidor;
 let puerto = 0;
 let peticiones: Peticion[] = [];
 let fallarCart = false;
@@ -22,12 +39,12 @@ const consultasPorPi: Record<string, number> = {};
 let contadorPi = 0;
 
 beforeAll(async () => {
-  server = http.createServer((req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse) => {
+  server = http.createServer((req: Req, res: Res) => {
     const ruta = (req.url ?? "").split("?")[0];
     peticiones.push({
       metodo: req.method ?? "",
       ruta,
-      auth: req.headers.authorization,
+      auth: String(req.headers.authorization),
       cliente: req.headers["x-client"] as string | undefined,
     });
     const json = (status: number, cuerpo: unknown) => {
@@ -60,7 +77,7 @@ beforeAll(async () => {
     });
   });
   await new Promise<void>((r) => server.listen(0, "127.0.0.1", () => r()));
-  puerto = (server.address() as import("node:net").AddressInfo).port;
+  puerto = server.address().port;
 });
 
 afterAll(async () => {
@@ -90,8 +107,8 @@ function correr(env: Record<string, string>, args: string[] = [], stdin = ""): P
     const hijo = spawn(process.execPath, [SCRIPT, ...args], { env: { ...base, ...env } });
     let stdout = "";
     let stderr = "";
-    hijo.stdout.on("data", (d: Buffer) => (stdout += d));
-    hijo.stderr.on("data", (d: Buffer) => (stderr += d));
+    hijo.stdout.on("data", (d: unknown) => (stdout += String(d)));
+    hijo.stderr.on("data", (d: unknown) => (stderr += String(d)));
     hijo.on("close", (codigo: number | null) => resolve({ codigo, stdout, stderr }));
     hijo.stdin.end(stdin);
   });

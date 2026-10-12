@@ -139,12 +139,12 @@ function CheckoutView({ payment, stripeConfigured }: { payment: PaymentApi; stri
           <Text style={styles.primaryText}>Verificar de nuevo</Text>
         </Pressable>
         <Pressable
-          onPress={() => router.replace("/profile")}
+          onPress={() => router.replace("/orders")}
           accessibilityRole="button"
-          accessibilityLabel="Ir a mi cuenta"
+          accessibilityLabel="Ver mis pedidos"
           style={styles.link}
         >
-          <Text style={{ color: c.brandPrimary, fontWeight: "700" }}>Ir a mi cuenta</Text>
+          <Text style={{ color: c.brandPrimary, fontWeight: "700" }}>Ver mis pedidos</Text>
         </Pressable>
       </View>
     );

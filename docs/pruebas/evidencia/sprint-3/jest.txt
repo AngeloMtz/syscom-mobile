@@ -1,0 +1,171 @@
+PASS src/__tests__/authRepository.test.ts
+PASS src/__tests__/apiClient.test.ts
+PASS src/__tests__/useLogin.test.tsx
+PASS src/__tests__/useUpdateProfile.test.tsx
+PASS src/__tests__/useProfile.test.tsx
+PASS src/__tests__/useVerifyRegistration.test.tsx
+PASS src/__tests__/useConfirm2FA.test.tsx
+PASS src/__tests__/useCart.test.tsx
+PASS src/__tests__/integration/favoritosApi.test.tsx
+PASS src/__tests__/integration/catalogoApi.test.tsx
+PASS src/__tests__/integration/sesionCache.test.tsx
+PASS src/__tests__/components/CartSummary.test.tsx
+PASS src/__tests__/components/AddressCard.test.tsx
+PASS src/__tests__/useAddresses.test.tsx
+PASS src/__tests__/useOrders.test.tsx
+PASS src/__tests__/productRepository.test.ts
+PASS src/__tests__/addressRepository.test.ts
+PASS src/__tests__/useProduct.test.tsx
+PASS src/__tests__/favoriteRepository.test.ts
+PASS src/__tests__/cartRepository.test.ts
+PASS src/__tests__/useProducts.test.tsx
+PASS src/__tests__/paymentRepository.test.ts
+PASS src/__tests__/components/CartItemRow.test.tsx
+PASS src/__tests__/useFavorites.test.tsx
+PASS src/__tests__/profileRepository.test.ts
+PASS src/__tests__/components/OrderComponents.test.tsx
+PASS src/__tests__/categoryRepository.test.ts
+PASS src/__tests__/orderRepository.test.ts
+PASS src/__tests__/addressErrors.test.ts
+PASS src/__tests__/useDebouncedValue.test.tsx
+PASS src/__tests__/addressValidation.test.ts
+PASS src/__tests__/session.test.ts
+PASS src/__tests__/useOrder.test.tsx
+PASS src/__tests__/useCategories.test.tsx
+PASS src/__tests__/usePasswordRecovery.test.tsx
+PASS src/__tests__/validation.test.ts
+PASS src/__tests__/paymentSelectors.test.ts
+PASS src/__tests__/useResendCode.test.tsx
+PASS src/__tests__/paymentErrors.test.ts
+PASS src/__tests__/paymentReducer.test.ts
+PASS src/__tests__/cartSelectors.test.ts
+PASS src/__tests__/categories.test.ts
+PASS src/__tests__/orderList.test.ts
+PASS src/__tests__/paymentPolling.test.ts
+PASS src/__tests__/productDetail.test.ts
+PASS src/__tests__/queryClient.test.ts
+PASS src/__tests__/favoriteSelectors.test.ts
+PASS src/__tests__/paymentConfig.test.ts
+PASS src/__tests__/orderFormat.test.ts
+PASS src/__tests__/searchFilters.test.ts
+PASS src/__tests__/addressSelectors.test.ts
+PASS src/__tests__/errorMessage.test.ts
+PASS src/__tests__/products.test.ts
+PASS src/__tests__/priceValidation.test.ts
+PASS src/__tests__/useMe.test.tsx
+PASS src/__tests__/useRegister.test.tsx
+PASS src/__tests__/usePayment.test.tsx
+PASS src/__tests__/components/AddressForm.test.tsx
+---------------------------------|---------|----------|---------|---------|-------------------
+File                             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------------------|---------|----------|---------|---------|-------------------
+All files                        |   98.89 |    98.14 |    97.7 |   98.93 |                   
+ features/addresses              |     100 |      100 |     100 |     100 |                   
+  addressErrors.ts               |     100 |      100 |     100 |     100 |                   
+  addressSelectors.ts            |     100 |      100 |     100 |     100 |                   
+  addressValidation.ts           |     100 |      100 |     100 |     100 |                   
+  checkoutStore.ts               |     100 |      100 |     100 |     100 |                   
+ features/addresses/components   |   86.84 |      100 |   64.28 |   84.37 |                   
+  AddressCard.tsx                |     100 |      100 |     100 |     100 |                   
+  AddressForm.tsx                |   85.71 |      100 |   61.53 |   82.75 | 71-120            
+ features/addresses/hooks        |     100 |      100 |     100 |     100 |                   
+  useAddresses.ts                |     100 |      100 |     100 |     100 |                   
+  useCreateAddress.ts            |     100 |      100 |     100 |     100 |                   
+  useDeleteAddress.ts            |     100 |      100 |     100 |     100 |                   
+  useUpdateAddress.ts            |     100 |      100 |     100 |     100 |                   
+ features/addresses/repositories |     100 |      100 |     100 |     100 |                   
+  addressRepository.ts           |     100 |      100 |     100 |     100 |                   
+ features/auth                   |     100 |      100 |     100 |     100 |                   
+  validation.ts                  |     100 |      100 |     100 |     100 |                   
+ features/auth/hooks             |     100 |      100 |     100 |     100 |                   
+  useConfirm2FA.ts               |     100 |      100 |     100 |     100 |                   
+  useLogin.ts                    |     100 |      100 |     100 |     100 |                   
+  useMe.ts                       |     100 |      100 |     100 |     100 |                   
+  usePasswordRecovery.ts         |     100 |      100 |     100 |     100 |                   
+  useRegister.ts                 |     100 |      100 |     100 |     100 |                   
+  useResendCode.ts               |     100 |      100 |     100 |     100 |                   
+  useVerifyRegistration.ts       |     100 |      100 |     100 |     100 |                   
+ features/auth/repositories      |     100 |    85.71 |     100 |     100 |                   
+  authRepository.ts              |     100 |    85.71 |     100 |     100 | 21                
+ features/cart                   |     100 |      100 |     100 |     100 |                   
+  cartSelectors.ts               |     100 |      100 |     100 |     100 |                   
+ features/cart/components        |   94.44 |    97.87 |   66.66 |   94.44 |                   
+  CartItemRow.tsx                |   88.88 |       96 |      50 |   88.88 | 55                
+  CartSummary.tsx                |     100 |      100 |     100 |     100 |                   
+ features/cart/hooks             |     100 |      100 |     100 |     100 |                   
+  useAddToCart.ts                |     100 |      100 |     100 |     100 |                   
+  useCart.ts                     |     100 |      100 |     100 |     100 |                   
+  useRemoveCartItem.ts           |     100 |      100 |     100 |     100 |                   
+  useUpdateCartItem.ts           |     100 |      100 |     100 |     100 |                   
+ features/cart/repositories      |     100 |      100 |     100 |     100 |                   
+  cartRepository.ts              |     100 |      100 |     100 |     100 |                   
+ features/catalog                |     100 |    98.79 |     100 |     100 |                   
+  productDetail.ts               |     100 |    97.61 |     100 |     100 | 34                
+  searchFilters.ts               |     100 |      100 |     100 |     100 |                   
+  validation.ts                  |     100 |      100 |     100 |     100 |                   
+ features/catalog/hooks          |     100 |     90.9 |     100 |     100 |                   
+  useCategories.ts               |     100 |      100 |     100 |     100 |                   
+  useProduct.ts                  |     100 |      100 |     100 |     100 |                   
+  useProducts.ts                 |     100 |     87.5 |     100 |     100 | 22                
+ features/catalog/repositories   |     100 |      100 |     100 |     100 |                   
+  categoryRepository.ts          |     100 |      100 |     100 |     100 |                   
+  productRepository.ts           |     100 |      100 |     100 |     100 |                   
+ features/favorites              |     100 |      100 |     100 |     100 |                   
+  favoriteSelectors.ts           |     100 |      100 |     100 |     100 |                   
+ features/favorites/hooks        |     100 |      100 |     100 |     100 |                   
+  useFavorites.ts                |     100 |      100 |     100 |     100 |                   
+  useToggleFavorite.ts           |     100 |      100 |     100 |     100 |                   
+ features/favorites/repositories |     100 |      100 |     100 |     100 |                   
+  favoriteRepository.ts          |     100 |      100 |     100 |     100 |                   
+ features/orders                 |     100 |      100 |     100 |     100 |                   
+  orderFormat.ts                 |     100 |      100 |     100 |     100 |                   
+  orderList.ts                   |     100 |      100 |     100 |     100 |                   
+ features/orders/components      |   96.55 |    91.66 |   88.88 |   96.55 |                   
+  OrderCard.tsx                  |   91.66 |       90 |      75 |   91.66 | 52                
+  OrderDetailView.tsx            |     100 |    92.85 |     100 |     100 | 68                
+  OrderStatusBadge.tsx           |     100 |      100 |     100 |     100 |                   
+ features/orders/hooks           |     100 |    85.71 |     100 |     100 |                   
+  useOrder.ts                    |     100 |      100 |     100 |     100 |                   
+  useOrders.ts                   |     100 |       50 |     100 |     100 | 25                
+ features/orders/repositories    |     100 |      100 |     100 |     100 |                   
+  orderRepository.ts             |     100 |      100 |     100 |     100 |                   
+ features/payments               |     100 |      100 |     100 |     100 |                   
+  paymentConfig.ts               |     100 |      100 |     100 |     100 |                   
+  paymentErrors.ts               |     100 |      100 |     100 |     100 |                   
+  paymentPolling.ts              |     100 |      100 |     100 |     100 |                   
+  paymentReducer.ts              |     100 |      100 |     100 |     100 |                   
+  paymentSelectors.ts            |     100 |      100 |     100 |     100 |                   
+  paymentStore.ts                |     100 |      100 |     100 |     100 |                   
+ features/payments/hooks         |     100 |     92.1 |     100 |     100 |                   
+  usePayment.ts                  |     100 |     92.1 |     100 |     100 | 118,122-123       
+ features/payments/repositories  |     100 |      100 |     100 |     100 |                   
+  paymentRepository.ts           |     100 |      100 |     100 |     100 |                   
+ features/profile                |   89.47 |    85.71 |     100 |     100 |                   
+  validation.ts                  |   89.47 |    85.71 |     100 |     100 | 19-21             
+ features/profile/hooks          |     100 |      100 |     100 |     100 |                   
+  useProfile.ts                  |     100 |      100 |     100 |     100 |                   
+  useUpdateProfile.ts            |     100 |      100 |     100 |     100 |                   
+ features/profile/repositories   |     100 |      100 |     100 |     100 |                   
+  profileRepository.ts           |     100 |      100 |     100 |     100 |                   
+ shared/api                      |     100 |    95.23 |     100 |     100 |                   
+  client.ts                      |     100 |      100 |     100 |     100 |                   
+  errorMessage.ts                |     100 |    94.11 |     100 |     100 | 19                
+  queryClient.ts                 |     100 |      100 |     100 |     100 |                   
+  secureToken.ts                 |     100 |      100 |     100 |     100 |                   
+ shared/hooks                    |     100 |      100 |     100 |     100 |                   
+  useDebouncedValue.ts           |     100 |      100 |     100 |     100 |                   
+ shared/storage                  |      75 |      100 |   66.66 |      75 |                   
+  onboarding.ts                  |      75 |      100 |   66.66 |      75 | 31-32             
+ shared/store                    |     100 |      100 |     100 |     100 |                   
+  authStore.ts                   |     100 |      100 |     100 |     100 |                   
+  onboardingStore.ts             |     100 |      100 |     100 |     100 |                   
+ shared/utils                    |     100 |      100 |     100 |     100 |                   
+  format.ts                      |     100 |      100 |     100 |     100 |                   
+---------------------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 58 passed, 58 total
+Tests:       778 passed, 778 total
+Snapshots:   0 total
+Time:        8.678 s, estimated 11 s
+Ran all test suites.
+EXIT=0

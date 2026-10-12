@@ -60,6 +60,12 @@ describe("paymentRepository.getOrderStatus", () => {
     expect(await paymentRepository.getOrderStatus("pi_123")).toBeNull();
   });
 
+  it("deja el estado vacío si el servidor no lo envía", async () => {
+    responde({ data: { id_pedido: 12 } });
+
+    expect(await paymentRepository.getOrderStatus("pi_123")).toEqual({ id_pedido: 12, estado: "" });
+  });
+
   it("devuelve null si la respuesta no trae un pedido válido", async () => {
     responde({});
     expect(await paymentRepository.getOrderStatus("pi_123")).toBeNull();

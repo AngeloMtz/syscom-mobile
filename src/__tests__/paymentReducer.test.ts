@@ -118,6 +118,30 @@ describe("protecciones", () => {
   });
 });
 
+describe("acciones fuera de fase", () => {
+  const idle = initialPaymentState();
+
+  it("las acciones que no corresponden a la fase actual se ignoran", () => {
+    expect(run(idle, { type: "INTENT_CREATED", paymentIntentId: "pi_1" })).toBe(idle);
+    expect(run(idle, { type: "SHEET_OPENED" })).toBe(idle);
+    expect(run(idle, { type: "VERIFY" })).toBe(idle);
+    expect(run(idle, { type: "ORDER_FOUND", orderId: 1 })).toBe(idle);
+    expect(run(idle, { type: "POLL_EXHAUSTED" })).toBe(idle);
+    expect(run(idle, { type: "FAILED", message: "x" })).toBe(idle);
+    expect(run(idle, { type: "CANCELED", message: "x" })).toBe(idle);
+  });
+
+  it("un error tardío no pisa un pago ya confirmado", () => {
+    const paid = run(
+      initialPaymentState("pi_1"),
+      { type: "VERIFY" },
+      { type: "ORDER_FOUND", orderId: 3 },
+    );
+    expect(run(paid, { type: "FAILED", message: "x" })).toBe(paid);
+    expect(run(paid, { type: "CANCELED", message: "x" })).toBe(paid);
+  });
+});
+
 describe("isBusy / isCartLocked", () => {
   it("ocupado en creating, preparing, sheet y verifying", () => {
     const base = initialPaymentState();

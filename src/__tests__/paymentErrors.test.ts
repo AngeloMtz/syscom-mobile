@@ -158,6 +158,10 @@ describe("classifyPaymentSheetError", () => {
     expect(result.message).toBe("Tu tarjeta ha caducado.");
   });
 
+  it("un error sin mensaje ni código es ambiguo", () => {
+    expect(classifyPaymentSheetError({}).kind).toBe("ambiguous");
+  });
+
   it("sin error devuelve ambiguo con mensaje genérico", () => {
     expect(classifyPaymentSheetError(undefined).kind).toBe("ambiguous");
   });

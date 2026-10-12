@@ -232,6 +232,17 @@ describe("usePayment: errores ambiguos se verifican antes de decir que falló", 
     expect(result.current.payment.state).toMatchObject({ phase: "paid", orderId: 9 });
   });
 
+  it("una excepción al preparar la hoja tampoco pudo cobrar", async () => {
+    initPaymentSheet.mockRejectedValueOnce(new Error("native crash"));
+    const { result } = await montar();
+
+    await pagar(result);
+
+    expect(presentPaymentSheet).not.toHaveBeenCalled();
+    expect(repo.getOrderStatus).not.toHaveBeenCalled();
+    expect(result.current.payment.state.message).toBe("No pudimos preparar el pago. Intenta de nuevo.");
+  });
+
   it("un fallo al preparar la hoja no pudo cobrar: falla sin consultar el pedido", async () => {
     initPaymentSheet.mockResolvedValueOnce({ error: { code: "Failed", message: "Network request failed" } });
     const { result } = await montar();
@@ -317,6 +328,80 @@ describe("usePayment: polling", () => {
 
     expect(repo.getOrderStatus.mock.calls[0][0]).toBe("pi_77");
     expect(result.current.payment.state.phase).toBe("paid");
+  });
+});
+
+describe("usePayment: casos límite", () => {
+  it("PaymentIntent ya pagado cuyo pedido no aparece queda pendiente, no fallido", async () => {
+    initPaymentSheet.mockResolvedValueOnce({
+      error: { code: "Failed", message: "PaymentSheet cannot set up a PaymentIntent in status 'succeeded'." },
+    });
+    repo.getOrderStatus.mockResolvedValue(null);
+    const { result } = await montar();
+
+    await pagar(result);
+
+    expect(repo.getOrderStatus).toHaveBeenCalledTimes(20);
+    expect(result.current.payment.state.phase).toBe("pending");
+  });
+
+  it("salir de la pantalla durante la espera detiene las consultas y libera el carrito", async () => {
+    repo.getOrderStatus.mockResolvedValue(null);
+    const { result, unmount } = await montar();
+
+    let promesa!: Promise<void>;
+    await act(async () => {
+      promesa = result.current.payment.pay(5);
+    });
+    await avanzar(4000);
+    const antes = repo.getOrderStatus.mock.calls.length;
+    await act(async () => {
+      unmount();
+    });
+    await avanzar(60000);
+    await act(async () => {
+      await promesa;
+    });
+
+    expect(repo.getOrderStatus.mock.calls.length).toBeLessThanOrEqual(antes + 1);
+    expect(usePaymentStore.getState().locked).toBe(false);
+  });
+
+  it("pay se ignora si el pago ya está pendiente: nunca crea otro PaymentIntent", async () => {
+    usePaymentStore.setState({ locked: true, pendingPaymentIntentId: "pi_77" });
+    const { result } = await montar();
+
+    await act(async () => {
+      await result.current.payment.pay(5);
+    });
+
+    expect(repo.createCheckout).not.toHaveBeenCalled();
+    expect(result.current.payment.state.phase).toBe("pending");
+  });
+
+  it("verificar de nuevo sin un pago pendiente no consulta nada", async () => {
+    const { result } = await montar();
+
+    await act(async () => {
+      await result.current.payment.recheck();
+    });
+
+    expect(repo.getOrderStatus).not.toHaveBeenCalled();
+  });
+
+  it("reset vuelve al reposo después de fallar", async () => {
+    presentPaymentSheet.mockResolvedValueOnce({
+      error: { code: "Failed", message: "x", declineCode: "generic_decline" },
+    });
+    const { result } = await montar();
+    await pagar(result);
+    expect(result.current.payment.state.phase).toBe("failed");
+
+    await act(async () => {
+      result.current.payment.reset();
+    });
+
+    expect(result.current.payment.state.phase).toBe("idle");
   });
 });
 

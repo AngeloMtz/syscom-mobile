@@ -15,9 +15,11 @@ type Props = {
   onDecrease: () => void;
   onRemove: () => void;
   onOpen?: () => void;
+  /** Pago en curso: no se edita el carrito. */
+  disabled?: boolean;
 };
 
-export default function CartItemRow({ line, onIncrease, onDecrease, onRemove, onOpen }: Props) {
+export default function CartItemRow({ line, onIncrease, onDecrease, onRemove, onOpen, disabled }: Props) {
   const c = useColors();
   const [imageFailed, setImageFailed] = useState(false);
   const price = line.precioUnitario !== null ? formatPrice(line.precioUnitario) : "Precio no disponible";
@@ -72,6 +74,7 @@ export default function CartItemRow({ line, onIncrease, onDecrease, onRemove, on
 
         <Pressable
           onPress={onRemove}
+          disabled={disabled}
           hitSlop={8}
           accessibilityRole="button"
           accessibilityLabel={`Quitar ${line.nombre} del carrito`}
@@ -94,6 +97,7 @@ export default function CartItemRow({ line, onIncrease, onDecrease, onRemove, on
         {unavailable ? (
           <Pressable
             onPress={onRemove}
+            disabled={disabled}
             accessibilityRole="button"
             accessibilityLabel={`Quitar ${line.nombre} del carrito`}
             style={[styles.removeBtn, { borderColor: c.danger }]}
@@ -104,11 +108,11 @@ export default function CartItemRow({ line, onIncrease, onDecrease, onRemove, on
           <View style={styles.stepper} accessibilityRole="adjustable" accessibilityLabel={`Cantidad de ${line.nombre}`}>
             <Pressable
               onPress={onDecrease}
-              disabled={!line.canDecrease}
+              disabled={disabled || !line.canDecrease}
               accessibilityRole="button"
               accessibilityLabel={`Disminuir cantidad de ${line.nombre}`}
-              accessibilityState={{ disabled: !line.canDecrease }}
-              style={[styles.stepBtn, { borderColor: c.border, opacity: line.canDecrease ? 1 : 0.4 }]}
+              accessibilityState={{ disabled: disabled || !line.canDecrease }}
+              style={[styles.stepBtn, { borderColor: c.border, opacity: !disabled && line.canDecrease ? 1 : 0.4 }]}
             >
               <Ionicons name="remove" size={18} color={c.text} />
             </Pressable>
@@ -120,11 +124,11 @@ export default function CartItemRow({ line, onIncrease, onDecrease, onRemove, on
             </Text>
             <Pressable
               onPress={onIncrease}
-              disabled={!line.canIncrease}
+              disabled={disabled || !line.canIncrease}
               accessibilityRole="button"
               accessibilityLabel={`Aumentar cantidad de ${line.nombre}`}
-              accessibilityState={{ disabled: !line.canIncrease }}
-              style={[styles.stepBtn, { borderColor: c.border, opacity: line.canIncrease ? 1 : 0.4 }]}
+              accessibilityState={{ disabled: disabled || !line.canIncrease }}
+              style={[styles.stepBtn, { borderColor: c.border, opacity: !disabled && line.canIncrease ? 1 : 0.4 }]}
             >
               <Ionicons name="add" size={18} color={c.text} />
             </Pressable>

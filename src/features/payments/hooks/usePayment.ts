@@ -44,12 +44,12 @@ export const usePayment = () => {
     initialPaymentState(usePaymentStore.getState().pendingPaymentIntentId),
   );
   const stateRef = useRef(state);
-  stateRef.current = state;
   const inFlight = useRef(false);
   const unmounted = useRef(false);
 
   // Refleja el estado en el store para bloquear el carrito y retomar un pendiente.
   useEffect(() => {
+    stateRef.current = state;
     usePaymentStore
       .getState()
       .setLock(isCartLocked(state), state.phase === "pending" ? state.paymentIntentId : null);

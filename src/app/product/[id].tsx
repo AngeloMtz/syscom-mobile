@@ -27,6 +27,7 @@ import {
   pickInitialVariant,
 } from "@/features/catalog/productDetail";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
+import { usePaymentStore } from "@/features/payments/paymentStore";
 import { useAuthStore } from "@/shared/store/authStore";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import { formatPrice } from "@/shared/utils/format";
@@ -47,6 +48,7 @@ export default function ProductDetailScreen() {
   const [cartFeedback, setCartFeedback] = useState<CartFeedback | null>(null);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const addToCart = useAddToCart();
+  const paymentLocked = usePaymentStore((s) => s.locked);
 
   const title = <Stack.Screen options={{ title: "Producto" }} />;
 
@@ -110,6 +112,7 @@ export default function ProductDetailScreen() {
   const stockVariant = selected ?? (variantes.length === 1 ? variantes[0] : null);
 
   const onAddToCart = () => {
+    if (paymentLocked) return;
     if (!isAuthenticated) {
       router.push("/(auth)/login");
       return;
@@ -249,15 +252,21 @@ export default function ProductDetailScreen() {
         ) : null}
         <Pressable
           onPress={onAddToCart}
-          disabled={soldOut || addToCart.isPending}
+          disabled={soldOut || addToCart.isPending || paymentLocked}
           accessibilityRole="button"
           accessibilityLabel={soldOut ? "Agregar al carrito, producto agotado" : "Agregar al carrito"}
-          accessibilityState={{ disabled: soldOut || addToCart.isPending, busy: addToCart.isPending }}
+          accessibilityState={{ disabled: soldOut || addToCart.isPending || paymentLocked, busy: addToCart.isPending }}
           style={[styles.primary, styles.cta, { backgroundColor: soldOut ? c.border : c.brandPrimary }]}
         >
           <Ionicons name="cart-outline" size={20} color={soldOut ? c.textMuted : "#fff"} />
           <Text style={[styles.primaryText, soldOut && { color: c.textMuted }]}>
-            {soldOut ? "Agotado" : addToCart.isPending ? "Agregando…" : "Agregar al carrito"}
+            {soldOut
+              ? "Agotado"
+              : paymentLocked
+                ? "Hay un pago en proceso"
+                : addToCart.isPending
+                  ? "Agregando…"
+                  : "Agregar al carrito"}
           </Text>
         </Pressable>
       </View>

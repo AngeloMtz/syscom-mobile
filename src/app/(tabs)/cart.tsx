@@ -21,6 +21,7 @@ import { useCart } from "@/features/cart/hooks/useCart";
 import { useRemoveCartItem } from "@/features/cart/hooks/useRemoveCartItem";
 import { useUpdateCartItem } from "@/features/cart/hooks/useUpdateCartItem";
 import { MAX_CART_LINES } from "@/features/cart/repositories/cartRepository";
+import { usePaymentStore } from "@/features/payments/paymentStore";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 
@@ -32,6 +33,9 @@ function CartContent() {
   const { data, isLoading, isError, error, refetch, isRefetching } = useCart();
   const update = useUpdateCartItem();
   const remove = useRemoveCartItem();
+  // Mientras se paga (o se confirma el pedido) el carrito no se edita: el webhook
+  // arma el pedido con el carrito del servidor en ese momento.
+  const locked = usePaymentStore((s) => s.locked);
 
   // Dirección de envío: la elegida, o la más reciente (el backend no tiene "por defecto").
   const addresses = useAddresses();
@@ -46,8 +50,10 @@ function CartContent() {
 
   const fail = (e: unknown) =>
     Alert.alert("No se pudo actualizar tu carrito", apiErrorMessage(e));
-  const setQuantity = (productId: number, cantidad: number) =>
+  const setQuantity = (productId: number, cantidad: number) => {
+    if (locked) return;
     update.mutate({ productId, cantidad }, { onError: fail });
+  };
 
   if (isLoading) {
     return (
@@ -113,23 +119,39 @@ function CartContent() {
             onOpen={() => openProduct(line.id)}
             onIncrease={() => setQuantity(line.id, line.cantidad + 1)}
             onDecrease={() => setQuantity(line.id, line.cantidad - 1)}
-            onRemove={() => remove.mutate(line.id, { onError: fail })}
+            disabled={locked}
+            onRemove={() => {
+              if (!locked) remove.mutate(line.id, { onError: fail });
+            }}
           />
         )}
         onRefresh={refetch}
         refreshing={isRefetching}
         ListHeaderComponent={
-          data?.truncated ? (
-            <View
-              style={[styles.notice, { backgroundColor: c.card, borderColor: c.border }]}
-              accessibilityRole="alert"
-            >
-              <Ionicons name="information-circle-outline" size={18} color={c.textMuted} />
-              <Text style={[styles.noticeText, { color: c.textMuted }]}>
-                Mostramos las {MAX_CART_LINES} líneas más recientes de {data.total}. El total incluye todas.
-              </Text>
-            </View>
-          ) : null
+          <>
+            {locked ? (
+              <View
+                style={[styles.notice, { backgroundColor: c.card, borderColor: c.border }]}
+                accessibilityRole="alert"
+              >
+                <Ionicons name="lock-closed-outline" size={18} color={c.textMuted} />
+                <Text style={[styles.noticeText, { color: c.textMuted }]}>
+                  Hay un pago en proceso. Podrás editar tu carrito cuando termine.
+                </Text>
+              </View>
+            ) : null}
+            {data?.truncated ? (
+              <View
+                style={[styles.notice, { backgroundColor: c.card, borderColor: c.border }]}
+                accessibilityRole="alert"
+              >
+                <Ionicons name="information-circle-outline" size={18} color={c.textMuted} />
+                <Text style={[styles.noticeText, { color: c.textMuted }]}>
+                  Mostramos las {MAX_CART_LINES} líneas más recientes de {data.total}. El total incluye todas.
+                </Text>
+              </View>
+            ) : null}
+          </>
         }
       />
       <CartSummary
@@ -140,6 +162,7 @@ function CartContent() {
         addressState={addressState}
         addressLine={address ? formatAddressLine(address) : null}
         onChangeAddress={changeAddress}
+        onCheckout={() => router.push("/checkout")}
       />
     </View>
   );

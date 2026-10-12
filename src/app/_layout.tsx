@@ -14,6 +14,7 @@ import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import OnboardingFlow from "@/features/onboarding/components/OnboardingFlow";
+import PaymentsProvider from "@/features/payments/components/PaymentsProvider";
 import { queryClient } from "@/shared/api/queryClient";
 import { useAuthStore } from "@/shared/store/authStore";
 import { useOnboardingStore } from "@/shared/store/onboardingStore";
@@ -42,30 +43,32 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <View style={{ flex: 1, backgroundColor: c.background }}>
-          {onboardingCompleted ? (
-            <Stack
-              screenOptions={{
-                headerStyle: { backgroundColor: c.card },
-                headerTintColor: c.brandPrimary,
-                headerTitleStyle: { color: c.text, fontWeight: "700" },
-                contentStyle: { backgroundColor: c.background },
-              }}
-            >
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="profile/personal-data"
-                options={{ title: "Datos personales" }}
-              />
-            </Stack>
-          ) : (
-            // Al completar, el flag cambia y el Stack monta solo: el guard de
-            // cada grupo decide entonces entre (auth) y (tabs).
-            <OnboardingFlow onFinish={completeOnboarding} />
-          )}
-          <StatusBar style="dark" />
-        </View>
+        <PaymentsProvider>
+          <View style={{ flex: 1, backgroundColor: c.background }}>
+            {onboardingCompleted ? (
+              <Stack
+                screenOptions={{
+                  headerStyle: { backgroundColor: c.card },
+                  headerTintColor: c.brandPrimary,
+                  headerTitleStyle: { color: c.text, fontWeight: "700" },
+                  contentStyle: { backgroundColor: c.background },
+                }}
+              >
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="profile/personal-data"
+                  options={{ title: "Datos personales" }}
+                />
+              </Stack>
+            ) : (
+              // Al completar, el flag cambia y el Stack monta solo: el guard de
+              // cada grupo decide entonces entre (auth) y (tabs).
+              <OnboardingFlow onFinish={completeOnboarding} />
+            )}
+            <StatusBar style="dark" />
+          </View>
+        </PaymentsProvider>
       </SafeAreaProvider>
     </QueryClientProvider>
   );

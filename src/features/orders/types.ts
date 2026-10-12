@@ -56,4 +56,26 @@ export interface OrderDetail {
   pago: OrderPayment | null;
 }
 
+/** Pedido de la lista (GET /orders): vista resumida. */
+export interface OrderSummary {
+  id_pedido: number;
+  estado: string;
+  /** Prisma Decimal: número o texto. */
+  total: number | string;
+  fecha_pedido: string | null;
+  /** Número de LÍNEAS del pedido (no de unidades). */
+  total_items: number;
+  primer_producto: string;
+  imagen_preview: string | null;
+}
+
+/** Una página de GET /orders tal como la entrega el repository. */
+export interface OrdersPage {
+  data: OrderSummary[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export type StatusTone = "success" | "info" | "warning" | "neutral" | "danger";

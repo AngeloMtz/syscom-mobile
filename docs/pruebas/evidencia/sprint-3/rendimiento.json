@@ -1,0 +1,87 @@
+{
+  "fecha": "2026-10-13T04:26:15.174Z",
+  "modo": "escritura",
+  "aviso": "Tiempos medidos contra el backend local con la base en una rama de Neon. No representan producción (Railway).",
+  "api": "http://localhost:4000/api",
+  "repeticiones": 20,
+  "umbralesMs": {
+    "lectura": 1000,
+    "carrito": 1500,
+    "checkout": 3000,
+    "webhook": 10000
+  },
+  "mediciones": [
+    {
+      "nombre": "GET /cart",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 149.57759999999962,
+      "p50": 163.12199999999984,
+      "p95": 177.66980000000012,
+      "max": 660.2437,
+      "media": 189,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /profile/addresses",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 154.47640000000047,
+      "p50": 168.21309999999994,
+      "p95": 193.0039000000006,
+      "max": 205.14869999999974,
+      "media": 169.77,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /orders",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 366.85169999999925,
+      "p50": 380.9341000000004,
+      "p95": 388.3036000000011,
+      "max": 398.10739999999896,
+      "media": 380.86,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "POST /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 20,
+      "min": 628.2748000000029,
+      "p50": 663.5082000000002,
+      "p95": 842.3267999999989,
+      "max": 937.5980000000018,
+      "media": 682.65,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "PATCH /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 20,
+      "min": 295.1196999999993,
+      "p50": 307.2331000000049,
+      "p95": 328.5326000000023,
+      "max": 328.65009999999893,
+      "media": 309.48,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "DELETE /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 1,
+      "min": 317.93909999999596,
+      "p50": 317.93909999999596,
+      "p95": 317.93909999999596,
+      "max": 317.93909999999596,
+      "media": 317.94,
+      "errores": 19,
+      "veredicto": "cumple"
+    }
+  ]
+}

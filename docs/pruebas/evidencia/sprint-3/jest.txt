@@ -1,61 +1,65 @@
+PASS src/__tests__/apiClient.test.ts (8.427 s)
+PASS src/__tests__/medirRendimiento.test.ts (6.779 s)
+PASS src/__tests__/useLogin.test.tsx (7.398 s)
+PASS src/__tests__/useVerifyRegistration.test.tsx (7.667 s)
+PASS src/__tests__/useProfile.test.tsx (7.949 s)
+PASS src/__tests__/useUpdateProfile.test.tsx (7.884 s)
+PASS src/__tests__/useConfirm2FA.test.tsx (8.08 s)
+PASS src/__tests__/useCart.test.tsx (8.319 s)
 PASS src/__tests__/authRepository.test.ts
-PASS src/__tests__/apiClient.test.ts
-PASS src/__tests__/useLogin.test.tsx
-PASS src/__tests__/useUpdateProfile.test.tsx
-PASS src/__tests__/useProfile.test.tsx
-PASS src/__tests__/useVerifyRegistration.test.tsx
-PASS src/__tests__/useConfirm2FA.test.tsx
-PASS src/__tests__/useCart.test.tsx
-PASS src/__tests__/integration/favoritosApi.test.tsx
-PASS src/__tests__/integration/catalogoApi.test.tsx
+PASS src/__tests__/perfGuard.test.ts
+PASS src/__tests__/integration/sesionCompra.test.tsx (11.466 s)
+PASS src/__tests__/components/CartSummary.test.tsx (9.752 s)
+PASS src/__tests__/components/AddressCard.test.tsx (9.657 s)
+PASS src/__tests__/integration/compraDeExtremoAExtremo.test.tsx (12.766 s)
+PASS src/__tests__/useMe.test.tsx
 PASS src/__tests__/integration/sesionCache.test.tsx
-PASS src/__tests__/components/CartSummary.test.tsx
-PASS src/__tests__/components/AddressCard.test.tsx
+PASS src/__tests__/addressRepository.test.ts
+PASS src/__tests__/favoriteRepository.test.ts
+PASS src/__tests__/integration/favoritosApi.test.tsx
+PASS src/__tests__/categoryRepository.test.ts
+PASS src/__tests__/components/AddressForm.test.tsx (11.93 s)
+PASS src/__tests__/paymentRepository.test.ts
+PASS src/__tests__/integration/catalogoApi.test.tsx
+PASS src/__tests__/usePayment.test.tsx
+PASS src/__tests__/components/CartItemRow.test.tsx (12.091 s)
+PASS src/__tests__/components/OrderComponents.test.tsx (12.112 s)
+PASS src/__tests__/productRepository.test.ts
+PASS src/__tests__/profileRepository.test.ts
+PASS src/__tests__/useCategories.test.tsx
+PASS src/__tests__/cartRepository.test.ts
+PASS src/__tests__/useProduct.test.tsx
 PASS src/__tests__/useAddresses.test.tsx
 PASS src/__tests__/useOrders.test.tsx
-PASS src/__tests__/productRepository.test.ts
-PASS src/__tests__/addressRepository.test.ts
-PASS src/__tests__/useProduct.test.tsx
-PASS src/__tests__/favoriteRepository.test.ts
-PASS src/__tests__/cartRepository.test.ts
-PASS src/__tests__/useProducts.test.tsx
-PASS src/__tests__/paymentRepository.test.ts
-PASS src/__tests__/components/CartItemRow.test.tsx
 PASS src/__tests__/useFavorites.test.tsx
-PASS src/__tests__/profileRepository.test.ts
-PASS src/__tests__/components/OrderComponents.test.tsx
-PASS src/__tests__/categoryRepository.test.ts
-PASS src/__tests__/orderRepository.test.ts
-PASS src/__tests__/addressErrors.test.ts
-PASS src/__tests__/useDebouncedValue.test.tsx
-PASS src/__tests__/addressValidation.test.ts
-PASS src/__tests__/session.test.ts
-PASS src/__tests__/useOrder.test.tsx
-PASS src/__tests__/useCategories.test.tsx
-PASS src/__tests__/usePasswordRecovery.test.tsx
-PASS src/__tests__/validation.test.ts
-PASS src/__tests__/paymentSelectors.test.ts
-PASS src/__tests__/useResendCode.test.tsx
-PASS src/__tests__/paymentErrors.test.ts
-PASS src/__tests__/paymentReducer.test.ts
-PASS src/__tests__/cartSelectors.test.ts
-PASS src/__tests__/categories.test.ts
-PASS src/__tests__/orderList.test.ts
-PASS src/__tests__/paymentPolling.test.ts
-PASS src/__tests__/productDetail.test.ts
-PASS src/__tests__/queryClient.test.ts
-PASS src/__tests__/favoriteSelectors.test.ts
-PASS src/__tests__/paymentConfig.test.ts
-PASS src/__tests__/orderFormat.test.ts
-PASS src/__tests__/searchFilters.test.ts
-PASS src/__tests__/addressSelectors.test.ts
-PASS src/__tests__/errorMessage.test.ts
-PASS src/__tests__/products.test.ts
-PASS src/__tests__/priceValidation.test.ts
-PASS src/__tests__/useMe.test.tsx
 PASS src/__tests__/useRegister.test.tsx
-PASS src/__tests__/usePayment.test.tsx
-PASS src/__tests__/components/AddressForm.test.tsx
+PASS src/__tests__/orderRepository.test.ts
+PASS src/__tests__/session.test.ts
+PASS src/__tests__/useDebouncedValue.test.tsx
+PASS src/__tests__/cartSelectors.test.ts
+PASS src/__tests__/useResendCode.test.tsx
+PASS src/__tests__/usePasswordRecovery.test.tsx
+PASS src/__tests__/addressSelectors.test.ts
+PASS src/__tests__/useProducts.test.tsx
+PASS src/__tests__/paymentSelectors.test.ts
+PASS src/__tests__/addressValidation.test.ts
+PASS src/__tests__/favoriteSelectors.test.ts
+PASS src/__tests__/useOrder.test.tsx
+PASS src/__tests__/queryClient.test.ts
+PASS src/__tests__/orderFormat.test.ts
+PASS src/__tests__/addressErrors.test.ts
+PASS src/__tests__/productDetail.test.ts
+PASS src/__tests__/validation.test.ts
+PASS src/__tests__/searchFilters.test.ts
+PASS src/__tests__/paymentErrors.test.ts
+PASS src/__tests__/products.test.ts
+PASS src/__tests__/orderList.test.ts
+PASS src/__tests__/errorMessage.test.ts
+PASS src/__tests__/paymentPolling.test.ts
+PASS src/__tests__/categories.test.ts
+PASS src/__tests__/paymentConfig.test.ts
+PASS src/__tests__/priceValidation.test.ts
+PASS src/__tests__/paymentReducer.test.ts
 ---------------------------------|---------|----------|---------|---------|-------------------
 File                             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 ---------------------------------|---------|----------|---------|---------|-------------------
@@ -163,9 +167,9 @@ All files                        |   98.89 |    98.14 |    97.7 |   98.93 |
   format.ts                      |     100 |      100 |     100 |     100 |                   
 ---------------------------------|---------|----------|---------|---------|-------------------
 
-Test Suites: 58 passed, 58 total
-Tests:       778 passed, 778 total
+Test Suites: 62 passed, 62 total
+Tests:       834 passed, 834 total
 Snapshots:   0 total
-Time:        8.678 s, estimated 11 s
+Time:        22.637 s
 Ran all test suites.
 EXIT=0

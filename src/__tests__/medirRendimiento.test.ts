@@ -35,6 +35,9 @@ let server: Servidor;
 let puerto = 0;
 let peticiones: Peticion[] = [];
 let fallarCart = false;
+let sinDirecciones = false;
+// El carrito falso solo tiene el ítem de prueba: un DELETE sin ítem responde 404, como el backend.
+let itemEnCarrito = false;
 const consultasPorPi: Record<string, number> = {};
 let contadorPi = 0;
 
@@ -57,10 +60,19 @@ beforeAll(async () => {
         if (fallarCart) return json(500, { success: false, message: "boom" });
         return json(200, { success: true, data: [], meta: { total: 0, totalPrice: "0.00" } });
       }
-      if (ruta === "/api/profile/addresses") return json(200, { success: true, data: [{ id_direccion: 3 }] });
+      if (ruta === "/api/profile/addresses") {
+        return json(200, { success: true, data: sinDirecciones ? [] : [{ id_direccion: 3 }] });
+      }
       if (ruta === "/api/orders") return json(200, { success: true, data: [{ id_pedido: 8 }], meta: { total: 1 } });
       if (ruta === "/api/orders/8") return json(200, { success: true, data: { id_pedido: 8 } });
-      if (/^\/api\/cart\/items\/\d+$/.test(ruta)) return json(200, { success: true });
+      if (/^\/api\/cart\/items\/\d+$/.test(ruta)) {
+        if (req.method === "POST") itemEnCarrito = true;
+        if (req.method === "DELETE") {
+          if (!itemEnCarrito) return json(404, { success: false, message: "El producto no está en el carrito" });
+          itemEnCarrito = false;
+        }
+        return json(200, { success: true });
+      }
       if (ruta === "/api/payments/checkout") {
         contadorPi += 1;
         return json(200, { success: true, data: { clientSecret: `pi_t${contadorPi}_secret`, paymentIntentId: `pi_t${contadorPi}` } });
@@ -87,6 +99,8 @@ afterAll(async () => {
 beforeEach(() => {
   peticiones = [];
   fallarCart = false;
+  sinDirecciones = false;
+  itemEnCarrito = false;
   contadorPi = 0;
   for (const k of Object.keys(consultasPorPi)) delete consultasPorPi[k];
 });
@@ -181,6 +195,7 @@ describe("scripts/medir-rendimiento.mjs: medición", () => {
     const datos = JSON.parse(fs.readFileSync(salida, "utf8"));
     const cart = datos.mediciones.find((m: { nombre: string }) => m.nombre === "GET /cart");
     expect(cart.errores).toBe(3);
+    expect(cart.veredicto).toBe("sin datos");
     fs.unlinkSync(salida);
   });
 
@@ -207,6 +222,36 @@ describe("scripts/medir-rendimiento.mjs: medición", () => {
       ]),
     );
     expect(r.stdout + r.stderr).not.toContain(TOKEN);
+    fs.unlinkSync(salida);
+  });
+
+  it("DELETE se mide sobre un ítem presente en cada repetición (sin errores 404 por borrar dos veces)", async () => {
+    const salida = salidaJson();
+    const r = await correr(
+      { PERF_API_URL: local(), PERF_TOKEN: TOKEN, PERF_N: "4", PERF_DB_ES_RAMA: "si", PERF_PRODUCT_ID: "7" },
+      ["--con-escrituras", `--salida=${salida}`],
+    );
+
+    expect(r.codigo).toBe(0);
+    const datos = JSON.parse(fs.readFileSync(salida, "utf8"));
+    const borrar = datos.mediciones.find((m: { nombre: string }) => m.nombre === "DELETE /cart/items/:id");
+    expect(borrar).toMatchObject({ n: 4, errores: 0 });
+    fs.unlinkSync(salida);
+  });
+
+  it("deja registrado en el JSON lo que se omitió y por qué (cuenta sin direcciones)", async () => {
+    sinDirecciones = true;
+    const salida = salidaJson();
+    const r = await correr(
+      { PERF_API_URL: local(), PERF_TOKEN: TOKEN, PERF_N: "2", PERF_DB_ES_RAMA: "si", PERF_PRODUCT_ID: "7" },
+      ["--con-escrituras", `--salida=${salida}`],
+    );
+
+    expect(r.codigo).toBe(0);
+    const datos = JSON.parse(fs.readFileSync(salida, "utf8"));
+    expect(datos.omitidas).toEqual(
+      expect.arrayContaining([expect.objectContaining({ nombre: "POST /payments/checkout", motivo: expect.stringMatching(/direcci/) })]),
+    );
     fs.unlinkSync(salida);
   });
 

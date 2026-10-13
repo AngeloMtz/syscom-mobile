@@ -74,6 +74,8 @@ async function pedir(metodo, ruta, cuerpo) {
 }
 
 const mediciones = [];
+/** Mediciones que no se pudieron hacer, con el motivo (queda en el JSON). */
+const omitidas = [];
 
 /** Repite `n` veces una petición y registra estadísticas + veredicto contra el umbral. */
 async function medir(nombre, umbralMs, n, hacer) {
@@ -90,7 +92,8 @@ async function medir(nombre, umbralMs, n, hacer) {
     umbralMs,
     ...est,
     errores,
-    veredicto: errores > 0 && est.n === 0 ? "sin datos" : veredicto(est.p95, umbralMs),
+    // Con errores no se declara "cumple": los tiempos de las peticiones fallidas no cuentan y falsean el p95.
+    veredicto: est.n === 0 ? "sin datos" : errores > 0 ? "con errores" : veredicto(est.p95, umbralMs),
   };
   mediciones.push(m);
   const f = (v) => (v === null ? "-" : v.toFixed(0));
@@ -188,6 +191,7 @@ async function principal() {
   if (idPedido !== null) {
     await medir("GET /orders/:id", UMBRALES_MS.lectura, repeticiones, () => pedir("GET", `/orders/${idPedido}`));
   } else {
+    omitidas.push({ nombre: "GET /orders/:id", motivo: "la cuenta de prueba no tiene pedidos" });
     console.log("GET /orders/:id             omitido: la cuenta no tiene pedidos.");
   }
 
@@ -198,13 +202,18 @@ async function principal() {
     const item = `/cart/items/${id}`;
     await medir("POST /cart/items/:id", UMBRALES_MS.carrito, repeticiones, () => pedir("POST", item));
     await medir("PATCH /cart/items/:id", UMBRALES_MS.carrito, repeticiones, () => pedir("PATCH", item, { cantidad: 1 }));
-    await medir("DELETE /cart/items/:id", UMBRALES_MS.carrito, repeticiones, () => pedir("DELETE", item));
+    // Cada DELETE necesita un ítem presente: se agrega antes (sin medirlo) y solo se cronometra el DELETE.
+    await medir("DELETE /cart/items/:id", UMBRALES_MS.carrito, repeticiones, async () => {
+      await pedir("POST", item);
+      return pedir("DELETE", item);
+    });
 
     // Checkout: necesita carrito con el producto y una dirección. Crea PaymentIntents de prueba sin confirmar.
     await pedir("POST", item);
     const dir = await pedir("GET", "/profile/addresses");
     const idDireccion = dir.cuerpo?.data?.[0]?.id_direccion;
     if (idDireccion === undefined) {
+      omitidas.push({ nombre: "POST /payments/checkout", motivo: "la cuenta de prueba no tiene direcciones guardadas" });
       console.log("POST /payments/checkout     omitido: la cuenta de prueba no tiene direcciones.");
     } else {
       await medir("POST /payments/checkout", UMBRALES_MS.checkout, repeticiones, () =>
@@ -224,6 +233,7 @@ async function principal() {
     repeticiones,
     umbralesMs: UMBRALES_MS,
     mediciones,
+    omitidas,
     ...(resultadoWebhook ? { webhook: resultadoWebhook } : {}),
   };
   mkdirSync(dirname(salida), { recursive: true });

@@ -2,7 +2,8 @@
 // Solo presentación: la consulta y los estados vienen de useProduct y las reglas
 // (variante inicial, agotado, descuento, descripción) de features/catalog/productDetail.
 // El precio mostrado es `precio_final` del servidor; `precio_extra` no se suma
-// porque el backend no confirma esa regla (ver PR).
+// porque el backend no confirma esa regla (ver PR). El carrito, en cambio,
+// cobra `precio_base`: es un riesgo conocido pendiente de backend (ver PR #11).
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -10,6 +11,8 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 
 import ImageCarousel from "@/features/catalog/components/ImageCarousel";
 import VariantSelector from "@/features/catalog/components/VariantSelector";
+import { classifyAddError } from "@/features/cart/cartSelectors";
+import { useAddToCart } from "@/features/cart/hooks/useAddToCart";
 import FavoriteButton from "@/features/favorites/components/FavoriteButton";
 import { toFavoriteProduct } from "@/features/favorites/favoriteSelectors";
 import { useProduct } from "@/features/catalog/hooks/useProduct";
@@ -24,17 +27,28 @@ import {
   pickInitialVariant,
 } from "@/features/catalog/productDetail";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
+import { usePaymentStore } from "@/features/payments/paymentStore";
+import { useAuthStore } from "@/shared/store/authStore";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import { formatPrice } from "@/shared/utils/format";
 
-const CART_SOON = "Disponible próximamente: el carrito llegará en una próxima versión.";
+type CartFeedback = "added" | "max" | "unavailable" | "other";
+
+const CART_FEEDBACK_TEXT: Record<Exclude<CartFeedback, "other">, string> = {
+  added: "Agregado al carrito.",
+  max: "Ya tienes 99 unidades de este producto en tu carrito.",
+  unavailable: "Este producto ya no está disponible.",
+};
 
 export default function ProductDetailScreen() {
   const c = useColors();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: product, isLoading, isError, error, refetch, notFound } = useProduct(id);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [cartNotice, setCartNotice] = useState(false);
+  const [cartFeedback, setCartFeedback] = useState<CartFeedback | null>(null);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const addToCart = useAddToCart();
+  const paymentLocked = usePaymentStore((s) => s.locked);
 
   const title = <Stack.Screen options={{ title: "Producto" }} />;
 
@@ -96,6 +110,22 @@ export default function ProductDetailScreen() {
   const description = cleanDescription(product.descripcion);
   const attributes = getVisibleAttributes(product.atributos);
   const stockVariant = selected ?? (variantes.length === 1 ? variantes[0] : null);
+
+  const onAddToCart = () => {
+    if (paymentLocked) return;
+    if (!isAuthenticated) {
+      router.push("/(auth)/login");
+      return;
+    }
+    setCartFeedback(null);
+    // LIMITACIÓN CONOCIDA: el backend (POST /cart/items/:productId) solo recibe el
+    // producto y suma 1 unidad. La variante que se vea seleccionada arriba NO se
+    // envía, y la cantidad se ajusta después en el carrito.
+    addToCart.mutate(product.id, {
+      onSuccess: () => setCartFeedback("added"),
+      onError: (e) => setCartFeedback(classifyAddError(e)),
+    });
+  };
 
   return (
     <View style={[styles.screen, { backgroundColor: c.background }]}>
@@ -195,22 +225,48 @@ export default function ProductDetailScreen() {
       </ScrollView>
 
       <View style={[styles.footer, { backgroundColor: c.card, borderColor: c.border }]}>
-        {cartNotice && !soldOut ? (
-          <Text style={[styles.notice, { color: c.textMuted }]} accessibilityRole="alert">
-            {CART_SOON}
-          </Text>
+        {cartFeedback && !soldOut ? (
+          <View style={styles.feedbackRow} accessibilityLiveRegion="polite">
+            <Text
+              style={[
+                styles.notice,
+                { color: cartFeedback === "added" ? c.brandDeep : c.danger },
+              ]}
+              accessibilityRole="alert"
+            >
+              {cartFeedback === "other"
+                ? apiErrorMessage(addToCart.error)
+                : CART_FEEDBACK_TEXT[cartFeedback]}
+            </Text>
+            {cartFeedback === "added" || cartFeedback === "max" ? (
+              <Pressable
+                onPress={() => router.push("/cart")}
+                accessibilityRole="button"
+                accessibilityLabel="Ver carrito"
+                hitSlop={8}
+              >
+                <Text style={{ color: c.brandPrimary, fontWeight: "700", fontSize: 12 }}>Ver carrito</Text>
+              </Pressable>
+            ) : null}
+          </View>
         ) : null}
         <Pressable
-          onPress={() => setCartNotice(true)}
-          disabled={soldOut}
+          onPress={onAddToCart}
+          disabled={soldOut || addToCart.isPending || paymentLocked}
           accessibilityRole="button"
           accessibilityLabel={soldOut ? "Agregar al carrito, producto agotado" : "Agregar al carrito"}
-          accessibilityState={{ disabled: soldOut }}
+          accessibilityState={{ disabled: soldOut || addToCart.isPending || paymentLocked, busy: addToCart.isPending }}
           style={[styles.primary, styles.cta, { backgroundColor: soldOut ? c.border : c.brandPrimary }]}
         >
           <Ionicons name="cart-outline" size={20} color={soldOut ? c.textMuted : "#fff"} />
           <Text style={[styles.primaryText, soldOut && { color: c.textMuted }]}>
-            {soldOut ? "Agotado" : "Agregar al carrito"}
+            {soldOut
+              ? "Agotado"
+              : paymentLocked
+                ? "Hay un pago en proceso"
+                : addToCart.isPending
+                  ? "Agregando…"
+                  : "Agregar al carrito"}
           </Text>
         </Pressable>
       </View>
@@ -243,7 +299,8 @@ const styles = StyleSheet.create({
   attrName: { fontSize: 13, flex: 1 },
   attrValue: { fontSize: 13, fontWeight: "600", flex: 1, textAlign: "right" },
   footer: { padding: spacing.lg, gap: spacing.sm, borderTopWidth: StyleSheet.hairlineWidth },
-  notice: { fontSize: 12, textAlign: "center" },
+  feedbackRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: spacing.md },
+  notice: { fontSize: 12, textAlign: "center", fontWeight: "600" },
   primary: { paddingHorizontal: spacing.xl, paddingVertical: spacing.md, borderRadius: 999, marginTop: spacing.sm },
   cta: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: spacing.sm, marginTop: 0 },
   primaryText: { color: "#fff", fontWeight: "700", fontSize: 15 },

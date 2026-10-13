@@ -1,0 +1,137 @@
+{
+  "fecha": "2026-10-13T05:58:27.064Z",
+  "modo": "escritura",
+  "aviso": "Tiempos medidos contra el backend local con la base en una rama de Neon. No representan producción (Railway).",
+  "api": "http://localhost:4000/api",
+  "repeticiones": 20,
+  "umbralesMs": {
+    "lectura": 1000,
+    "carrito": 1500,
+    "checkout": 3000,
+    "webhook": 10000
+  },
+  "mediciones": [
+    {
+      "nombre": "GET /cart",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 339.01969999999983,
+      "p50": 345.79479999999967,
+      "p95": 351.83060000000023,
+      "max": 1221.6612,
+      "media": 389.39,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /profile/addresses",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 134.31880000000092,
+      "p50": 137.42749999999978,
+      "p95": 142.39969999999994,
+      "max": 144.69909999999982,
+      "media": 137.83,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /orders",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 326.59109999999964,
+      "p50": 333.1131999999998,
+      "p95": 336.5686999999998,
+      "max": 526.5801999999985,
+      "media": 342.05,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /orders/:id",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 325.04869999999937,
+      "p50": 331.0734999999986,
+      "p95": 337.27110000000175,
+      "max": 599.390199999998,
+      "media": 344.02,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "POST /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 20,
+      "min": 610.476499999997,
+      "p50": 619.9094000000041,
+      "p95": 630.3643999999986,
+      "max": 1047.315999999999,
+      "media": 641.49,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "PATCH /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 20,
+      "min": 270.95520000000397,
+      "p50": 277.0279999999984,
+      "p95": 282.4311000000016,
+      "max": 282.7213999999949,
+      "media": 277.38,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "DELETE /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 20,
+      "min": 270.54329999999754,
+      "p50": 279.31670000000304,
+      "p95": 284.19740000000456,
+      "max": 285.47499999999854,
+      "media": 279.28,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "POST /payments/checkout",
+      "umbralMs": 3000,
+      "n": 20,
+      "min": 628.2667000000074,
+      "p50": 669.5817999999999,
+      "p95": 708.039499999999,
+      "max": 928.4270000000033,
+      "media": 680,
+      "errores": 0,
+      "veredicto": "cumple"
+    }
+  ],
+  "omitidas": [],
+  "webhook": {
+    "umbralMs": 10000,
+    "mediciones": [
+      {
+        "ms": null,
+        "motivo": "tiempo agotado sin pedido"
+      },
+      {
+        "ms": null,
+        "motivo": "no se creó el PaymentIntent"
+      },
+      {
+        "ms": null,
+        "motivo": "no se creó el PaymentIntent"
+      }
+    ],
+    "n": 0,
+    "min": null,
+    "p50": null,
+    "p95": null,
+    "max": null,
+    "media": null,
+    "veredicto": "no cumple",
+    "nota": "El cronómetro arranca al presionar Enter, que se hace justo al lanzar el comando de Stripe: incluye ese pequeño retraso humano y el sondeo cada 250 ms (sobreestima ligeramente)."
+  }
+}

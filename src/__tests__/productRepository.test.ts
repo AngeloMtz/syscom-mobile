@@ -55,6 +55,14 @@ describe("productRepository.getPage", () => {
     });
   });
 
+  it("manda el filtro id_marca cuando se pide por marca", async () => {
+    responde({ data: [], pagination: makePagination() });
+
+    await productRepository.getPage({ id_marca: 5 }, 1);
+
+    expect(ultimaPeticion().params).toMatchObject({ id_marca: 5 });
+  });
+
   it("devuelve lista vacía y paginación en cero si la respuesta viene incompleta", async () => {
     responde({});
 
@@ -103,5 +111,40 @@ describe("productRepository.getById", () => {
     adapter.mockRejectedValueOnce(error);
 
     await expect(productRepository.getById(1)).rejects.toBe(error);
+  });
+});
+
+describe("productRepository.getFeatured", () => {
+  it("envía GET /catalog/featured con el límite y devuelve los productos", async () => {
+    const destacados = [makeProduct({ id: 1 }), makeProduct({ id: 2 })];
+    responde({ data: destacados });
+
+    const resultado = await productRepository.getFeatured(5);
+
+    const { metodo, ruta, params } = ultimaPeticion();
+    expect({ metodo, ruta }).toEqual({ metodo: "get", ruta: "/catalog/featured" });
+    expect(params).toMatchObject({ limit: 5 });
+    expect(resultado).toEqual(destacados);
+  });
+
+  it("usa 8 como límite por defecto", async () => {
+    responde({ data: [] });
+
+    await productRepository.getFeatured();
+
+    expect(ultimaPeticion().params).toMatchObject({ limit: 8 });
+  });
+
+  it("devuelve lista vacía si la respuesta no trae un arreglo", async () => {
+    responde({ data: null });
+
+    await expect(productRepository.getFeatured()).resolves.toEqual([]);
+  });
+
+  it("rechaza con el error de la API", async () => {
+    const error = makeApiError({ status: 500, message: "Error del servidor" });
+    adapter.mockRejectedValueOnce(error);
+
+    await expect(productRepository.getFeatured()).rejects.toBe(error);
   });
 });

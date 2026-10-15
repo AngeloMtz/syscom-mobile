@@ -80,6 +80,8 @@
       "src/features/favorites/favoriteSelectors.ts",
       "src/features/favorites/hooks/*.ts",
       "src/features/favorites/repositories/*.ts",
+      "src/features/institutional/hooks/*.ts",
+      "src/features/institutional/repositories/*.ts",
       "src/features/orders/components/OrderCard.tsx",
       "src/features/orders/components/OrderDetailView.tsx",
       "src/features/orders/components/OrderStatusBadge.tsx",
@@ -104,7 +106,8 @@
       "src/shared/hooks/*.ts",
       "src/shared/store/*.ts",
       "src/shared/storage/*.ts",
-      "src/shared/utils/format.ts"
+      "src/shared/utils/format.ts",
+      "src/shared/utils/url.ts"
     ],
     "coverageThreshold": {
       "global": {

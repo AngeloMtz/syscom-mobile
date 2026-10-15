@@ -21,6 +21,10 @@ async function escribir(etiqueta: string, texto: string) {
 }
 
 describe("AddressForm: validación local", () => {
+  // Es la primera prueba que renderiza el formulario: paga el arranque en frío del módulo (~2.5 s
+  // aislada). Con toda la suite en paralelo en Windows pasaba de los 5 s por defecto (#108).
+  const TIEMPO_LIMITE_PRIMER_RENDER_MS = 15000;
+
   it("con todo vacío muestra un error por campo obligatorio y no envía", async () => {
     const onSubmit = jest.fn();
     await render(<AddressForm {...props({ onSubmit })} />);
@@ -33,7 +37,7 @@ describe("AddressForm: validación local", () => {
     expect(screen.getByText("El estado debe tener al menos 3 caracteres")).toBeTruthy();
     expect(screen.getByText("El código postal debe tener exactamente 5 dígitos")).toBeTruthy();
     expect(onSubmit).not.toHaveBeenCalled();
-  });
+  }, TIEMPO_LIMITE_PRIMER_RENDER_MS);
 
   it("código postal de 4 y de 6 dígitos es inválido; de 5 es válido", async () => {
     const onSubmit = jest.fn();

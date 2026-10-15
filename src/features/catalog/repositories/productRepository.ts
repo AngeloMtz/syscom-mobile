@@ -2,7 +2,12 @@
 // Endpoint público. El backend pagina con page/limit y devuelve
 // { success, data: Producto[], pagination }.
 import api from "@/shared/api/client";
-import type { PaginatedProducts, ProductDetail, ProductFilters } from "@/features/catalog/types";
+import type {
+  PaginatedProducts,
+  ProductDetail,
+  ProductFilters,
+  ProductListItem,
+} from "@/features/catalog/types";
 
 export const PRODUCTS_PAGE_SIZE = 20;
 
@@ -18,6 +23,7 @@ export const productRepository = {
           page,
           limit: filters.limit ?? PRODUCTS_PAGE_SIZE,
           categoria: filters.categoria,
+          id_marca: filters.id_marca,
           search: filters.search,
           precioMin: filters.precioMin,
           precioMax: filters.precioMax,
@@ -28,6 +34,13 @@ export const productRepository = {
         data: Array.isArray(r.data?.data) ? r.data.data : [],
         pagination: r.data?.pagination ?? { page, limit: PRODUCTS_PAGE_SIZE, total: 0, pages: 0 },
       })),
+
+  /** Productos destacados para el home (GET /catalog/featured). */
+  getFeatured: (limit = 8): Promise<ProductListItem[]> =>
+    api.get("/catalog/featured", { params: { limit } }).then((r) => {
+      const data = r.data?.data;
+      return Array.isArray(data) ? data : [];
+    }),
 
   /**
    * Detalle de un producto. El backend responde 404 si no existe o no está

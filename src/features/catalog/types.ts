@@ -15,6 +15,13 @@ export interface Category {
   cantidad_productos: number;
 }
 
+/** Marca del listado de marcas (GET /catalog/brands). */
+export interface Brand {
+  id: number;
+  nombre: string;
+  logo_url: string | null;
+}
+
 export interface ProductImage {
   id: number;
   url: string;
@@ -101,6 +108,8 @@ export interface PaginatedProducts {
 /** Filtros que acepta GET /catalog/products. */
 export interface ProductFilters {
   categoria?: number;
+  /** El backend espera `id_marca`; filtra el catálogo por una marca. */
+  id_marca?: number;
   search?: string;
   precioMin?: number;
   precioMax?: number;

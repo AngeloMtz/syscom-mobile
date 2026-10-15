@@ -45,10 +45,17 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="services"
         options={{
-          title: "Perfil",
-          tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
+          title: "Servicios",
+          tabBarIcon: ({ color, size }) => <Ionicons name="construct" size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="more"
+        options={{
+          title: "Más",
+          tabBarIcon: ({ color, size }) => <Ionicons name="menu" size={size} color={color} />,
         }}
       />
     </Tabs>

@@ -1,4 +1,4 @@
-// src/app/(tabs)/profile.tsx — Panel del cliente: pantalla de entrada del área
+// src/app/profile/index.tsx — Panel del cliente: pantalla de entrada del área
 // de cuenta. Las opciones replican el menú del área cliente de la web; solo
 // "Datos personales" está implementada, el resto llega en sus propios issues.
 import { useRouter } from "expo-router";
@@ -108,6 +108,12 @@ function ClientDashboard() {
         MÁS
       </Text>
 
+      <DashboardOption
+        icon="information-circle-outline"
+        label="Información"
+        description="Nosotros, políticas, preguntas frecuentes y contacto"
+        onPress={() => router.push("/informacion")}
+      />
       <DashboardOption icon="notifications-outline" label="Notificaciones" disabled />
       <DashboardOption icon="gift-outline" label="Aportaciones" disabled />
       <DashboardOption icon="help-circle-outline" label="Ayuda" disabled />

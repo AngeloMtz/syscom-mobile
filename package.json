@@ -107,6 +107,7 @@
       "src/shared/store/*.ts",
       "src/shared/storage/*.ts",
       "src/shared/utils/format.ts",
+      "src/shared/utils/html.ts",
       "src/shared/utils/url.ts"
     ],
     "coverageThreshold": {

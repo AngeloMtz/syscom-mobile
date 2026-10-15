@@ -1,11 +1,19 @@
 // src/features/institutional/hooks/useInstitutional.ts
-import { useQuery } from "@tanstack/react-query";
+// Hooks del contenido institucional. Todos son datos públicos y casi estáticos,
+// así que comparten un staleTime largo.
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { institutionalRepository } from "@/features/institutional/repositories/institutionalRepository";
 
 const STALE = 30 * 60 * 1000;
 
-/** Banners del home. Datos públicos y casi estáticos: staleTime largo. */
+export const useInstitutionalContent = () =>
+  useQuery({
+    queryKey: ["institutional", "content"],
+    queryFn: institutionalRepository.getContent,
+    staleTime: STALE,
+  });
+
 export const useSliders = () =>
   useQuery({
     queryKey: ["institutional", "sliders"],
@@ -13,10 +21,24 @@ export const useSliders = () =>
     staleTime: STALE,
   });
 
-/** Contenido institucional (teléfono/correo) para el CTA de contacto. */
-export const useInstitutionalContent = () =>
+export const useFaqs = () =>
   useQuery({
-    queryKey: ["institutional", "content"],
-    queryFn: institutionalRepository.getContent,
+    queryKey: ["institutional", "faqs"],
+    queryFn: institutionalRepository.getFaqs,
     staleTime: STALE,
+  });
+
+export const usePolicies = () =>
+  useQuery({
+    queryKey: ["institutional", "policies"],
+    queryFn: institutionalRepository.getPolicies,
+    staleTime: STALE,
+  });
+
+/** Suscripción al boletín. El usuario decide reintentar, no se reintenta solo. */
+export const useNewsletter = () =>
+  useMutation({
+    mutationFn: ({ nombre, correo }: { nombre: string; correo: string }) =>
+      institutionalRepository.subscribeNewsletter(nombre, correo),
+    retry: 0,
   });

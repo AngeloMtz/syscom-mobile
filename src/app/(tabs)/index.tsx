@@ -112,7 +112,7 @@ export default function HomeScreen() {
       </Pressable>
 
       <Pressable
-        onPress={() => router.push(isAuthenticated ? "/(tabs)/profile" : "/(auth)/login")}
+        onPress={() => router.push(isAuthenticated ? "/(tabs)/more" : "/(auth)/login")}
         accessibilityRole="button"
         accessibilityLabel={isAuthenticated ? "Mi cuenta" : "Iniciar sesión"}
         style={({ pressed }) => [
@@ -299,6 +299,27 @@ export default function HomeScreen() {
             </View>
           </View>
 
+          {/* Acceso a la información institucional (HU #105) */}
+          <View style={{ marginTop: spacing.xl, paddingHorizontal: spacing.lg }}>
+            <Pressable
+              onPress={() => router.push("/informacion")}
+              accessibilityRole="button"
+              accessibilityLabel="Información de SYSCOM"
+              style={({ pressed }) => [styles.infoCard, cardShadow, { backgroundColor: c.card, opacity: pressed ? 0.9 : 1 }]}
+            >
+              <View style={[styles.infoIcon, { backgroundColor: c.brandPrimary + "18" }]}>
+                <Ionicons name="business-outline" size={22} color={c.brandPrimary} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: c.text, fontWeight: "800", fontSize: 15 }}>Conoce SYSCOM</Text>
+                <Text style={{ color: c.textMuted, fontSize: 12, marginTop: 1 }}>
+                  Nosotros, políticas, preguntas frecuentes y contacto
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={c.textMuted} />
+            </Pressable>
+          </View>
+
           {/* Nuestros productos: cuadrícula de 2 columnas */}
           {(productos.data?.length ?? 0) > 0 ? (
             <View style={{ marginTop: spacing.xl, paddingHorizontal: spacing.lg }}>
@@ -394,4 +415,12 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
   },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: spacing.md },
+  infoCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radius.lg,
+  },
+  infoIcon: { width: 46, height: 46, borderRadius: radius.md, alignItems: "center", justifyContent: "center" },
 });

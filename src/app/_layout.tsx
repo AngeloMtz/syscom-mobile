@@ -56,10 +56,16 @@ export default function RootLayout() {
               >
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="profile/index" options={{ title: "Mi cuenta" }} />
                 <Stack.Screen
                   name="profile/personal-data"
                   options={{ title: "Datos personales" }}
                 />
+                <Stack.Screen name="informacion" options={{ title: "Información" }} />
+                <Stack.Screen name="about" options={{ title: "Nosotros" }} />
+                <Stack.Screen name="faqs" options={{ title: "Preguntas frecuentes" }} />
+                <Stack.Screen name="policies" options={{ title: "Políticas" }} />
+                <Stack.Screen name="contact" options={{ title: "Contacto" }} />
               </Stack>
             ) : (
               // Al completar, el flag cambia y el Stack monta solo: el guard de

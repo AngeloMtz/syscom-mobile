@@ -43,9 +43,45 @@ jobs:
         id: audit-critica
         run: npm audit --audit-level=critical
 
-      - name: Auditoría de seguridad (informativa, nivel alto)
-        run: npm audit --audit-level=high
-        continue-on-error: true
+      # Informativa: las vulnerabilidades de nivel alto se muestran como advertencia y en el
+      # resumen del job, sin anotación de error y sin ocultar nada. Un fallo de ejecución
+      # (red, registro, salida no interpretable) SÍ falla el paso: no es lo mismo que
+      # "hay vulnerabilidades". El bloqueo por críticas lo hace el paso anterior.
+      - name: Auditoría de seguridad (nivel alto, como advertencia)
+        id: audit-alta
+        shell: bash
+        run: |
+          set +e
+          npm audit --json > audit.json 2> audit.err
+          codigo=$?
+          set -e
+          node - "$codigo" <<'JS'
+          const fs = require("fs");
+          const codigo = process.argv[2];
+          const resumen = process.env.GITHUB_STEP_SUMMARY;
+          const anexar = (t) => { if (resumen) fs.appendFileSync(resumen, t + "\n"); };
+          let datos = null;
+          try { datos = JSON.parse(fs.readFileSync("audit.json", "utf8")); } catch (e) { datos = null; }
+          if (!datos || datos.error || !datos.metadata || !datos.metadata.vulnerabilities) {
+            // Error de ejecución (red, registro, JSON inválido): NO es "hay vulnerabilidades".
+            const e = datos && datos.error ? datos.error : {};
+            const motivo = (datos && datos.message) || e.summary || e.code || "salida de npm audit no interpretable";
+            console.log("::error title=La auditoría no se pudo ejecutar::" + motivo + " (código " + codigo + ")");
+            anexar("## Auditoría de dependencias\n\n**No se pudo ejecutar** (" + motivo + "). Esto es un error de ejecución, no un resultado de seguridad.");
+            process.exit(1);
+          }
+          const v = datos.metadata.vulnerabilities;
+          const altas = (v.high || 0) + (v.critical || 0);
+          anexar("## Auditoría de dependencias\n");
+          anexar("| Severidad | Cantidad |\n|---|---|");
+          for (const s of ["critical", "high", "moderate", "low", "info"]) anexar("| " + s + " | " + (v[s] || 0) + " |");
+          anexar("\nTotal: " + (v.total || 0) + ". Las críticas bloquean el job (paso anterior); las altas son informativas y están documentadas en `docs/pruebas/advertencias-y-vulnerabilidades.md`.");
+          if (altas > 0) {
+            console.log("::warning title=Vulnerabilidades de nivel alto en las dependencias::" + altas + " de nivel alto o crítico (total " + v.total + "). Ver el resumen del job y docs/pruebas/advertencias-y-vulnerabilidades.md.");
+          } else {
+            console.log("Sin vulnerabilidades de nivel alto ni crítico.");
+          }
+          JS
 
       - name: Resumen del análisis estático
         if: always()
@@ -53,6 +89,7 @@ jobs:
           LINT: ${{ steps.lint.outcome }}
           TSC: ${{ steps.tsc.outcome }}
           AUDIT_CRITICA: ${{ steps.audit-critica.outcome }}
+          AUDIT_ALTA: ${{ steps.audit-alta.outcome }}
         run: |
           {
             echo "## Análisis estático"
@@ -62,6 +99,7 @@ jobs:
             echo "| ESLint (\`npx expo lint\`) | $LINT |"
             echo "| TypeScript (\`npx tsc --noEmit\`) | $TSC |"
             echo "| Auditoría crítica (bloqueante) | $AUDIT_CRITICA |"
+            echo "| Auditoría de nivel alto (ejecución; hallazgos como advertencia) | $AUDIT_ALTA |"
           } >> "$GITHUB_STEP_SUMMARY"
 
   pruebas-unitarias:

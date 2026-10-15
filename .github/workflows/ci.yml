@@ -6,16 +6,21 @@ on:
   push:
     branches: [develop, main]
 
+# Los dos jobs (Análisis estático y Pruebas unitarias) no declaran `needs`, así que
+# corren EN PARALELO en runners distintos: ninguno espera al otro y cada uno instala
+# sus propias dependencias. Ambos son checks requeridos; si uno falla, el otro
+# termina igual y su resumen y artefactos quedan disponibles.
+
 jobs:
   analisis-estatico:
     name: Análisis estático
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -27,27 +32,85 @@ jobs:
         run: npm ci
 
       - name: Análisis estático (ESLint)
+        id: lint
         run: npx expo lint
 
       - name: Verificación de tipos (TypeScript)
+        id: tsc
         run: npx tsc --noEmit
 
       - name: Auditoría de seguridad (bloquea con vulnerabilidades críticas)
+        id: audit-critica
         run: npm audit --audit-level=critical
 
-      - name: Auditoría de seguridad (informativa, nivel alto)
-        run: npm audit --audit-level=high
-        continue-on-error: true
+      # Informativa: las vulnerabilidades de nivel alto se muestran como advertencia y en el
+      # resumen del job, sin anotación de error y sin ocultar nada. Un fallo de ejecución
+      # (red, registro, salida no interpretable) SÍ falla el paso: no es lo mismo que
+      # "hay vulnerabilidades". El bloqueo por críticas lo hace el paso anterior.
+      - name: Auditoría de seguridad (nivel alto, como advertencia)
+        id: audit-alta
+        shell: bash
+        run: |
+          set +e
+          npm audit --json > audit.json 2> audit.err
+          codigo=$?
+          set -e
+          node - "$codigo" <<'JS'
+          const fs = require("fs");
+          const codigo = process.argv[2];
+          const resumen = process.env.GITHUB_STEP_SUMMARY;
+          const anexar = (t) => { if (resumen) fs.appendFileSync(resumen, t + "\n"); };
+          let datos = null;
+          try { datos = JSON.parse(fs.readFileSync("audit.json", "utf8")); } catch (e) { datos = null; }
+          if (!datos || datos.error || !datos.metadata || !datos.metadata.vulnerabilities) {
+            // Error de ejecución (red, registro, JSON inválido): NO es "hay vulnerabilidades".
+            const e = datos && datos.error ? datos.error : {};
+            const motivo = (datos && datos.message) || e.summary || e.code || "salida de npm audit no interpretable";
+            console.log("::error title=La auditoría no se pudo ejecutar::" + motivo + " (código " + codigo + ")");
+            anexar("## Auditoría de dependencias\n\n**No se pudo ejecutar** (" + motivo + "). Esto es un error de ejecución, no un resultado de seguridad.");
+            process.exit(1);
+          }
+          const v = datos.metadata.vulnerabilities;
+          const altas = (v.high || 0) + (v.critical || 0);
+          anexar("## Auditoría de dependencias\n");
+          anexar("| Severidad | Cantidad |\n|---|---|");
+          for (const s of ["critical", "high", "moderate", "low", "info"]) anexar("| " + s + " | " + (v[s] || 0) + " |");
+          anexar("\nTotal: " + (v.total || 0) + ". Las críticas bloquean el job (paso anterior); las altas son informativas y están documentadas en `docs/pruebas/advertencias-y-vulnerabilidades.md`.");
+          if (altas > 0) {
+            console.log("::warning title=Vulnerabilidades de nivel alto en las dependencias::" + altas + " de nivel alto o crítico (total " + v.total + "). Ver el resumen del job y docs/pruebas/advertencias-y-vulnerabilidades.md.");
+          } else {
+            console.log("Sin vulnerabilidades de nivel alto ni crítico.");
+          }
+          JS
+
+      - name: Resumen del análisis estático
+        if: always()
+        env:
+          LINT: ${{ steps.lint.outcome }}
+          TSC: ${{ steps.tsc.outcome }}
+          AUDIT_CRITICA: ${{ steps.audit-critica.outcome }}
+          AUDIT_ALTA: ${{ steps.audit-alta.outcome }}
+        run: |
+          {
+            echo "## Análisis estático"
+            echo
+            echo "| Verificación | Resultado |"
+            echo "|---|---|"
+            echo "| ESLint (\`npx expo lint\`) | $LINT |"
+            echo "| TypeScript (\`npx tsc --noEmit\`) | $TSC |"
+            echo "| Auditoría crítica (bloqueante) | $AUDIT_CRITICA |"
+            echo "| Auditoría de nivel alto (ejecución; hallazgos como advertencia) | $AUDIT_ALTA |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   pruebas-unitarias:
     name: Pruebas unitarias
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -55,5 +118,55 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      # `pipefail` (bash) hace que el código de salida sea el de Jest aunque pase por tee.
+      # json-summary produce coverage/coverage-summary.json para el resumen.
       - name: Pruebas unitarias (Jest)
-        run: npx jest --ci --coverage
+        id: jest
+        shell: bash
+        run: |
+          npx jest --ci --coverage \
+            --coverageReporters=text --coverageReporters=lcov --coverageReporters=json-summary \
+            2>&1 | tee jest.log
+
+      - name: Resumen de pruebas y cobertura
+        if: always()
+        shell: bash
+        env:
+          JEST: ${{ steps.jest.outcome }}
+        run: |
+          {
+            echo "## Pruebas unitarias"
+            echo
+            echo "Resultado de Jest: **$JEST**"
+            echo
+            if [ -f jest.log ]; then
+              echo '```'
+              grep -E "^(Test Suites|Tests|Snapshots|Time):" jest.log || echo "Jest no llegó a imprimir un resumen."
+              echo '```'
+            fi
+            if [ -f coverage/coverage-summary.json ]; then
+              node -e '
+                const t = require("./coverage/coverage-summary.json").total;
+                const f = (k) => t[k].pct + " % (" + t[k].covered + "/" + t[k].total + ")";
+                console.log("");
+                console.log("| Cobertura global | Obtenida |");
+                console.log("|---|---|");
+                console.log("| Sentencias | " + f("statements") + " |");
+                console.log("| Ramas | " + f("branches") + " |");
+                console.log("| Funciones | " + f("functions") + " |");
+                console.log("| Líneas | " + f("lines") + " |");
+              '
+            else
+              echo
+              echo "No se generó el reporte de cobertura."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Subir el reporte de cobertura
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cobertura
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 14

@@ -21,6 +21,8 @@ import { useBrands } from "@/features/catalog/hooks/useBrands";
 import { useRootCategories } from "@/features/catalog/hooks/useCategories";
 import { useFeaturedProducts } from "@/features/catalog/hooks/useFeaturedProducts";
 import { useProductsPreview } from "@/features/catalog/hooks/useProductsPreview";
+import { useServicesPreview } from "@/features/services/hooks/useServicesPreview";
+import { getServiceImageUrl } from "@/features/services/selectors";
 import ProductCard from "@/features/catalog/components/ProductCard";
 import type { Brand, Category, ProductListItem } from "@/features/catalog/types";
 import { useProfile } from "@/features/profile/hooks/useProfile";
@@ -49,6 +51,7 @@ export default function HomeScreen() {
   const featured = useFeaturedProducts(8);
   const brands = useBrands();
   const productos = useProductsPreview(6);
+  const servicios = useServicesPreview(6);
   const info = useInstitutionalContent();
   // Con sesión, la inicial sale del perfil (como en otras pantallas).
   const { data: perfil } = useProfile();
@@ -72,6 +75,7 @@ export default function HomeScreen() {
     featured.isRefetching ||
     brands.isRefetching ||
     productos.isRefetching ||
+    servicios.isRefetching ||
     info.isRefetching;
 
   const reloadAll = () => {
@@ -80,6 +84,7 @@ export default function HomeScreen() {
     featured.refetch();
     brands.refetch();
     productos.refetch();
+    servicios.refetch();
     info.refetch();
   };
 
@@ -279,6 +284,53 @@ export default function HomeScreen() {
             </View>
           ) : null}
 
+          {/* Servicios: acceso al listado completo */}
+          {(servicios.data?.length ?? 0) > 0 ? (
+            <View style={{ marginTop: spacing.xl }}>
+              <View style={{ paddingHorizontal: spacing.lg }}>
+                <SectionTitle title="Servicios" action="Ver todo" onAction={() => router.push("/(tabs)/services")} />
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: spacing.lg, gap: spacing.md }}
+              >
+                {servicios.data!.map((s) => {
+                  const img = getServiceImageUrl(s);
+                  return (
+                    <Pressable
+                      key={s.id}
+                      onPress={() => router.push({ pathname: "/service/[id]", params: { id: String(s.id) } })}
+                      accessibilityRole="button"
+                      accessibilityLabel={s.nombre}
+                      style={({ pressed }) => [
+                        styles.serviceCard,
+                        cardShadow,
+                        { backgroundColor: c.card, opacity: pressed ? 0.9 : 1 },
+                      ]}
+                    >
+                      <View style={[styles.serviceMedia, { backgroundColor: c.divider }]}>
+                        {img ? (
+                          <Image source={{ uri: img }} style={styles.serviceImg} resizeMode="cover" />
+                        ) : (
+                          <Ionicons name="construct" size={28} color={c.brandPrimary} />
+                        )}
+                      </View>
+                      <Text style={[styles.serviceName, { color: c.text }]} numberOfLines={2}>
+                        {s.nombre}
+                      </Text>
+                      {s.duracion_estimada ? (
+                        <Text style={{ color: c.textMuted, fontSize: 11 }} numberOfLines={1}>
+                          {s.duracion_estimada}
+                        </Text>
+                      ) : null}
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          ) : null}
+
           {/* CTA de contacto */}
           <View style={{ marginTop: spacing.xl, paddingHorizontal: spacing.lg }}>
             <View style={styles.ctaCard}>
@@ -423,4 +475,9 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
   },
   infoIcon: { width: 46, height: 46, borderRadius: radius.md, alignItems: "center", justifyContent: "center" },
+  serviceCard: { width: 150, borderRadius: radius.lg, overflow: "hidden", paddingBottom: spacing.sm },
+  serviceMedia: { height: 92, alignItems: "center", justifyContent: "center" },
+  serviceImg: { width: "100%", height: "100%" },
+  serviceName: { fontSize: 13, fontWeight: "700", marginTop: spacing.sm, paddingHorizontal: spacing.sm },
 });
+

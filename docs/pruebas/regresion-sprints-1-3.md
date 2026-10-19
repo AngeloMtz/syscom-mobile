@@ -121,7 +121,7 @@ Resultado: `[ ] Pasa` · `[ ] Falla` · Observaciones: ______
 | Criterio | Pasos | Resultado |
 |---|---|---|
 | Corre en Expo Go sin errores | 1. `npx expo start`. 2. Abrir en Expo Go. 3. Ver que carga sin pantalla roja ni errores en consola. | [ ] Pasa [ ] Falla — Obs: |
-| Estructura documentada en el README | 1. Abrir `README.md`. 2. Confirmar que describe la estructura de carpetas. AVISO: el README actual (84 líneas) no tiene una sección de estructura de carpetas (búsqueda de "estructura", "carpeta", "screens", "components" sin resultados); es probable que este criterio falle. | [ ] Pasa [ ] Falla — Obs: |
+| Estructura documentada en el README | 1. Abrir `README.md`. 2. Confirmar que describe la estructura de carpetas. NOTA: al momento de esta corrida el README de `develop` no tenía la sección de estructura; ya está en el PR #124 (issue #123). Debería pasar cuando #124 entre a `develop`; verificar leyendo el README. | [ ] Pasa [ ] Falla — Obs: |
 | Variable de entorno con la URL base | 1. Revisar `.env.example` con la variable `EXPO_PUBLIC_*` de la API. 2. Con `.env` creado, confirmar que la app consume esa URL (el catálogo carga datos). | [ ] Pasa [ ] Falla — Obs: |
 
 **HU #2 — Navegación principal** (contra las 5 pestañas vigentes)

@@ -1,7 +1,7 @@
 # Advertencias y vulnerabilidades de dependencias
 
 - **Fecha de la verificación:** 2026-10-15 (issue #107)
-- **Actualizado:** 2026-10-19, rama `fix/113-source-map-js` (issue #113): causa 3 corregida
+- **Actualizado:** 2026-10-19 (issue #113): causa 3 corregida; (issue #114): ERESOLVE aceptado, con evidencia
 - **Sobre:** `package-lock.json` de `develop` en `4580272` (sin cambios de dependencias en esta rama)
 - **Herramientas:** `npm audit`, `npm ci` y `npm ls`, ejecutados en local (npm con Node 22). Nada de esto se obtuvo con `npm audit fix --force`.
 
@@ -68,7 +68,7 @@ Se tomaron del `package-lock.json` (campo `deprecated`). Son 7, todos **transiti
 | `uuid` 7.0.3 | `uuid@10` e inferiores sin soporte | `expo` → `@expo/config-plugins` → `xcode` | **Aceptar.** Es la causa raíz #6. |
 | `eslint` 9.39.5 | "Esta versión ya no tiene soporte" | Dependencia directa de desarrollo (`"eslint": "^9.0.0"`), usada con `eslint-config-expo` ~57 | **Aceptar.** Es herramienta de desarrollo y lo fija el SDK; revisar al actualizar `eslint-config-expo`. |
 
-## 4. Aviso ERESOLVE (`test-renderer` y React 19.3)
+## 4. Aviso ERESOLVE (`react-reconciler` y React 19.3)
 
 ```
 npm warn ERESOLVE overriding peer dependency
@@ -82,7 +82,35 @@ npm warn Conflicting peer dependency: react@19.3.1
 
 | Qué pasa | Por qué | Decisión |
 |---|---|---|
-| `test-renderer@1.3.0` (usado por `@testing-library/react-native` 14) trae `react-reconciler@0.34.0`, que pide `react ^19.3.0`, y el proyecto fija `react 19.2.3` (el del SDK 57). | `react` lo fija Expo SDK 57; no se debe subir por separado. `npm ci` solo avisa: la instalación y las 834 pruebas funcionan. | **Pendiente de PR aparte (#114)**: `npm view test-renderer@1.3.1` muestra peer `react ^19.0.0`, lo que podría eliminar el aviso. Se hará con `npx expo install` y corriendo las 834 pruebas. Mientras tanto, **aceptar**. |
+| `test-renderer` (usado por `@testing-library/react-native` 14) trae `react-reconciler@0.34.0`, que pide `react ^19.3.0`, y el proyecto fija `react 19.2.3` (el del SDK 57). | `react` lo fija Expo SDK 57; no se debe subir por separado. `npm ci` solo avisa: la instalación y las pruebas funcionan (75 suites y 909 pruebas). | **ACEPTADO (2026-10-19, #114).** Se espera que desaparezca cuando el SDK de Expo suba React a 19.3. Evidencia abajo. |
+
+### Evidencia (#114, 2026-10-19)
+
+La hipótesis del issue era que `test-renderer@1.3.1` eliminaría el aviso porque su peer es `react ^19.0.0`. **Resultó falsa**:
+
+- **La causa real es `react-reconciler@0.34.0`** (peer `react ^19.3.0`), no el peer de `test-renderer`. Tanto `test-renderer@1.3.0` como `1.3.1` dependen de `react-reconciler ~0.34.0`; solo cambia `@types/react-reconciler` (`~0.33.0` → `~0.34.0`).
+- **Se probó en un clon limpio de `develop`** (`732783c`), no en la carpeta de trabajo:
+  1. Línea base: `npm ci` muestra el aviso.
+  2. Con `test-renderer` actualizado a 1.3.1 en el lockfile (`npm update test-renderer --package-lock-only`, que además sube `@types/react-reconciler` de 0.33.1 a 0.34.0): `npm ci` **sigue mostrando el mismo aviso**, ahora "from test-renderer@1.3.1".
+- Por eso no se subió `test-renderer` a 1.3.1: no resuelve el aviso y solo cambiaría el lockfile sin beneficio.
+
+### Opciones descartadas
+
+| Opción | Por qué se descartó |
+|---|---|
+| `overrides` de `react-reconciler` a `~0.33.0` (la rama que pide `react ^19.2.0`) | Fuerza un paquete con el que `test-renderer` no está compilado (usa la 0.34); podría romper las pruebas de componentes de forma silenciosa. Es forzar, y el proyecto no fuerza dependencias. |
+| Subir `react` a 19.3.x | `react` lo fija el SDK 57 de Expo (19.2.3); subirlo por separado sale de las versiones que el SDK valida. |
+| `npx expo install test-renderer@1.3.1` | No es aplicable aquí; ver la nota práctica de abajo. |
+
+### Nota práctica: `npx expo install` con un paquete ya presente
+
+Con `test-renderer` (ya declarado en `devDependencies`), `npx expo install test-renderer@1.3.1`:
+
+- **duplicó** `test-renderer: 1.3.1` en `dependencies` (seguía también en `devDependencies`),
+- **reescribió `package.json` completo** (finales de línea CRLF → LF), y
+- **no cambió el lockfile**: `test-renderer` siguió en 1.3.0.
+
+Para un paquete que **ya está** en `package.json` y solo se quiere subir dentro de su rango, usar `npm update <paquete> --package-lock-only` (cambia solo el lockfile; `package.json` queda intacto). Reservar `npx expo install` para agregar paquetes nuevos y para alinear versiones con el SDK.
 
 ## 5. Cómo se muestra esto en el CI
 
@@ -104,6 +132,6 @@ Los jobs **"Análisis estático"** y **"Pruebas unitarias"** de `.github/workflo
 | Pendiente | Dónde |
 |---|---|
 | ~~Actualizar `source-map-js`~~ | **Hecho el 2026-10-19 (#113)** |
-| Probar `test-renderer@1.3.1` con `npx expo install` y la suite completa | PR aparte (#114) |
+| ~~Probar `test-renderer@1.3.1`~~ | **Resuelto por documentación el 2026-10-19 (#114):** el aviso queda aceptado; no desaparece con 1.3.1 y se espera que se resuelva cuando el SDK suba React a 19.3 |
 | Revisar las causas aceptadas (1, 2, 4, 5, 6 y los deprecados) al actualizar el SDK de Expo | Siguiente cambio de SDK |
 | `npx expo-doctor` reporta 5 paquetes con versión de parche anterior a la que espera el SDK 57 (`expo`, `expo-constants`, `expo-linking`, `expo-router`, `jest-expo`). Existía antes de #113 y está fuera de su alcance | Aparte, con `npx expo install --check` |

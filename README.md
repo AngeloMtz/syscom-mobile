@@ -79,6 +79,42 @@ npx expo start
 
 Las variables de entorno van en un archivo `.env` local, que no se versiona.
 
+## Estructura del proyecto
+
+```text
+src/
+├── app/          # Pantallas y navegación (Expo Router): cada archivo es una ruta
+│   ├── (auth)/   #   login, registro, verificación y recuperación de contraseña
+│   ├── (tabs)/   #   las 5 pestañas: Inicio, Catálogo, Carrito, Servicios, Más
+│   └── ...       #   checkout, favorites, orders, addresses, profile, product, service, etc.
+├── features/     # Lógica por dominio: addresses, auth, cart, catalog, favorites,
+│                 #   institutional, onboarding, orders, payments, profile, services
+│                 #   (cada una con repositories/, hooks/, components/ y types.ts según aplique)
+├── shared/       # Código común: api (cliente HTTP, token), store, storage, theme,
+│                 #   ui (componentes reutilizables), hooks y utils
+└── __tests__/    # Pruebas unitarias e integración (Jest); fixtures/ y utils/ son apoyo
+docs/
+└── pruebas/      # Reportes de pruebas por sprint, plantilla, evidencia y datos de prueba
+scripts/          # Scripts de apoyo (por ejemplo, verificar-entorno)
+.github/          # Workflows de CI
+```
+
+Las rutas de `src/app/` solo contienen pantallas; los componentes, hooks y repositorios viven en `src/features/` y `src/shared/`.
+
+## Pruebas
+
+```bash
+npx expo lint                # análisis estático (ESLint)
+npx tsc --noEmit             # verificación de tipos
+npx jest --ci --coverage     # pruebas unitarias con cobertura
+```
+
+El CI (`.github/workflows/ci.yml`) corre en cada Pull Request hacia `develop` y `main` con dos jobs en paralelo:
+- **Análisis estático:** `npx expo lint`, `npx tsc --noEmit` y `npm audit` (bloquea con vulnerabilidades críticas).
+- **Pruebas unitarias:** `npx jest --ci --coverage` y sube el reporte de cobertura como artefacto.
+
+Los reportes de pruebas de cada sprint están en [`docs/pruebas/`](docs/pruebas/) (`sprint-1.md`, `sprint-2.md`, `sprint-3.md`), junto con la plantilla, la evidencia y los datos de prueba.
+
 ## Licencia
 
 MIT

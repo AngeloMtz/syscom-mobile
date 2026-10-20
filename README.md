@@ -115,6 +115,15 @@ El CI (`.github/workflows/ci.yml`) corre en cada Pull Request hacia `develop` y 
 
 Los reportes de pruebas de cada sprint están en [`docs/pruebas/`](docs/pruebas/) (`sprint-1.md`, `sprint-2.md`, `sprint-3.md`), junto con la plantilla, la evidencia y los datos de prueba.
 
+## Documentación generada (DeepWiki)
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/AngeloMtz/syscom-mobile)
+
+Wiki del repositorio: <https://deepwiki.com/AngeloMtz/syscom-mobile>
+
+La wiki se genera automáticamente a partir de la rama por defecto (`main`), así que puede ir atrás de `develop`.
+No sustituye la documentación del repositorio (`docs/` y los reportes de pruebas), que es la referencia vigente.
+
 ## Licencia
 
 MIT

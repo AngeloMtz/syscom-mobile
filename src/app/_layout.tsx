@@ -70,6 +70,7 @@ export default function RootLayout() {
                 <Stack.Screen name="policies" options={{ title: "Políticas" }} />
                 <Stack.Screen name="contact" options={{ title: "Contacto" }} />
                 <Stack.Screen name="service/[id]" options={{ title: "Servicio" }} />
+                <Stack.Screen name="viewer3d" options={{ title: "Vista 3D" }} />
               </Stack>
             ) : (
               // Al completar, el flag cambia y el Stack monta solo: el guard de

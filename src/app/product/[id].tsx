@@ -9,6 +9,7 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import ARButton from "@/features/ar/components/ARButton";
 import ImageCarousel from "@/features/catalog/components/ImageCarousel";
 import VariantSelector from "@/features/catalog/components/VariantSelector";
 import { classifyAddError } from "@/features/cart/cartSelectors";
@@ -179,6 +180,9 @@ export default function ProductDetailScreen() {
               <Text style={{ color: c.brandPrimary, fontWeight: "700", fontSize: 13 }}>Envío gratis</Text>
             </View>
           ) : null}
+
+          {/* Botón "Ver en AR": solo aparece si el producto tiene modelo 3D cargado (#16). */}
+          <ARButton productId={product.id} productName={product.nombre} />
 
           {variantes.length > 1 ? (
             <View style={styles.section}>

@@ -4,12 +4,14 @@
 // (sin `meta`: el total sirve para saber si hay más).
 // can-review y crear exigen sesión (Bearer, lo agrega el interceptor del cliente). SUPUESTO,
 // pendiente de verificar: su forma se leyó del código del backend, no de una respuesta real;
-// por eso se leen de forma tolerante y se normalizan (ver CanReview en types.ts).
+// por eso se leen de forma tolerante y se normalizan (ver CanReview en types.ts). Lo mismo
+// aplica a GET /reviews/my (ver MyReview en types.ts).
 import api from "@/shared/api/client";
 import type {
   CanReview,
   CreateReviewInput,
   CreateReviewResult,
+  MyReview,
   ProductReview,
   ProductReviewsPage,
   RatingDistribution,
@@ -87,4 +89,17 @@ export const reviewRepository = {
         comentario: input.comentario,
       })
       .then((r) => ({ idResena: toPositiveInt(r.data?.data?.id_resena) })),
+  /**
+   * Reseñas del usuario (GET /reviews/my), de la más reciente a la más antigua y de TODOS los tipos:
+   * el filtro por producto se hace en el hook. Sin paginación. Se descartan los elementos que no
+   * son reseñas (sin id numérico) para que un dato raro no rompa la lista.
+   */
+  getMine: (): Promise<MyReview[]> =>
+    api.get("/reviews/my").then((r) => {
+      const data = r.data?.data;
+      if (!Array.isArray(data)) return [];
+      return data.filter(
+        (item): item is MyReview => typeof item === "object" && item !== null && typeof (item as MyReview).id_resena === "number",
+      );
+    }),
 };

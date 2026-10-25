@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, renderHook } from "@testing-library/react-native";
+import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
 import { useCreateReview } from "@/features/reviews/hooks/useCreateReview";
@@ -82,7 +82,8 @@ describe("useCreateReview", () => {
     });
 
     expect(repo.create).toHaveBeenCalledTimes(1);
-    expect(result.current.error).toBe(error);
+    // El estado de error del hook llega cuando TanStack notifica al observador, no al terminar el act.
+    await waitFor(() => expect(result.current.error).toBe(error));
     expect(clavesInvalidadas()).toEqual(expect.arrayContaining([canReviewKey(7), MY_REVIEWS_KEY]));
   });
 

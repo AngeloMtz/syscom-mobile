@@ -11,7 +11,9 @@ import { makeReview } from "../fixtures/review";
 
 // Los íconos se simulan como texto con el nombre del ícono para poder contar estrellas llenas, medias y vacías.
 jest.mock("@expo/vector-icons", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require("react");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { Text } = require("react-native");
   return { Ionicons: ({ name }: { name: string }) => React.createElement(Text, null, name) };
 });

@@ -1,7 +1,7 @@
 import { REVIEWS_PAGE_SIZE, reviewRepository } from "@/features/reviews/repositories/reviewRepository";
 
 import { makeApiError, makeNetworkError } from "./fixtures";
-import { makeReview } from "./fixtures/review";
+import { makeMyReview, makeReview } from "./fixtures/review";
 import { crearAxiosFalso } from "./utils/axiosFake";
 
 jest.mock("expo-secure-store", () => ({
@@ -282,5 +282,61 @@ describe("reviewRepository.create", () => {
     const red = makeNetworkError();
     adapter.mockRejectedValueOnce(red);
     await expect(reviewRepository.create(entrada)).rejects.toBe(red);
+  });
+});
+
+// SUPUESTO (pendiente de verificar): la forma de GET /reviews/my se leyó del código del backend
+// (devuelve las reseñas de todos los tipos del usuario); no se ha contrastado con una respuesta real.
+describe("reviewRepository.getMine", () => {
+  it("envía GET /reviews/my", async () => {
+    responde({ data: [] });
+
+    await reviewRepository.getMine();
+
+    const { metodo, ruta } = ultimaPeticion();
+    expect({ metodo, ruta }).toEqual({ metodo: "get", ruta: "/reviews/my" });
+  });
+
+  it("devuelve las reseñas del usuario tal cual (el filtro por tipo se hace aparte)", async () => {
+    const lista = [makeMyReview({ id_resena: 1 }), makeMyReview({ id_resena: 2, tipo: "servicio", productos: null })];
+    responde({ data: lista });
+
+    expect(await reviewRepository.getMine()).toEqual(lista);
+  });
+
+  it("sin reseñas devuelve una lista vacía", async () => {
+    responde({ data: [] });
+
+    expect(await reviewRepository.getMine()).toEqual([]);
+  });
+
+  it.each([[null], [undefined], ["x"], [{}]])("si `data` no es un arreglo (%s) devuelve lista vacía", async (data) => {
+    responde({ data });
+
+    expect(await reviewRepository.getMine()).toEqual([]);
+  });
+
+  it("descarta los elementos que no son reseñas (nulos o sin id) y conserva el resto", async () => {
+    const buena = makeMyReview({ id_resena: 5 });
+    responde({ data: [null, 7, "x", { tipo: "producto" }, { id_resena: "5" }, buena] });
+
+    expect(await reviewRepository.getMine()).toEqual([buena]);
+  });
+
+  it("conserva reseñas con `productos` nulo y `created_at` nulo", async () => {
+    const sinProducto = makeMyReview({ id_resena: 9, productos: null, created_at: null });
+    responde({ data: [sinProducto] });
+
+    expect(await reviewRepository.getMine()).toEqual([sinProducto]);
+  });
+
+  it("rechaza con el 401 sin sesión y con el 503 del backend", async () => {
+    const e401 = makeApiError({ status: 401, message: "Token requerido" });
+    adapter.mockRejectedValueOnce(e401);
+    await expect(reviewRepository.getMine()).rejects.toBe(e401);
+
+    const e503 = makeApiError({ status: 503, message: "Error de conexión. Intenta de nuevo más tarde." });
+    adapter.mockRejectedValueOnce(e503);
+    await expect(reviewRepository.getMine()).rejects.toBe(e503);
   });
 });

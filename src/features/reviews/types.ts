@@ -91,3 +91,38 @@ export interface ReviewFormValues {
 
 export type ReviewFormField = "calificacion" | "titulo" | "comentario";
 export type ReviewFormErrors = Partial<Record<ReviewFormField, string>>;
+
+// — Mis reseñas —
+// SUPUESTO (pendiente de verificar): la forma de GET /reviews/my ({ success, data: reseña[] }) se leyó
+// del código del backend (getMyReviews en reviews.service.ts), sin contrastarla con una respuesta real.
+// Devuelve las reseñas de TODOS los tipos del usuario; la app muestra solo las de producto. El
+// `productos` de esa respuesta no incluye el id del producto, solo nombre, slug e imágenes.
+
+export interface MyReviewProduct {
+  nombre: string;
+  slug: string;
+  producto_imagenes?: { url_imagen: string }[];
+}
+
+export interface MyReview {
+  id_resena: number;
+  /** "producto", "servicio" o "general". */
+  tipo: string;
+  calificacion: number;
+  titulo: string | null;
+  comentario: string;
+  /** pendiente | aprobada | rechazada. */
+  estado: string;
+  /** ISO en UTC; puede ser null. */
+  created_at: string | null;
+  productos?: MyReviewProduct | null;
+  servicios?: { nombre: string; slug: string } | null;
+}
+
+/** Lo que expone useMyReviews: solo reseñas de producto y su total. */
+export interface MyReviewsResult {
+  reviews: MyReview[];
+  total: number;
+}
+
+export type ReviewStatusTone = "success" | "warning" | "danger" | "neutral";

@@ -4,9 +4,11 @@
 import { formatOrderDate } from "@/features/orders/orderFormat";
 import type {
   DistributionRow,
+  MyReview,
   ProductReview,
   RatingDistribution,
   ReviewAuthor,
+  ReviewStatusTone,
   StarIcon,
 } from "@/features/reviews/types";
 
@@ -94,4 +96,43 @@ export function reviewsCountLabel(total: unknown): string {
 /** Hay más reseñas por pedir mientras lo cargado sea menor que el total del servidor. */
 export function hasMoreReviews(loaded: number, total: number): boolean {
   return safeCount(loaded) < safeCount(total);
+}
+
+/** El alcance de la app es solo reseñas de producto: descarta las de servicio y las generales. */
+export function onlyProductReviews(reviews: MyReview[]): MyReview[] {
+  return reviews.filter((r) => r.tipo === "producto");
+}
+
+const normalizeStatus = (estado: unknown): string => (typeof estado === "string" ? estado.trim().toLowerCase() : "");
+
+const STATUS_LABELS: Record<string, string> = {
+  pendiente: "Pendiente",
+  aprobada: "Aprobada",
+  rechazada: "Rechazada",
+};
+
+const STATUS_TONES: Record<string, ReviewStatusTone> = {
+  pendiente: "warning",
+  aprobada: "success",
+  rechazada: "danger",
+};
+
+/** "Pendiente", "Aprobada" o "Rechazada"; cualquier otro valor, "Estado no disponible". */
+export function reviewStatusLabel(estado: string | null | undefined): string {
+  return STATUS_LABELS[normalizeStatus(estado)] ?? "Estado no disponible";
+}
+
+export function reviewStatusTone(estado: string | null | undefined): ReviewStatusTone {
+  return STATUS_TONES[normalizeStatus(estado)] ?? "neutral";
+}
+
+/** Nombre del producto reseñado, o un texto genérico si el servidor no lo trae. */
+export function myReviewProductName(review: MyReview): string {
+  return clean(review.productos?.nombre) || "Producto no disponible";
+}
+
+/** Primera imagen del producto reseñado, o null. */
+export function myReviewImageUrl(review: MyReview): string | null {
+  const url = review.productos?.producto_imagenes?.[0]?.url_imagen;
+  return typeof url === "string" && url !== "" ? url : null;
 }

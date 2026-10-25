@@ -3,15 +3,20 @@ import {
   distributionRows,
   formatAverage,
   hasMoreReviews,
+  myReviewImageUrl,
+  myReviewProductName,
+  onlyProductReviews,
   ratingLabel,
   reviewAuthor,
   reviewDateLabel,
+  reviewStatusLabel,
+  reviewStatusTone,
   reviewerName,
   reviewsCountLabel,
   starIcons,
 } from "@/features/reviews/reviewSelectors";
 
-import { makeReview } from "./fixtures/review";
+import { makeMyReview, makeReview } from "./fixtures/review";
 
 describe("reviewAuthor", () => {
   it("lee el autor de `usuarios` (forma real del backend)", () => {
@@ -192,5 +197,63 @@ describe("reviewsCountLabel y hasMoreReviews", () => {
     expect(hasMoreReviews(12, 12)).toBe(false);
     expect(hasMoreReviews(0, 0)).toBe(false);
     expect(hasMoreReviews(3, 0)).toBe(false);
+  });
+});
+
+describe("onlyProductReviews (el alcance de la app es solo reseñas de producto)", () => {
+  it("descarta las de servicio y las generales y conserva el orden", () => {
+    const lista = [
+      makeMyReview({ id_resena: 1, tipo: "producto" }),
+      makeMyReview({ id_resena: 2, tipo: "servicio" }),
+      makeMyReview({ id_resena: 3, tipo: "general" }),
+      makeMyReview({ id_resena: 4, tipo: "producto" }),
+    ];
+    expect(onlyProductReviews(lista).map((r) => r.id_resena)).toEqual([1, 4]);
+  });
+
+  it("lista vacía o sin reseñas de producto devuelve lista vacía", () => {
+    expect(onlyProductReviews([])).toEqual([]);
+    expect(onlyProductReviews([makeMyReview({ tipo: "servicio" })])).toEqual([]);
+  });
+});
+
+describe("reviewStatusLabel y reviewStatusTone", () => {
+  it.each([
+    ["pendiente", "Pendiente", "warning"],
+    ["aprobada", "Aprobada", "success"],
+    ["rechazada", "Rechazada", "danger"],
+  ])("%s se muestra como %s con tono %s", (estado, etiqueta, tono) => {
+    expect(reviewStatusLabel(estado)).toBe(etiqueta);
+    expect(reviewStatusTone(estado)).toBe(tono);
+  });
+
+  it("ignora mayúsculas y espacios", () => {
+    expect(reviewStatusLabel(" Aprobada ")).toBe("Aprobada");
+    expect(reviewStatusTone("PENDIENTE")).toBe("warning");
+  });
+
+  it("un estado nulo, vacío o desconocido no rompe", () => {
+    for (const estado of [null, undefined, "", "en_revision"]) {
+      expect(reviewStatusLabel(estado)).toBe("Estado no disponible");
+      expect(reviewStatusTone(estado)).toBe("neutral");
+    }
+  });
+});
+
+describe("myReviewProductName y myReviewImageUrl", () => {
+  it("nombre del producto de la reseña", () => {
+    expect(myReviewProductName(makeMyReview())).toBe("Lenovo ThinkPad X1 Carbon");
+  });
+
+  it("sin producto (productos nulo) o sin nombre usa un texto genérico", () => {
+    expect(myReviewProductName(makeMyReview({ productos: null }))).toBe("Producto no disponible");
+    expect(myReviewProductName(makeMyReview({ productos: { nombre: "  ", slug: "x" } }))).toBe("Producto no disponible");
+  });
+
+  it("primera imagen del producto, o null si no hay", () => {
+    expect(myReviewImageUrl(makeMyReview())).toBe("https://example.com/thinkpad.jpg");
+    expect(myReviewImageUrl(makeMyReview({ productos: null }))).toBeNull();
+    expect(myReviewImageUrl(makeMyReview({ productos: { nombre: "A", slug: "a", producto_imagenes: [] } }))).toBeNull();
+    expect(myReviewImageUrl(makeMyReview({ productos: { nombre: "A", slug: "a" } }))).toBeNull();
   });
 });

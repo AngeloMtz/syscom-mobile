@@ -100,7 +100,12 @@ function ClientDashboard() {
         description="Productos que guardaste"
         onPress={() => router.push("/favorites")}
       />
-      <DashboardOption icon="star-outline" label="Mis reseñas" disabled />
+      <DashboardOption
+        icon="star-outline"
+        label="Mis reseñas"
+        description="Tus calificaciones y su estado"
+        onPress={() => router.push("/reviews")}
+      />
       <DashboardOption icon="card-outline" label="Métodos de pago" disabled />
       <DashboardOption icon="document-text-outline" label="Facturación" disabled />
 

@@ -27,6 +27,11 @@ const STATUS_LABELS: Record<string, string> = {
   cancelado: "Cancelado",
 };
 
+/** Solo los productos de un pedido entregado se pueden reseñar (lo mismo que exige el backend). */
+export function isOrderReviewable(estado: string | null | undefined): boolean {
+  return typeof estado === "string" && estado.trim().toLowerCase() === "entregado";
+}
+
 export function orderStatusLabel(estado: string | null | undefined): string {
   if (!estado) return "Estado no disponible";
   return STATUS_LABELS[estado] ?? humanize(estado);

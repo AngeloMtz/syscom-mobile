@@ -29,6 +29,7 @@ import {
 } from "@/features/catalog/productDetail";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { usePaymentStore } from "@/features/payments/paymentStore";
+import ProductReviewsSection from "@/features/reviews/components/ProductReviewsSection";
 import { useAuthStore } from "@/shared/store/authStore";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import { formatPrice } from "@/shared/utils/format";
@@ -225,6 +226,8 @@ export default function ProductDetailScreen() {
               ))}
             </View>
           ) : null}
+
+          <ProductReviewsSection productId={product.id} />
         </View>
       </ScrollView>
 

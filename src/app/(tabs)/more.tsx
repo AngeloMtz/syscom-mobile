@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useProfile } from "@/features/profile/hooks/useProfile";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import { useAuthStore } from "@/shared/store/authStore";
@@ -14,7 +15,7 @@ export default function MoreScreen() {
   const c = useColors();
   const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const logout = useAuthStore((s) => s.logout);
+  const logout = useLogout();
   const { data: perfil } = useProfile();
   const [saliendo, setSaliendo] = useState(false);
 

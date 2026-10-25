@@ -27,4 +27,5 @@ export {
   makeOrderSummary,
   makeOrdersPage,
 } from "./order";
+export { makeNotification, makeNotificationsPage } from "./notification";
 export { makeProfile, makeUpdateProfileDTO, makeUser } from "./user";

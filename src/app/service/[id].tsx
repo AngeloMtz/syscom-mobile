@@ -3,16 +3,15 @@
 // reseñas del servicio son otra feature y no se incluyen aquí.
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { Dimensions, Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import ServiceGallery from "@/features/services/components/ServiceGallery";
 import { useService } from "@/features/services/hooks/useService";
+import { getServiceGalleryUrls } from "@/features/services/selectors";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import ScreenState from "@/shared/ui/ScreenState";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import { formatPrice } from "@/shared/utils/format";
-import { resolveAssetUrl } from "@/shared/utils/url";
-
-const { width } = Dimensions.get("window");
 
 export default function ServiceDetailScreen() {
   const c = useColors();
@@ -54,21 +53,11 @@ export default function ServiceDetailScreen() {
 
 function ServiceBody({ service: s }: { service: NonNullable<ReturnType<typeof useService>["data"]> }) {
   const c = useColors();
-  const galeria = (s.imagenes ?? [])
-    .map((img) => resolveAssetUrl(img.url))
-    .filter((u): u is string => !!u);
-  const portada = resolveAssetUrl(s.imagen_principal) ?? galeria[0];
   const precio = s.precio_final ?? s.precio_base;
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: spacing.xxl }}>
-      <View style={[styles.imgWrap, { backgroundColor: c.card }]}>
-        {portada ? (
-          <Image source={{ uri: portada }} style={styles.img} resizeMode="cover" />
-        ) : (
-          <Ionicons name="construct" size={64} color={c.brandPrimary} />
-        )}
-      </View>
+      <ServiceGallery urls={getServiceGalleryUrls(s)} />
 
       <View style={{ padding: spacing.lg }}>
         {s.categoria?.nombre ? (
@@ -142,17 +131,6 @@ function ServiceBody({ service: s }: { service: NonNullable<ReturnType<typeof us
           </View>
         ) : null}
 
-        {galeria.length > 1 ? (
-          <View style={{ marginTop: spacing.xl }}>
-            <Text style={[styles.sectionTitle, { color: c.text }]}>Galería</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: spacing.md }}>
-              {galeria.map((uri, i) => (
-                <Image key={`${uri}-${i}`} source={{ uri }} style={styles.galleryImg} resizeMode="cover" />
-              ))}
-            </ScrollView>
-          </View>
-        ) : null}
-
         {(s.videos?.length ?? 0) > 0 ? (
           <View style={{ marginTop: spacing.xl }}>
             <Text style={[styles.sectionTitle, { color: c.text }]}>Videos</Text>
@@ -200,8 +178,6 @@ function MetaCard({
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: spacing.xl, gap: spacing.sm },
   titleText: { fontSize: 17, fontWeight: "700", textAlign: "center" },
-  imgWrap: { width, height: width * 0.6, alignItems: "center", justifyContent: "center" },
-  img: { width: "100%", height: "100%" },
   category: { fontSize: 11, fontWeight: "700", letterSpacing: 0.5, color: "#6b7683" },
   name: { fontSize: 22, fontWeight: "800", marginTop: 2 },
   priceRow: { flexDirection: "row", alignItems: "center", gap: spacing.md, marginTop: 8 },
@@ -224,7 +200,6 @@ const styles = StyleSheet.create({
   stepDot: { width: 26, height: 26, borderRadius: 13, alignItems: "center", justifyContent: "center" },
   stepNum: { color: "#fff", fontWeight: "800", fontSize: 13 },
   stepLine: { width: 2, flex: 1, marginTop: 2 },
-  galleryImg: { width: 190, height: 130, borderRadius: radius.md },
   videoRow: {
     flexDirection: "row",
     alignItems: "center",

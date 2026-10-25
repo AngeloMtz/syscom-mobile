@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { useRegisterPushToken } from "@/features/notifications/hooks/useRegisterPushToken";
 import OnboardingFlow from "@/features/onboarding/components/OnboardingFlow";
 import PaymentsProvider from "@/features/payments/components/PaymentsProvider";
 import { queryClient } from "@/shared/api/queryClient";
@@ -30,6 +31,11 @@ export default function RootLayout() {
   const isCheckingOnboarding = useOnboardingStore((s) => s.isChecking);
   const onboardingCompleted = useOnboardingStore((s) => s.completed);
   const completeOnboarding = useOnboardingStore((s) => s.complete);
+
+  // Mientras haya sesión, registra (o reintenta registrar) el token de Expo
+  // Push de este dispositivo en el backend. No bloquea el arranque: si falla
+  // o el usuario niega el permiso, el resto de la app funciona igual.
+  useRegisterPushToken();
 
   useEffect(() => {
     hydrate();

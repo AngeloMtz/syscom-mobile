@@ -1,4 +1,4 @@
-import { getServiceImageUrl, getServicePrice } from "@/features/services/selectors";
+import { getServiceGalleryUrls, getServiceImageUrl, getServicePrice } from "@/features/services/selectors";
 import type { ServiceListItem } from "@/features/services/types";
 
 jest.mock("expo-secure-store", () => ({
@@ -22,6 +22,41 @@ describe("getServiceImageUrl", () => {
 
   it("devuelve undefined si no hay ninguna imagen", () => {
     expect(getServiceImageUrl(base({ imagen_principal: null, imagenes: [] }))).toBeUndefined();
+  });
+});
+
+describe("getServiceGalleryUrls", () => {
+  it("pone la imagen principal al frente y el resto después", () => {
+    const s = base({
+      imagen_principal: "https://cdn.com/p.jpg",
+      imagenes: [{ url: "https://cdn.com/a.jpg" }, { url: "https://cdn.com/b.jpg" }],
+    });
+    expect(getServiceGalleryUrls(s)).toEqual([
+      "https://cdn.com/p.jpg",
+      "https://cdn.com/a.jpg",
+      "https://cdn.com/b.jpg",
+    ]);
+  });
+
+  it("no repite la principal si ya está en la galería", () => {
+    const s = base({
+      imagen_principal: "https://cdn.com/a.jpg",
+      imagenes: [{ url: "https://cdn.com/a.jpg" }, { url: "https://cdn.com/b.jpg" }],
+    });
+    expect(getServiceGalleryUrls(s)).toEqual(["https://cdn.com/a.jpg", "https://cdn.com/b.jpg"]);
+  });
+
+  it("quita imágenes repetidas y las que no tienen url", () => {
+    const s = base({
+      imagen_principal: null,
+      imagenes: [{ url: "https://cdn.com/a.jpg" }, { url: "https://cdn.com/a.jpg" }, { url: "" }],
+    });
+    expect(getServiceGalleryUrls(s)).toEqual(["https://cdn.com/a.jpg"]);
+  });
+
+  it("sin imágenes devuelve lista vacía", () => {
+    expect(getServiceGalleryUrls(base({ imagen_principal: null, imagenes: [] }))).toEqual([]);
+    expect(getServiceGalleryUrls(base())).toEqual([]);
   });
 });
 

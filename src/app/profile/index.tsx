@@ -6,15 +6,15 @@ import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import RequireAuth from "@/features/auth/components/RequireAuth";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 import DashboardOption from "@/features/profile/components/DashboardOption";
 import { useProfile } from "@/features/profile/hooks/useProfile";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
-import { useAuthStore } from "@/shared/store/authStore";
 
 function ClientDashboard() {
   const c = useColors();
   const router = useRouter();
-  const logout = useAuthStore((s) => s.logout);
+  const logout = useLogout();
   const [saliendo, setSaliendo] = useState(false);
 
   const { data: perfil, isPending, isError } = useProfile();
@@ -114,7 +114,12 @@ function ClientDashboard() {
         description="Nosotros, políticas, preguntas frecuentes y contacto"
         onPress={() => router.push("/informacion")}
       />
-      <DashboardOption icon="notifications-outline" label="Notificaciones" disabled />
+      <DashboardOption
+        icon="notifications-outline"
+        label="Notificaciones"
+        description="Avisos de pedidos y promociones"
+        onPress={() => router.push("/notifications")}
+      />
       <DashboardOption icon="gift-outline" label="Aportaciones" disabled />
       <DashboardOption icon="help-circle-outline" label="Ayuda" disabled />
 

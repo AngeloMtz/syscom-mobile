@@ -1,20 +1,24 @@
 // src/features/reviews/components/ProductReviewsSection.tsx — Sección "Reseñas" del detalle de producto.
 // Solo presentación: la consulta y la paginación vienen de useProductReviews. Maneja sus propios
 // estados (carga, error con reintento, vacío, lista y "Ver más") para que un fallo de las reseñas
-// no afecte al resto de la pantalla del producto.
+// no afecte al resto de la pantalla del producto. Con la lista (o el estado vacío) muestra la acción
+// "Escribir reseña" (WriteReviewAction decide si hay botón, el motivo o nada).
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 
 import ReviewCard from "@/features/reviews/components/ReviewCard";
 import ReviewSummary from "@/features/reviews/components/ReviewSummary";
+import WriteReviewAction from "@/features/reviews/components/WriteReviewAction";
 import { useProductReviews } from "@/features/reviews/hooks/useProductReviews";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 
 type Props = {
   productId: number;
+  /** Se pasa al formulario para mostrar sobre qué producto es la reseña. */
+  productName?: string;
 };
 
-export default function ProductReviewsSection({ productId }: Props) {
+export default function ProductReviewsSection({ productId, productName }: Props) {
   const c = useColors();
   const q = useProductReviews(productId);
 
@@ -64,6 +68,7 @@ export default function ProductReviewsSection({ productId }: Props) {
       <View style={styles.section}>
         {title}
         <Text style={[styles.hint, { color: c.textMuted }]}>Aún no hay reseñas de este producto.</Text>
+        <WriteReviewAction productId={productId} productName={productName} />
       </View>
     );
   }
@@ -72,6 +77,7 @@ export default function ProductReviewsSection({ productId }: Props) {
     <View style={styles.section}>
       {title}
       <ReviewSummary total={total} promedio={promedio} distribucion={distribucion} />
+      <WriteReviewAction productId={productId} productName={productName} />
       <View style={styles.list}>
         {reviews.map((review) => (
           <ReviewCard key={review.id_resena} review={review} />

@@ -132,3 +132,155 @@ describe("reviewRepository.getProductReviews", () => {
     await expect(reviewRepository.getProductReviews(7)).rejects.toBe(error);
   });
 });
+
+// SUPUESTO (pendiente de verificar): la forma de can-review y de POST /reviews se leyó del código
+// del backend; no se ha contrastado con una respuesta real. Estas pruebas fijan la tolerancia del
+// repository ante variaciones, no el contrato real.
+describe("reviewRepository.canReview", () => {
+  it("envía GET /reviews/can-review/:id", async () => {
+    responde({ data: { canReview: false } });
+
+    await reviewRepository.canReview(7);
+
+    const { metodo, ruta } = ultimaPeticion();
+    expect({ metodo, ruta }).toEqual({ metodo: "get", ruta: "/reviews/can-review/7" });
+  });
+
+  it("puede reseñar: devuelve canReview true con el id del pedido", async () => {
+    responde({ data: { canReview: true, id_pedido: 12 } });
+
+    expect(await reviewRepository.canReview(7)).toEqual({ canReview: true, idPedido: 12, reason: null });
+  });
+
+  it("no puede reseñar: devuelve el motivo del servidor", async () => {
+    responde({ data: { canReview: false, reason: "Ya dejaste una reseña para este producto." } });
+
+    expect(await reviewRepository.canReview(7)).toEqual({
+      canReview: false,
+      idPedido: null,
+      reason: "Ya dejaste una reseña para este producto.",
+    });
+  });
+
+  it("si la respuesta no trae datos, no se puede reseñar y no se rompe", async () => {
+    responde({});
+
+    expect(await reviewRepository.canReview(7)).toEqual({ canReview: false, idPedido: null, reason: null });
+  });
+
+  it("canReview true sin id de pedido no es utilizable: se trata como que no puede (crear exige el pedido)", async () => {
+    responde({ data: { canReview: true } });
+
+    const resultado = await reviewRepository.canReview(7);
+
+    expect(resultado.canReview).toBe(false);
+    expect(resultado.idPedido).toBeNull();
+  });
+
+  it("acepta el id de pedido como texto numérico", async () => {
+    responde({ data: { canReview: true, id_pedido: "12" } });
+
+    expect((await reviewRepository.canReview(7)).idPedido).toBe(12);
+  });
+
+  it.each([[0], [-3], ["abc"], [1.5], [null]])("un id de pedido inválido (%s) no habilita la reseña", async (idPedido) => {
+    responde({ data: { canReview: true, id_pedido: idPedido } });
+
+    expect((await reviewRepository.canReview(7)).canReview).toBe(false);
+  });
+
+  it("un motivo vacío o que no es texto se normaliza a null", async () => {
+    responde({ data: { canReview: false, reason: "   " } });
+    expect((await reviewRepository.canReview(7)).reason).toBeNull();
+
+    responde({ data: { canReview: false, reason: 42 } });
+    expect((await reviewRepository.canReview(7)).reason).toBeNull();
+  });
+
+  it("canReview que no es exactamente true cuenta como false", async () => {
+    responde({ data: { canReview: "true", id_pedido: 12 } });
+
+    expect((await reviewRepository.canReview(7)).canReview).toBe(false);
+  });
+
+  it("rechaza con el 401 cuando no hay sesión", async () => {
+    const error = makeApiError({ status: 401, message: "Token requerido" });
+    adapter.mockRejectedValueOnce(error);
+
+    await expect(reviewRepository.canReview(7)).rejects.toBe(error);
+  });
+
+  it("rechaza con el 503 del backend", async () => {
+    const error = makeApiError({ status: 503, message: "Error de conexión. Intenta de nuevo más tarde." });
+    adapter.mockRejectedValueOnce(error);
+
+    await expect(reviewRepository.canReview(7)).rejects.toBe(error);
+  });
+});
+
+describe("reviewRepository.create", () => {
+  const entrada = {
+    idProducto: 7,
+    idPedido: 12,
+    calificacion: 4,
+    titulo: "Buen producto",
+    comentario: "Llegó rápido y funciona bien.",
+  };
+
+  it("envía POST /reviews con tipo producto, ids, calificación, título y comentario", async () => {
+    responde({ data: { id_resena: 99 } });
+
+    await reviewRepository.create(entrada);
+
+    const { metodo, ruta, cuerpo } = ultimaPeticion();
+    expect({ metodo, ruta }).toEqual({ metodo: "post", ruta: "/reviews" });
+    expect(cuerpo).toEqual({
+      tipo: "producto",
+      id_producto: 7,
+      id_pedido: 12,
+      calificacion: 4,
+      titulo: "Buen producto",
+      comentario: "Llegó rápido y funciona bien.",
+    });
+  });
+
+  it("sin título no envía la clave `titulo`", async () => {
+    responde({ data: { id_resena: 99 } });
+
+    await reviewRepository.create({ ...entrada, titulo: undefined });
+
+    expect("titulo" in ultimaPeticion().cuerpo).toBe(false);
+  });
+
+  it("devuelve el id de la reseña creada", async () => {
+    responde({ data: { id_resena: 99 } });
+
+    expect(await reviewRepository.create(entrada)).toEqual({ idResena: 99 });
+  });
+
+  it("si la respuesta no trae el id, no se rompe (idResena null)", async () => {
+    responde({});
+
+    expect(await reviewRepository.create(entrada)).toEqual({ idResena: null });
+  });
+
+  it.each([["no comprado", "No puedes reseñar este producto. Necesitas haberlo comprado y recibido."], ["duplicada", "Ya dejaste una reseña para este producto."]])(
+    "rechaza con el error 400 del servidor (%s) para mostrar su mensaje",
+    async (_caso, message) => {
+      const error = makeApiError({ status: 400, message });
+      adapter.mockRejectedValueOnce(error);
+
+      await expect(reviewRepository.create(entrada)).rejects.toBe(error);
+    },
+  );
+
+  it("rechaza con el 503 y con el error de red", async () => {
+    const e503 = makeApiError({ status: 503, message: "Error de conexión. Intenta de nuevo más tarde." });
+    adapter.mockRejectedValueOnce(e503);
+    await expect(reviewRepository.create(entrada)).rejects.toBe(e503);
+
+    const red = makeNetworkError();
+    adapter.mockRejectedValueOnce(red);
+    await expect(reviewRepository.create(entrada)).rejects.toBe(red);
+  });
+});

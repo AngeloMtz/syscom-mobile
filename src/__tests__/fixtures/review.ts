@@ -1,4 +1,4 @@
-import type { ProductReview, ProductReviewsPage } from "@/features/reviews/types";
+import type { CanReview, ProductReview, ProductReviewsPage } from "@/features/reviews/types";
 
 // Forma verificada con GET /reviews/product/7 en producción (2026-10-24): el autor viene en
 // `usuarios` (plural) y no hay `usuario`. El backend también expone `productos` y `servicios`,
@@ -26,4 +26,11 @@ export function makeProductReviewsPage(over: Partial<ProductReviewsPage> = {}): 
     page: 1,
     ...over,
   };
+}
+
+// SUPUESTO: la forma de GET /reviews/can-review/:id y de POST /reviews se leyó del código del
+// backend (reviews.service.ts / controller.ts), sin contrastarla con una respuesta real.
+// El repository la normaliza a CanReview; esto es la forma ya normalizada.
+export function makeCanReview(over: Partial<CanReview> = {}): CanReview {
+  return { canReview: true, idPedido: 12, reason: null, ...over };
 }

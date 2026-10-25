@@ -19,6 +19,18 @@ jest.mock("@expo/vector-icons", () => {
 });
 
 jest.mock("@/features/reviews/hooks/useProductReviews", () => ({ useProductReviews: jest.fn() }));
+// La acción de "Escribir reseña" tiene sus propias pruebas; aquí solo se comprueba dónde aparece.
+jest.mock("@/features/reviews/components/WriteReviewAction", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require("react");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { Text } = require("react-native");
+  return {
+    __esModule: true,
+    default: ({ productId, productName }: { productId: number; productName?: string }) =>
+      React.createElement(Text, null, `accion-escribir:${productId}:${productName ?? ""}`),
+  };
+});
 
 const useReviews = useProductReviews as jest.Mock;
 
@@ -216,6 +228,30 @@ describe("ProductReviewsSection", () => {
     expect(screen.getByText("Cargando…")).toBeTruthy();
     await fireEvent.press(screen.getByLabelText("Ver más reseñas"));
     expect(fetchNextPage).not.toHaveBeenCalled();
+  });
+
+  it("muestra la acción de escribir reseña con el producto, en la lista y en el estado vacío", async () => {
+    useReviews.mockReturnValue(
+      estado({ data: { reviews: [makeReview()], total: 1, promedio: 5, distribucion: { ...DIST_VACIA, "5": 1 } } }),
+    );
+    await render(<ProductReviewsSection productId={7} productName="Lenovo ThinkPad X1 Carbon" />);
+    expect(screen.getByText("accion-escribir:7:Lenovo ThinkPad X1 Carbon")).toBeTruthy();
+
+    useReviews.mockReturnValue(
+      estado({ data: { reviews: [], total: 0, promedio: 0, distribucion: DIST_VACIA } }),
+    );
+    await render(<ProductReviewsSection productId={7} />);
+    expect(screen.getByText("accion-escribir:7:")).toBeTruthy();
+  });
+
+  it("no muestra la acción de escribir reseña mientras carga ni cuando falla la carga", async () => {
+    useReviews.mockReturnValue(estado({ isLoading: true }));
+    await render(<ProductReviewsSection productId={7} />);
+    expect(screen.queryByText(/accion-escribir/)).toBeNull();
+
+    useReviews.mockReturnValue(estado({ isError: true, error: makeApiError({ status: 503, message: "Error" }) }));
+    await render(<ProductReviewsSection productId={7} />);
+    expect(screen.queryByText(/accion-escribir/)).toBeNull();
   });
 
   it("si falla una página siguiente conserva la lista y avisa con opción de reintentar", async () => {

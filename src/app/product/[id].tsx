@@ -227,7 +227,7 @@ export default function ProductDetailScreen() {
             </View>
           ) : null}
 
-          <ProductReviewsSection productId={product.id} />
+          <ProductReviewsSection productId={product.id} productName={product.nombre} />
         </View>
       </ScrollView>
 

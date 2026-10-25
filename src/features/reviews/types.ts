@@ -52,3 +52,42 @@ export interface DistributionRow {
   /** 0 a 100, redondeado. */
   percent: number;
 }
+
+// — Escribir reseña —
+// SUPUESTO (pendiente de verificar): la forma de GET /reviews/can-review/:id
+// ({ success, data: { canReview, id_pedido?, reason? } }) y de POST /reviews
+// ({ success, message, data: { id_resena } }) se leyó del código del backend
+// (reviews.service.ts y controller.ts), sin contrastarla con una respuesta real.
+// El repository las normaliza a estos tipos.
+
+/** Respuesta ya normalizada de can-review. `idPedido` solo viene cuando puede reseñar. */
+export interface CanReview {
+  canReview: boolean;
+  /** Pedido entregado que da derecho a reseñar; POST /reviews lo exige. */
+  idPedido: number | null;
+  /** Motivo del servidor cuando no puede reseñar. */
+  reason: string | null;
+}
+
+export interface CreateReviewInput {
+  idProducto: number;
+  idPedido: number;
+  calificacion: number;
+  titulo?: string;
+  comentario: string;
+}
+
+export interface CreateReviewResult {
+  idResena: number | null;
+}
+
+/** Lo que escribe la persona en el formulario. */
+export interface ReviewFormValues {
+  /** 0 mientras no elige estrellas. */
+  calificacion: number;
+  titulo: string;
+  comentario: string;
+}
+
+export type ReviewFormField = "calificacion" | "titulo" | "comentario";
+export type ReviewFormErrors = Partial<Record<ReviewFormField, string>>;

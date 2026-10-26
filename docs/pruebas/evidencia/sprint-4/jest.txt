@@ -1,0 +1,316 @@
+PASS src/__tests__/notificationRepository.test.ts (9.101 s)
+PASS src/__tests__/useMarkNotificationsRead.test.tsx (9.108 s)
+PASS src/__tests__/useNotificationPreferences.test.tsx (9.108 s)
+PASS src/__tests__/components/ChatFab.test.tsx (10.999 s)
+PASS src/__tests__/components/ARButton.test.tsx (13.888 s)
+PASS src/__tests__/components/LiveChatComponents.test.tsx (12.194 s)
+PASS src/__tests__/components/ChatComponents.test.tsx (12.424 s)
+PASS src/__tests__/components/NotificationComponents.test.tsx (13.097 s)
+PASS src/__tests__/components/ReviewComponents.test.tsx (13.481 s)
+PASS src/__tests__/components/CartItemRow.test.tsx (13.89 s)
+PASS src/__tests__/components/AddressForm.test.tsx (14.109 s)
+PASS src/__tests__/components/OrderComponents.test.tsx (14.445 s)
+PASS src/__tests__/usePayment.test.tsx (5.173 s)
+PASS src/__tests__/integration/compraDeExtremoAExtremo.test.tsx (8.051 s)
+PASS src/__tests__/components/AddressCard.test.tsx (5.719 s)
+PASS src/__tests__/integration/catalogoApi.test.tsx (5.118 s)
+PASS src/__tests__/components/ReviewWriteComponents.test.tsx (16.553 s)
+PASS src/__tests__/integration/sesionCompra.test.tsx (5.169 s)
+PASS src/__tests__/components/CartSummary.test.tsx
+PASS src/__tests__/useProductModels.test.tsx
+PASS src/__tests__/reviewRepository.test.ts
+PASS src/__tests__/integration/favoritosApi.test.tsx (5.188 s)
+PASS src/__tests__/institutionalRepository.test.ts
+PASS src/__tests__/medirRendimiento.test.ts
+PASS src/__tests__/useLiveChat.test.tsx
+PASS src/__tests__/integration/sesionCache.test.tsx (5.29 s)
+PASS src/__tests__/useCart.test.tsx
+PASS src/__tests__/components/MyReviewsComponents.test.tsx (19.451 s)
+PASS src/__tests__/apiClient.test.ts
+PASS src/__tests__/useAddresses.test.tsx
+PASS src/__tests__/useProductReviews.test.tsx
+PASS src/__tests__/productRepository.test.ts
+PASS src/__tests__/modelsRepository.test.ts
+PASS src/__tests__/useFavorites.test.tsx
+PASS src/__tests__/favoriteRepository.test.ts
+PASS src/__tests__/useConfirm2FA.test.tsx
+PASS src/__tests__/useChatbot.test.tsx
+PASS src/__tests__/cartRepository.test.ts
+PASS src/__tests__/components/BannerCarousel.test.tsx (21.306 s)
+PASS src/__tests__/chatbotRepository.test.ts
+PASS src/__tests__/useNotificationDetail.test.tsx
+PASS src/__tests__/useProfile.test.tsx
+PASS src/__tests__/useProduct.test.tsx
+PASS src/__tests__/authRepository.test.ts
+PASS src/__tests__/paymentRepository.test.ts
+PASS src/__tests__/brandRepository.test.ts
+PASS src/__tests__/serviceRepository.test.ts
+PASS src/__tests__/categoryRepository.test.ts
+PASS src/__tests__/useRegisterPushToken.test.tsx
+PASS src/__tests__/useMyReviews.test.tsx
+PASS src/__tests__/useVerifyRegistration.test.tsx
+PASS src/__tests__/orderRepository.test.ts
+PASS src/__tests__/profileRepository.test.ts
+PASS src/__tests__/useProductsPreview.test.tsx
+PASS src/__tests__/useProducts.test.tsx
+PASS src/__tests__/useLogout.test.tsx
+PASS src/__tests__/useInstitutional.test.tsx
+PASS src/__tests__/addressRepository.test.ts
+PASS src/__tests__/useServicesPreview.test.tsx
+PASS src/__tests__/useRegister.test.tsx
+PASS src/__tests__/useMe.test.tsx
+PASS src/__tests__/useServices.test.tsx
+PASS src/__tests__/servicesSelectors.test.ts
+PASS src/__tests__/useOrders.test.tsx
+PASS src/__tests__/arSelectors.test.ts
+PASS src/__tests__/useCanReview.test.tsx
+PASS src/__tests__/useBrands.test.tsx
+PASS src/__tests__/useUpdateProfile.test.tsx
+PASS src/__tests__/usePasswordRecovery.test.tsx
+PASS src/__tests__/useCreateReview.test.tsx
+PASS src/__tests__/useFeaturedProducts.test.tsx
+PASS src/__tests__/session.test.ts
+PASS src/__tests__/useResendCode.test.tsx
+PASS src/__tests__/useNotifications.test.tsx
+PASS src/__tests__/url.test.ts
+PASS src/__tests__/useLogin.test.tsx
+PASS src/__tests__/liveChatGateway.test.ts
+PASS src/__tests__/useDebouncedValue.test.tsx
+PASS src/__tests__/useService.test.tsx
+PASS src/__tests__/useOrder.test.tsx
+PASS src/__tests__/cartSelectors.test.ts
+PASS src/__tests__/useCategories.test.tsx
+PASS src/__tests__/addressSelectors.test.ts
+PASS src/__tests__/productDetail.test.ts
+PASS src/__tests__/perfGuard.test.ts
+PASS src/__tests__/addressValidation.test.ts
+PASS src/__tests__/priceValidation.test.ts
+PASS src/__tests__/paymentErrors.test.ts
+PASS src/__tests__/searchFilters.test.ts
+PASS src/__tests__/queryClient.test.ts
+PASS src/__tests__/products.test.ts
+PASS src/__tests__/reviewSelectors.test.ts
+PASS src/__tests__/html.test.ts
+PASS src/__tests__/favoriteSelectors.test.ts
+PASS src/__tests__/notificationSelectors.test.ts
+PASS src/__tests__/liveChatSelectors.test.ts
+PASS src/__tests__/pushNotifications.test.ts
+PASS src/__tests__/paymentReducer.test.ts
+PASS src/__tests__/addressErrors.test.ts
+PASS src/__tests__/liveChatValidation.test.ts
+PASS src/__tests__/serviceGallery.test.ts
+PASS src/__tests__/reviewValidation.test.ts
+PASS src/__tests__/validation.test.ts
+PASS src/__tests__/liveChatReducer.test.ts
+PASS src/__tests__/paymentPolling.test.ts
+PASS src/__tests__/chatSelectors.test.ts
+PASS src/__tests__/errorMessage.test.ts
+PASS src/__tests__/modelViewerHtml.test.ts
+PASS src/__tests__/orderFormat.test.ts
+PASS src/__tests__/paymentConfig.test.ts
+PASS src/__tests__/chatStore.test.ts
+PASS src/__tests__/orderList.test.ts
+PASS src/__tests__/chatValidation.test.ts
+PASS src/__tests__/categories.test.ts
+PASS src/__tests__/paymentSelectors.test.ts
+-------------------------------------|---------|----------|---------|---------|-------------------
+File                                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------------------------|---------|----------|---------|---------|-------------------
+All files                            |   99.08 |    97.35 |   98.53 |   99.34 |                   
+ features/addresses                  |     100 |      100 |     100 |     100 |                   
+  addressErrors.ts                   |     100 |      100 |     100 |     100 |                   
+  addressSelectors.ts                |     100 |      100 |     100 |     100 |                   
+  addressValidation.ts               |     100 |      100 |     100 |     100 |                   
+  checkoutStore.ts                   |     100 |      100 |     100 |     100 |                   
+ features/addresses/components       |   86.84 |      100 |   64.28 |   84.37 |                   
+  AddressCard.tsx                    |     100 |      100 |     100 |     100 |                   
+  AddressForm.tsx                    |   85.71 |      100 |   61.53 |   82.75 | 71-120            
+ features/addresses/hooks            |     100 |      100 |     100 |     100 |                   
+  useAddresses.ts                    |     100 |      100 |     100 |     100 |                   
+  useCreateAddress.ts                |     100 |      100 |     100 |     100 |                   
+  useDeleteAddress.ts                |     100 |      100 |     100 |     100 |                   
+  useUpdateAddress.ts                |     100 |      100 |     100 |     100 |                   
+ features/addresses/repositories     |     100 |      100 |     100 |     100 |                   
+  addressRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/ar                         |     100 |    88.88 |     100 |     100 |                   
+  modelViewerHtml.ts                 |     100 |    83.33 |     100 |     100 | 13                
+  selectors.ts                       |     100 |    90.47 |     100 |     100 | 16,31             
+ features/ar/components              |     100 |    91.66 |     100 |     100 |                   
+  ARButton.tsx                       |     100 |    91.66 |     100 |     100 | 43                
+ features/ar/hooks                   |     100 |      100 |     100 |     100 |                   
+  useProductModels.ts                |     100 |      100 |     100 |     100 |                   
+ features/ar/repositories            |     100 |      100 |     100 |     100 |                   
+  modelsRepository.ts                |     100 |      100 |     100 |     100 |                   
+ features/auth                       |     100 |      100 |     100 |     100 |                   
+  validation.ts                      |     100 |      100 |     100 |     100 |                   
+ features/auth/hooks                 |     100 |      100 |     100 |     100 |                   
+  useConfirm2FA.ts                   |     100 |      100 |     100 |     100 |                   
+  useLogin.ts                        |     100 |      100 |     100 |     100 |                   
+  useLogout.ts                       |     100 |      100 |     100 |     100 |                   
+  useMe.ts                           |     100 |      100 |     100 |     100 |                   
+  usePasswordRecovery.ts             |     100 |      100 |     100 |     100 |                   
+  useRegister.ts                     |     100 |      100 |     100 |     100 |                   
+  useResendCode.ts                   |     100 |      100 |     100 |     100 |                   
+  useVerifyRegistration.ts           |     100 |      100 |     100 |     100 |                   
+ features/auth/repositories          |     100 |    85.71 |     100 |     100 |                   
+  authRepository.ts                  |     100 |    85.71 |     100 |     100 | 21                
+ features/cart                       |     100 |      100 |     100 |     100 |                   
+  cartSelectors.ts                   |     100 |      100 |     100 |     100 |                   
+ features/cart/components            |   94.44 |    97.87 |   66.66 |   94.44 |                   
+  CartItemRow.tsx                    |   88.88 |       96 |      50 |   88.88 | 55                
+  CartSummary.tsx                    |     100 |      100 |     100 |     100 |                   
+ features/cart/hooks                 |     100 |      100 |     100 |     100 |                   
+  useAddToCart.ts                    |     100 |      100 |     100 |     100 |                   
+  useCart.ts                         |     100 |      100 |     100 |     100 |                   
+  useRemoveCartItem.ts               |     100 |      100 |     100 |     100 |                   
+  useUpdateCartItem.ts               |     100 |      100 |     100 |     100 |                   
+ features/cart/repositories          |     100 |      100 |     100 |     100 |                   
+  cartRepository.ts                  |     100 |      100 |     100 |     100 |                   
+ features/catalog                    |     100 |    98.79 |     100 |     100 |                   
+  productDetail.ts                   |     100 |    97.61 |     100 |     100 | 34                
+  searchFilters.ts                   |     100 |      100 |     100 |     100 |                   
+  validation.ts                      |     100 |      100 |     100 |     100 |                   
+ features/catalog/hooks              |     100 |     92.3 |     100 |     100 |                   
+  useBrands.ts                       |     100 |      100 |     100 |     100 |                   
+  useCategories.ts                   |     100 |      100 |     100 |     100 |                   
+  useFeaturedProducts.ts             |     100 |      100 |     100 |     100 |                   
+  useProduct.ts                      |     100 |      100 |     100 |     100 |                   
+  useProducts.ts                     |     100 |     87.5 |     100 |     100 | 22                
+  useProductsPreview.ts              |     100 |      100 |     100 |     100 |                   
+ features/catalog/repositories       |     100 |      100 |     100 |     100 |                   
+  brandRepository.ts                 |     100 |      100 |     100 |     100 |                   
+  categoryRepository.ts              |     100 |      100 |     100 |     100 |                   
+  productRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/chatbot                    |     100 |      100 |     100 |     100 |                   
+  chatSelectors.ts                   |     100 |      100 |     100 |     100 |                   
+  chatStore.ts                       |     100 |      100 |     100 |     100 |                   
+  validation.ts                      |     100 |      100 |     100 |     100 |                   
+ features/chatbot/components         |   98.03 |    97.77 |     100 |     100 |                   
+  ChatBubble.tsx                     |     100 |      100 |     100 |     100 |                   
+  ChatComposer.tsx                   |   93.75 |    92.85 |     100 |     100 | 35                
+  ChatFab.tsx                        |     100 |      100 |     100 |     100 |                   
+  LiveGuestForm.tsx                  |     100 |      100 |     100 |     100 |                   
+  LiveMessageBubble.tsx              |     100 |      100 |     100 |     100 |                   
+ features/chatbot/hooks              |     100 |      100 |     100 |     100 |                   
+  useChatbot.ts                      |     100 |      100 |     100 |     100 |                   
+  useLiveChat.ts                     |     100 |      100 |     100 |     100 |                   
+ features/chatbot/liveChat           |     100 |      100 |     100 |     100 |                   
+  liveChatGateway.ts                 |     100 |      100 |     100 |     100 |                   
+  liveChatReducer.ts                 |     100 |      100 |     100 |     100 |                   
+  liveChatSelectors.ts               |     100 |      100 |     100 |     100 |                   
+  validation.ts                      |     100 |      100 |     100 |     100 |                   
+ features/chatbot/repositories       |     100 |      100 |     100 |     100 |                   
+  chatbotRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/favorites                  |     100 |      100 |     100 |     100 |                   
+  favoriteSelectors.ts               |     100 |      100 |     100 |     100 |                   
+ features/favorites/hooks            |     100 |      100 |     100 |     100 |                   
+  useFavorites.ts                    |     100 |      100 |     100 |     100 |                   
+  useToggleFavorite.ts               |     100 |      100 |     100 |     100 |                   
+ features/favorites/repositories     |     100 |      100 |     100 |     100 |                   
+  favoriteRepository.ts              |     100 |      100 |     100 |     100 |                   
+ features/institutional/hooks        |     100 |      100 |     100 |     100 |                   
+  useInstitutional.ts                |     100 |      100 |     100 |     100 |                   
+ features/institutional/repositories |     100 |    88.23 |     100 |     100 |                   
+  institutionalRepository.ts         |     100 |    88.23 |     100 |     100 | 38,40             
+ features/notifications              |   98.21 |      100 |   93.33 |   97.67 |                   
+  notificationSelectors.ts           |     100 |      100 |     100 |     100 |                   
+  pushNotifications.ts               |   94.73 |      100 |      75 |   93.33 | 11                
+ features/notifications/components   |     100 |    96.15 |     100 |     100 |                   
+  NotificationCard.tsx               |     100 |       90 |     100 |     100 | 32                
+  PreferencesCard.tsx                |     100 |      100 |     100 |     100 |                   
+ features/notifications/hooks        |     100 |    88.88 |     100 |     100 |                   
+  useMarkNotificationsRead.ts        |     100 |      100 |     100 |     100 |                   
+  useNotificationDetail.ts           |     100 |      100 |     100 |     100 |                   
+  useNotificationPreferences.ts      |     100 |       50 |     100 |     100 | 38                
+  useNotifications.ts                |     100 |       50 |     100 |     100 | 25                
+  useRegisterPushToken.ts            |     100 |      100 |     100 |     100 |                   
+ features/notifications/repositories |     100 |      100 |     100 |     100 |                   
+  notificationRepository.ts          |     100 |      100 |     100 |     100 |                   
+ features/orders                     |     100 |      100 |     100 |     100 |                   
+  orderFormat.ts                     |     100 |      100 |     100 |     100 |                   
+  orderList.ts                       |     100 |      100 |     100 |     100 |                   
+ features/orders/components          |   96.77 |    92.85 |      90 |   96.77 |                   
+  OrderCard.tsx                      |   91.66 |       90 |      75 |   91.66 | 52                
+  OrderDetailView.tsx                |     100 |    94.44 |     100 |     100 | 74                
+  OrderStatusBadge.tsx               |     100 |      100 |     100 |     100 |                   
+ features/orders/hooks               |     100 |    85.71 |     100 |     100 |                   
+  useOrder.ts                        |     100 |      100 |     100 |     100 |                   
+  useOrders.ts                       |     100 |       50 |     100 |     100 | 25                
+ features/orders/repositories        |     100 |      100 |     100 |     100 |                   
+  orderRepository.ts                 |     100 |      100 |     100 |     100 |                   
+ features/payments                   |     100 |      100 |     100 |     100 |                   
+  paymentConfig.ts                   |     100 |      100 |     100 |     100 |                   
+  paymentErrors.ts                   |     100 |      100 |     100 |     100 |                   
+  paymentPolling.ts                  |     100 |      100 |     100 |     100 |                   
+  paymentReducer.ts                  |     100 |      100 |     100 |     100 |                   
+  paymentSelectors.ts                |     100 |      100 |     100 |     100 |                   
+  paymentStore.ts                    |     100 |      100 |     100 |     100 |                   
+ features/payments/hooks             |     100 |     92.1 |     100 |     100 |                   
+  usePayment.ts                      |     100 |     92.1 |     100 |     100 | 118,122-123       
+ features/payments/repositories      |     100 |      100 |     100 |     100 |                   
+  paymentRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/profile                    |   89.47 |    85.71 |     100 |     100 |                   
+  validation.ts                      |   89.47 |    85.71 |     100 |     100 | 19-21             
+ features/profile/hooks              |     100 |      100 |     100 |     100 |                   
+  useProfile.ts                      |     100 |      100 |     100 |     100 |                   
+  useUpdateProfile.ts                |     100 |      100 |     100 |     100 |                   
+ features/profile/repositories       |     100 |      100 |     100 |     100 |                   
+  profileRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/reviews                    |     100 |      100 |     100 |     100 |                   
+  reviewKeys.ts                      |     100 |      100 |     100 |     100 |                   
+  reviewSelectors.ts                 |     100 |      100 |     100 |     100 |                   
+  reviewValidation.ts                |     100 |      100 |     100 |     100 |                   
+ features/reviews/components         |   97.03 |    95.91 |   97.22 |   99.18 |                   
+  MyReviewCard.tsx                   |    87.5 |      100 |      50 |    87.5 | 33                
+  MyReviewsList.tsx                  |     100 |       90 |     100 |     100 | 45                
+  ProductReviewsSection.tsx          |   94.11 |    93.75 |     100 |     100 | 44                
+  RatingInput.tsx                    |     100 |      100 |     100 |     100 |                   
+  ReviewCard.tsx                     |     100 |      100 |     100 |     100 |                   
+  ReviewForm.tsx                     |     100 |      100 |     100 |     100 |                   
+  ReviewStatusBadge.tsx              |     100 |      100 |     100 |     100 |                   
+  ReviewSummary.tsx                  |     100 |      100 |     100 |     100 |                   
+  StarRating.tsx                     |     100 |      100 |     100 |     100 |                   
+  WriteReview.tsx                    |    93.1 |       90 |     100 |     100 | 35,78             
+  WriteReviewAction.tsx              |     100 |      100 |     100 |     100 |                   
+ features/reviews/hooks              |     100 |    86.36 |     100 |     100 |                   
+  useCanReview.ts                    |     100 |      100 |     100 |     100 |                   
+  useCreateReview.ts                 |     100 |      100 |     100 |     100 |                   
+  useMyReviews.ts                    |     100 |      100 |     100 |     100 |                   
+  useProductReviews.ts               |     100 |       80 |     100 |     100 | 29-31             
+ features/reviews/repositories       |     100 |      100 |     100 |     100 |                   
+  reviewRepository.ts                |     100 |      100 |     100 |     100 |                   
+ features/services                   |     100 |      100 |     100 |     100 |                   
+  gallery.ts                         |     100 |      100 |     100 |     100 |                   
+  selectors.ts                       |     100 |      100 |     100 |     100 |                   
+ features/services/hooks             |     100 |    82.35 |     100 |     100 |                   
+  useService.ts                      |     100 |    88.88 |     100 |     100 | 8                 
+  useServices.ts                     |     100 |    71.42 |     100 |     100 | 22-24             
+  useServicesPreview.ts              |     100 |      100 |     100 |     100 |                   
+ features/services/repositories      |     100 |    92.85 |     100 |     100 |                   
+  serviceRepository.ts               |     100 |    92.85 |     100 |     100 | 28                
+ shared/api                          |     100 |    95.23 |     100 |     100 |                   
+  client.ts                          |     100 |      100 |     100 |     100 |                   
+  errorMessage.ts                    |     100 |    94.11 |     100 |     100 | 19                
+  queryClient.ts                     |     100 |      100 |     100 |     100 |                   
+  secureToken.ts                     |     100 |      100 |     100 |     100 |                   
+ shared/hooks                        |     100 |      100 |     100 |     100 |                   
+  useDebouncedValue.ts               |     100 |      100 |     100 |     100 |                   
+ shared/storage                      |      75 |      100 |   66.66 |      75 |                   
+  onboarding.ts                      |      75 |      100 |   66.66 |      75 | 31-32             
+ shared/store                        |     100 |      100 |     100 |     100 |                   
+  authStore.ts                       |     100 |      100 |     100 |     100 |                   
+  onboardingStore.ts                 |     100 |      100 |     100 |     100 |                   
+ shared/ui                           |     100 |    91.66 |     100 |     100 |                   
+  BannerCarousel.tsx                 |     100 |    91.66 |     100 |     100 | 35                
+ shared/utils                        |   97.77 |    95.65 |     100 |     100 |                   
+  format.ts                          |     100 |      100 |     100 |     100 |                   
+  html.ts                            |   97.14 |    94.11 |     100 |     100 | 79                
+  url.ts                             |     100 |      100 |     100 |     100 |                   
+-------------------------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 115 passed, 115 total
+Tests:       1440 passed, 1440 total
+Snapshots:   0 total
+Time:        41.064 s, estimated 83 s
+Ran all test suites.
+EXIT=0

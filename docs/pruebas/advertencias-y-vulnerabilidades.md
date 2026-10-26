@@ -3,6 +3,7 @@
 - **Fecha de la verificación:** 2026-10-15 (issue #107)
 - **Actualizado:** 2026-10-19 (issue #113): causa 3 corregida; (issue #114): ERESOLVE aceptado, con evidencia
 - **Actualizado:** 2026-10-26 (issue #134): `npm audit` pasó de 66 a 13; ver la sección 1 ("Situación actual") y las filas marcadas en la sección 2. `develop` en `b824bd5`
+- **Actualizado:** 2026-10-26 (issue #137): `follow-redirects` actualizado a 1.16.2 (PR #138); `npm audit` en **12**, con 0 críticas; `zod` aceptado. `develop` en `5be3bb8`
 - **Sobre:** `package-lock.json` de `develop` en `4580272` (sin cambios de dependencias en esta rama)
 - **Herramientas:** `npm audit`, `npm ci` y `npm ls`, ejecutados en local (npm con Node 22). Nada de esto se obtuvo con `npm audit fix --force`.
 
@@ -65,6 +66,20 @@ Las 13 entradas son: **altas** `follow-redirects`, `node-forge`, `@expo/cli`, `@
 - **No se pudo explicar con evidencia:** por qué `zod` (aviso GHSA-mrhx-c7xc-m3w5, publicado el 2026-10-01 según la API de GitHub) no aparecía en el reporte del 19 de octubre. La versión de `zod` (3.25.76) es la misma.
 - **Sin explicar por completo:** el resto de la reducción (de 66 a 13 entradas) es consistente con el retiro de los dos avisos de arriba, pero no se contó entrada por entrada qué parte corresponde a cada uno.
 
+### Después de #137 (2026-10-26)
+
+`npm audit` real sobre `develop` (`5be3bb8`, con `follow-redirects` 1.16.2 en el lockfile; 2 corridas):
+
+| Severidad | Cantidad |
+|---|---|
+| Crítica | **0** |
+| Alta | 6 |
+| Moderada | 6 |
+| Baja / info | 0 |
+| **Total** | **12** |
+
+Las 12 entradas son: **altas** `@expo/cli`, `@expo/code-signing-certificates`, `@stripe/stripe-react-native`, `expo`, `node-forge` y `zod`; **moderadas** `@expo/config-plugins`, `decode-uri-component`, `expo-router`, `query-string`, `uuid` y `xcode`. Las **causas raíz** son 4: `decode-uri-component`, `node-forge`, `uuid` y `zod`. `follow-redirects` ya no aparece.
+
 ## 2. Las 6 causas raíz
 
 Todas son de **denegación de servicio** o similar; ninguna es crítica. "Ruta" es la cadena que trae el paquete al proyecto (`npm ls`).
@@ -84,8 +99,8 @@ Las correcciones que sugiere `npm audit` para los paquetes directos (`expo`, `re
 
 | # | Paquete (versión instalada) | Severidad | Aviso | Ruta de dependencia | Qué exigiría corregirla | Decisión |
 |---|---|---|---|---|---|---|
-| 7 | `follow-redirects` 1.16.0 | Alta | [GHSA-q3jh-wrc6-jgq8](https://github.com/advisories/GHSA-q3jh-wrc6-jgq8) y [GHSA-8r9p-f939-6h3c](https://github.com/advisories/GHSA-8r9p-f939-6h3c): cabeceras que evitan quitar credenciales entre orígenes y expresión regular de `sensitiveHeaders`; ambos publicados el 2026-10-20, versión corregida 1.16.1 | `axios` 1.20.0 → `follow-redirects` | `npm audit` indica que se corrige sin salto mayor (`fixAvailable: true`; la versión corregida es 1.16.1). No se aplicó ni se probó | **Pendiente de decisión.** Propuesta: corregir con una actualización dirigida del lockfile en un PR aparte, como se hizo con `source-map-js`. No se aplicó en este PR. Aparece desde el 2026-10-20, después del reporte del 19 de octubre |
-| 8 | `zod` 3.25.76 | Alta | [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5): consumo de memoria al validar colecciones muy grandes con restricciones; afecta a `< 4.6.6` | `expo` → `@expo/cli` → `zod` | `zod` 4.6.6 o superior (salto de versión mayor); `npm audit` propone `expo@44.0.6` (downgrade): inválido | **Pendiente de decisión.** Llega por la CLI de desarrollo de Expo, no por el código de la app. No se verificó que la app o la CLI usen la parte afectada. No se explicó por qué no aparecía el 19 de octubre (ver arriba) |
+| 7 | `follow-redirects` 1.16.0 → **1.16.2** | Alta | [GHSA-q3jh-wrc6-jgq8](https://github.com/advisories/GHSA-q3jh-wrc6-jgq8) y [GHSA-8r9p-f939-6h3c](https://github.com/advisories/GHSA-8r9p-f939-6h3c): cabeceras que evitan quitar credenciales entre orígenes y expresión regular de `sensitiveHeaders`; ambos publicados el 2026-10-20, versión corregida 1.16.1 | `axios` 1.20.0 → `follow-redirects` | `npm audit` indica que se corrige sin salto mayor (`fixAvailable: true`; la versión corregida es 1.16.1). No se aplicó ni se probó | **Resuelto el 2026-10-26 (#137, PR #138): actualizado a 1.16.2.** Actualización dirigida solo del lockfile (`npm update follow-redirects --package-lock-only`): cambia únicamente `follow-redirects`, `package.json` intacto y sin `npm audit fix`. Se eligió la 1.16.2 porque es la última versión que permite el rango de `axios` (`^1.16.0`) y se publicó el 2026-10-25; fijar la 1.16.1 no se pudo hacer limpiamente. Verificado: `npm audit` baja de 13 a 12 y `follow-redirects` ya no aparece. **Lo verificado sobre la 1.16.2** (diff 1.16.1 → 1.16.2 en GitHub: 3 commits): el único cambio de código es en `_sanitizeOptions` de `index.js`, donde se normaliza `sensitiveHeaders`: reemplaza una función propia `isArray` (`value instanceof Array`) por `Array.isArray`; no cambia la lógica que corrigió la 1.16.1, pero no se probó. El `README.md` y el `SECURITY.md` nuevos del paquete dicen que el mantenimiento está pausado hasta conseguir financiamiento y que no hay garantía de correcciones. Las pruebas del proyecto usan el adapter simulado de Axios, así que no ejercitan `follow-redirects`. *Decisión original (propuesta del 2026-10-26):* **Pendiente de decisión.** Propuesta: corregir con una actualización dirigida del lockfile en un PR aparte, como se hizo con `source-map-js`. No se aplicó en este PR. Aparece desde el 2026-10-20, después del reporte del 19 de octubre |
+| 8 | `zod` 3.25.76 | Alta | [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5): consumo de memoria al validar colecciones muy grandes con restricciones; afecta a `< 4.6.6` | Dos caminos (`npm ls zod --all`): `expo` → `@expo/cli` → `zod`, y `eslint-config-expo` → `eslint-plugin-react-hooks` → `zod` (este último también pasa por `zod-validation-error`) | `zod` 4.6.6 o superior (salto de versión mayor); `npm audit` propone `expo@44.0.6` (downgrade): inválido | **Aceptar** (decidido el 2026-10-26). Llega por la CLI de desarrollo de Expo y por la configuración de ESLint (`eslint-config-expo` está en `devDependencies`), no por el código de la app: `zod` no es dependencia directa y no se importa en `src`. No se verificó que la CLI ni el plugin de ESLint usen la parte afectada. No se explicó por qué no aparecía el 19 de octubre (ver arriba) |
 
 ## 3. Paquetes deprecados en `npm ci`
 
@@ -170,4 +185,4 @@ Los jobs **"Análisis estático"** y **"Pruebas unitarias"** de `.github/workflo
 | ~~Probar `test-renderer@1.3.1`~~ | **Resuelto por documentación el 2026-10-19 (#114):** el aviso queda aceptado; no desaparece con 1.3.1 y se espera que se resuelva cuando el SDK suba React a 19.3 |
 | Revisar las causas aceptadas (1, 2, 4, 5, 6 y los deprecados) al actualizar el SDK de Expo | Siguiente cambio de SDK |
 | `npx expo-doctor` reporta paquetes con versión de parche anterior a la que espera el SDK 57. El 2026-10-19 eran 5 (`expo`, `expo-constants`, `expo-linking`, `expo-router`, `jest-expo`); el 2026-10-26 son **4**: `expo-constants` ya no aparece. Está fuera del alcance de #113 y #134 | Aparte, con `npx expo install --check` (issue #121) |
-| Decidir qué hacer con `follow-redirects` (propuesta: actualización dirigida) y con `zod` (exige salto mayor, llega por la CLI de Expo); causas nuevas del 2026-10-26 | Issue y PR aparte (por crear) |
+| ~~Decidir qué hacer con `follow-redirects` y con `zod` (causas nuevas del 2026-10-26)~~ | **Resuelto el 2026-10-26:** `follow-redirects` actualizado a 1.16.2 (#137, PR #138) y `zod` aceptado |

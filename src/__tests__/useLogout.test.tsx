@@ -1,6 +1,7 @@
 import { act, renderHook } from "@testing-library/react-native";
 
 import { useLogout } from "@/features/auth/hooks/useLogout";
+import { useChatStore } from "@/features/chatbot/chatStore";
 import * as pushNotifications from "@/features/notifications/pushNotifications";
 import { notificationRepository } from "@/features/notifications/repositories/notificationRepository";
 import { useAuthStore } from "@/shared/store/authStore";
@@ -12,6 +13,7 @@ jest.mock("expo-secure-store", () => ({
   getItemAsync: jest.fn(),
   deleteItemAsync: jest.fn(),
 }));
+jest.mock("expo-crypto", () => ({ randomUUID: jest.fn(() => "uuid-test") }));
 jest.mock("@/features/notifications/pushNotifications", () => ({
   getExpoPushToken: jest.fn(),
 }));
@@ -52,6 +54,19 @@ describe("useLogout", () => {
 
     expect(repo.unregisterPushToken).not.toHaveBeenCalled();
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
+  });
+
+  it("borra la conversación del chatbot para que otra cuenta no la vea", async () => {
+    push.getExpoPushToken.mockResolvedValueOnce(null);
+    useChatStore.getState().ensureSession();
+    useChatStore.getState().addMessage("user", "hola");
+
+    const { result } = await renderHook(() => useLogout());
+    await act(async () => {
+      await result.current();
+    });
+
+    expect(useChatStore.getState()).toMatchObject({ sessionId: null, messages: [], escalated: false });
   });
 
   it("si falla el desregistro (sin conexión), igual cierra la sesión", async () => {

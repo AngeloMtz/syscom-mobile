@@ -75,6 +75,8 @@ export default function RootLayout() {
                 <Stack.Screen name="faqs" options={{ title: "Preguntas frecuentes" }} />
                 <Stack.Screen name="policies" options={{ title: "Políticas" }} />
                 <Stack.Screen name="contact" options={{ title: "Contacto" }} />
+                <Stack.Screen name="chatbot" options={{ title: "Asistente virtual" }} />
+                <Stack.Screen name="live-chat" options={{ title: "Chat con un asesor" }} />
                 <Stack.Screen name="service/[id]" options={{ title: "Servicio" }} />
                 <Stack.Screen name="viewer3d" options={{ title: "Vista 3D" }} />
               </Stack>

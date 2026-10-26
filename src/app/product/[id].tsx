@@ -9,6 +9,7 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import ARButton from "@/features/ar/components/ARButton";
 import ImageCarousel from "@/features/catalog/components/ImageCarousel";
 import VariantSelector from "@/features/catalog/components/VariantSelector";
 import { classifyAddError } from "@/features/cart/cartSelectors";
@@ -28,6 +29,7 @@ import {
 } from "@/features/catalog/productDetail";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { usePaymentStore } from "@/features/payments/paymentStore";
+import ProductReviewsSection from "@/features/reviews/components/ProductReviewsSection";
 import { useAuthStore } from "@/shared/store/authStore";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import { formatPrice } from "@/shared/utils/format";
@@ -180,6 +182,9 @@ export default function ProductDetailScreen() {
             </View>
           ) : null}
 
+          {/* Botón "Ver en AR": solo aparece si el producto tiene modelo 3D cargado (#16). */}
+          <ARButton productId={product.id} productName={product.nombre} />
+
           {variantes.length > 1 ? (
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: c.text }]}>Variante</Text>
@@ -221,6 +226,8 @@ export default function ProductDetailScreen() {
               ))}
             </View>
           ) : null}
+
+          <ProductReviewsSection productId={product.id} productName={product.nombre} />
         </View>
       </ScrollView>
 

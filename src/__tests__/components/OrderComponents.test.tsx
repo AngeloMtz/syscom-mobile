@@ -178,3 +178,72 @@ describe("OrderDetailView", () => {
     expect(screen.getByLabelText("Total —")).toBeTruthy();
   });
 });
+
+describe("OrderDetailView: botón Reseñar (HU #19)", () => {
+  const pedidoConDosProductos = (estado: string) =>
+    makeOrderDetail({
+      estado,
+      items: [
+        makeOrderItem({ id_pedido_detalle: 1, id_producto: 7 }),
+        makeOrderItem({
+          id_pedido_detalle: 2,
+          id_producto: 9,
+          productos: { ...makeOrderItem().productos, id_producto: 9, nombre: "Teclado" },
+        }),
+      ],
+    });
+
+  it("en un pedido entregado muestra un botón Reseñar por producto", async () => {
+    await render(
+      <OrderDetailView order={pedidoConDosProductos("entregado")} onOpenProduct={jest.fn()} onReviewProduct={jest.fn()} />,
+    );
+
+    expect(screen.getByLabelText("Reseñar Mouse inalámbrico")).toBeTruthy();
+    expect(screen.getByLabelText("Reseñar Teclado")).toBeTruthy();
+  });
+
+  it("al tocarlo avisa con el id y el nombre del producto, sin abrir el producto", async () => {
+    const onReviewProduct = jest.fn();
+    const onOpenProduct = jest.fn();
+    await render(
+      <OrderDetailView
+        order={pedidoConDosProductos("entregado")}
+        onOpenProduct={onOpenProduct}
+        onReviewProduct={onReviewProduct}
+      />,
+    );
+
+    await fireEvent.press(screen.getByLabelText("Reseñar Teclado"));
+
+    expect(onReviewProduct).toHaveBeenCalledWith(9, "Teclado");
+    expect(onOpenProduct).not.toHaveBeenCalled();
+  });
+
+  it.each(["pendiente_pago", "confirmado", "en_preparacion", "en_camino", "cancelado"])(
+    "en un pedido %s no muestra el botón",
+    async (estado) => {
+      await render(
+        <OrderDetailView order={pedidoConDosProductos(estado)} onOpenProduct={jest.fn()} onReviewProduct={jest.fn()} />,
+      );
+
+      expect(screen.queryByLabelText(/^Reseñar /)).toBeNull();
+    },
+  );
+
+  it("sin la función onReviewProduct (la confirmación tras pagar) no muestra el botón aunque esté entregado", async () => {
+    await render(<OrderDetailView order={pedidoConDosProductos("entregado")} onOpenProduct={jest.fn()} />);
+
+    expect(screen.queryByLabelText(/^Reseñar /)).toBeNull();
+  });
+
+  it("tocar el producto sigue abriéndolo", async () => {
+    const onOpenProduct = jest.fn();
+    await render(
+      <OrderDetailView order={pedidoConDosProductos("entregado")} onOpenProduct={onOpenProduct} onReviewProduct={jest.fn()} />,
+    );
+
+    await fireEvent.press(screen.getByLabelText("Teclado, 2 piezas, ver producto"));
+
+    expect(onOpenProduct).toHaveBeenCalledWith(9);
+  });
+});

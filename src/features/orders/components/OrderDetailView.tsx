@@ -1,12 +1,15 @@
 // src/features/orders/components/OrderDetailView.tsx — Detalle de un pedido.
 // Solo presentación: el folio, las etiquetas y los formatos vienen de orderFormat.
 // Lo usan la confirmación (tras pagar) y, en la HU #15, el historial.
+// Con `onReviewProduct` y un pedido entregado, cada producto muestra "Reseñar" (HU #19); no consulta
+// can-review: eso lo verifica el formulario al abrirse.
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import OrderStatusBadge from "@/features/orders/components/OrderStatusBadge";
 import {
   formatOrderDate,
   formatOrderFolio,
+  isOrderReviewable,
   orderTotal,
   paymentMethodLabel,
   paymentStatusLabel,
@@ -18,6 +21,8 @@ import { formatPrice } from "@/shared/utils/format";
 type Props = {
   order: OrderDetail;
   onOpenProduct: (productId: number) => void;
+  /** Si se pasa, los productos de un pedido entregado muestran el botón "Reseñar". */
+  onReviewProduct?: (productId: number, productName: string) => void;
 };
 
 const money = (value: unknown) => {
@@ -25,10 +30,11 @@ const money = (value: unknown) => {
   return n === null ? "—" : formatPrice(n);
 };
 
-export default function OrderDetailView({ order, onOpenProduct }: Props) {
+export default function OrderDetailView({ order, onOpenProduct, onReviewProduct }: Props) {
   const c = useColors();
   const folio = formatOrderFolio(order.id_pedido);
   const a = order.direccion;
+  const canReview = onReviewProduct !== undefined && isOrderReviewable(order.estado);
 
   return (
     <View style={styles.wrap}>
@@ -55,30 +61,41 @@ export default function OrderDetailView({ order, onOpenProduct }: Props) {
           order.items.map((item, i) => {
             const img = item.productos.producto_imagenes?.[0]?.url_imagen;
             return (
-              <Pressable
-                key={item.id_pedido_detalle}
-                onPress={() => onOpenProduct(item.productos.id_producto)}
-                accessibilityRole="button"
-                accessibilityLabel={`${item.productos.nombre}, ${item.cantidad} ${
-                  item.cantidad === 1 ? "pieza" : "piezas"
-                }, ver producto`}
-                style={[styles.item, i > 0 && { borderTopColor: c.divider, borderTopWidth: StyleSheet.hairlineWidth }]}
-              >
-                <View style={[styles.thumb, { backgroundColor: c.divider }]}>
-                  {img ? (
-                    <Image source={{ uri: img }} style={styles.thumbImg} resizeMode="contain" />
-                  ) : null}
-                </View>
-                <View style={styles.itemInfo}>
-                  <Text style={[styles.itemName, { color: c.text }]} numberOfLines={2}>
-                    {item.productos.nombre}
-                  </Text>
-                  <Text style={{ color: c.textMuted, fontSize: 12 }}>
-                    {item.cantidad} × {money(item.precio_unitario)}
-                  </Text>
-                </View>
-                <Text style={{ color: c.text, fontWeight: "700" }}>{money(item.subtotal)}</Text>
-              </Pressable>
+              <View key={item.id_pedido_detalle}>
+                <Pressable
+                  onPress={() => onOpenProduct(item.productos.id_producto)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${item.productos.nombre}, ${item.cantidad} ${
+                    item.cantidad === 1 ? "pieza" : "piezas"
+                  }, ver producto`}
+                  style={[styles.item, i > 0 && { borderTopColor: c.divider, borderTopWidth: StyleSheet.hairlineWidth }]}
+                >
+                  <View style={[styles.thumb, { backgroundColor: c.divider }]}>
+                    {img ? (
+                      <Image source={{ uri: img }} style={styles.thumbImg} resizeMode="contain" />
+                    ) : null}
+                  </View>
+                  <View style={styles.itemInfo}>
+                    <Text style={[styles.itemName, { color: c.text }]} numberOfLines={2}>
+                      {item.productos.nombre}
+                    </Text>
+                    <Text style={{ color: c.textMuted, fontSize: 12 }}>
+                      {item.cantidad} × {money(item.precio_unitario)}
+                    </Text>
+                  </View>
+                  <Text style={{ color: c.text, fontWeight: "700" }}>{money(item.subtotal)}</Text>
+                </Pressable>
+                {canReview ? (
+                  <Pressable
+                    onPress={() => onReviewProduct?.(item.productos.id_producto, item.productos.nombre)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Reseñar ${item.productos.nombre}`}
+                    style={[styles.review, { borderColor: c.brandPrimary }]}
+                  >
+                    <Text style={[styles.reviewText, { color: c.brandPrimary }]}>Reseñar</Text>
+                  </Pressable>
+                ) : null}
+              </View>
             );
           })
         )}
@@ -138,6 +155,15 @@ const styles = StyleSheet.create({
   thumbImg: { width: "100%", height: "100%" },
   itemInfo: { flex: 1, gap: 2 },
   itemName: { fontSize: 14, fontWeight: "600" },
+  review: {
+    alignSelf: "flex-end",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    marginBottom: spacing.sm,
+  },
+  reviewText: { fontSize: 13, fontWeight: "700" },
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",

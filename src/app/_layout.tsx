@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { useRegisterPushToken } from "@/features/notifications/hooks/useRegisterPushToken";
 import OnboardingFlow from "@/features/onboarding/components/OnboardingFlow";
 import PaymentsProvider from "@/features/payments/components/PaymentsProvider";
 import { queryClient } from "@/shared/api/queryClient";
@@ -30,6 +31,11 @@ export default function RootLayout() {
   const isCheckingOnboarding = useOnboardingStore((s) => s.isChecking);
   const onboardingCompleted = useOnboardingStore((s) => s.completed);
   const completeOnboarding = useOnboardingStore((s) => s.complete);
+
+  // Mientras haya sesión, registra (o reintenta registrar) el token de Expo
+  // Push de este dispositivo en el backend. No bloquea el arranque: si falla
+  // o el usuario niega el permiso, el resto de la app funciona igual.
+  useRegisterPushToken();
 
   useEffect(() => {
     hydrate();
@@ -52,14 +58,27 @@ export default function RootLayout() {
                   headerTintColor: c.brandPrimary,
                   headerTitleStyle: { color: c.text, fontWeight: "700" },
                   contentStyle: { backgroundColor: c.background },
+                  // Botón de regresar solo con la flecha, sin el nombre de la
+                  // ruta anterior (evita el "(tabs)" al volver desde una tab).
+                  headerBackButtonDisplayMode: "minimal",
                 }}
               >
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="profile/index" options={{ title: "Mi cuenta" }} />
                 <Stack.Screen
                   name="profile/personal-data"
                   options={{ title: "Datos personales" }}
                 />
+                <Stack.Screen name="informacion" options={{ title: "Información" }} />
+                <Stack.Screen name="about" options={{ title: "Nosotros" }} />
+                <Stack.Screen name="faqs" options={{ title: "Preguntas frecuentes" }} />
+                <Stack.Screen name="policies" options={{ title: "Políticas" }} />
+                <Stack.Screen name="contact" options={{ title: "Contacto" }} />
+                <Stack.Screen name="chatbot" options={{ title: "Asistente virtual" }} />
+                <Stack.Screen name="live-chat" options={{ title: "Chat con un asesor" }} />
+                <Stack.Screen name="service/[id]" options={{ title: "Servicio" }} />
+                <Stack.Screen name="viewer3d" options={{ title: "Vista 3D" }} />
               </Stack>
             ) : (
               // Al completar, el flag cambia y el Stack monta solo: el guard de

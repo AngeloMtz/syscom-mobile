@@ -18,6 +18,9 @@ const goHome = () => router.replace("/");
 const goOrders = () => router.replace("/orders");
 const openProduct = (productId: number) =>
   router.push({ pathname: "/product/[id]", params: { id: String(productId) } });
+// "Reseñar" abre el formulario; este no consulta can-review aquí, lo verifica el formulario al abrirse.
+const reviewProduct = (productId: number, productName: string) =>
+  router.push({ pathname: "/reviews/new", params: { productId: String(productId), productName } });
 
 function OrderScreen() {
   const c = useColors();
@@ -144,7 +147,11 @@ function OrderScreen() {
       {title}
       <ScrollView contentContainerStyle={styles.content}>
         {success}
-        <OrderDetailView order={order} onOpenProduct={openProduct} />
+        <OrderDetailView
+          order={order}
+          onOpenProduct={openProduct}
+          onReviewProduct={confirmation ? undefined : reviewProduct}
+        />
         {isRefetching ? <ActivityIndicator color={c.brandPrimary} style={{ marginTop: spacing.md }} /> : null}
       </ScrollView>
       {actions ? (

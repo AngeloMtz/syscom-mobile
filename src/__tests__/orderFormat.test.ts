@@ -2,6 +2,7 @@ import {
   formatItemCount,
   formatOrderDate,
   formatOrderFolio,
+  isOrderReviewable,
   orderStatusLabel,
   orderStatusTone,
   orderTotal,
@@ -137,5 +138,29 @@ describe("parseOrderId", () => {
   });
   it.each([undefined, "", "abc", "0", "-3", "1.5", "12abc", " "])("devuelve null para %p", (raw) => {
     expect(parseOrderId(raw as string | undefined)).toBeNull();
+  });
+});
+
+describe("isOrderReviewable", () => {
+  it("solo un pedido entregado permite reseñar sus productos", () => {
+    expect(isOrderReviewable("entregado")).toBe(true);
+  });
+
+  it.each(["pendiente_pago", "confirmado", "en_preparacion", "en_camino", "cancelado"])(
+    "%s no permite reseñar",
+    (estado) => {
+      expect(isOrderReviewable(estado)).toBe(false);
+    },
+  );
+
+  it("ignora mayúsculas y espacios", () => {
+    expect(isOrderReviewable(" Entregado ")).toBe(true);
+  });
+
+  it("estado nulo, vacío o desconocido no permite reseñar", () => {
+    expect(isOrderReviewable(null)).toBe(false);
+    expect(isOrderReviewable(undefined)).toBe(false);
+    expect(isOrderReviewable("")).toBe(false);
+    expect(isOrderReviewable("en_revision")).toBe(false);
   });
 });

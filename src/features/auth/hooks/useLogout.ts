@@ -4,6 +4,7 @@
 // pasar primero. Es best-effort — si falla (sin conexión, token ya vencido),
 // igual se cierra la sesión; el token simplemente queda activo en el backend
 // hasta que expire por sí solo o alguien vuelva a iniciar sesión y lo reemplace.
+import { useChatStore } from "@/features/chatbot/chatStore";
 import { getExpoPushToken } from "@/features/notifications/pushNotifications";
 import { notificationRepository } from "@/features/notifications/repositories/notificationRepository";
 import { useAuthStore } from "@/shared/store/authStore";
@@ -19,5 +20,7 @@ export function useLogout(): () => Promise<void> {
       // Sin bloquear el cierre de sesión por esto.
     }
     await logout();
+    // La conversación con el chatbot es de esta cuenta: otra no debe verla.
+    useChatStore.getState().reset();
   };
 }

@@ -1,122 +1,179 @@
-PASS src/__tests__/notificationRepository.test.ts (9.101 s)
-PASS src/__tests__/useMarkNotificationsRead.test.tsx (9.108 s)
-PASS src/__tests__/useNotificationPreferences.test.tsx (9.108 s)
-PASS src/__tests__/components/ChatFab.test.tsx (10.999 s)
-PASS src/__tests__/components/ARButton.test.tsx (13.888 s)
-PASS src/__tests__/components/LiveChatComponents.test.tsx (12.194 s)
-PASS src/__tests__/components/ChatComponents.test.tsx (12.424 s)
-PASS src/__tests__/components/NotificationComponents.test.tsx (13.097 s)
-PASS src/__tests__/components/ReviewComponents.test.tsx (13.481 s)
-PASS src/__tests__/components/CartItemRow.test.tsx (13.89 s)
-PASS src/__tests__/components/AddressForm.test.tsx (14.109 s)
-PASS src/__tests__/components/OrderComponents.test.tsx (14.445 s)
-PASS src/__tests__/usePayment.test.tsx (5.173 s)
-PASS src/__tests__/integration/compraDeExtremoAExtremo.test.tsx (8.051 s)
-PASS src/__tests__/components/AddressCard.test.tsx (5.719 s)
-PASS src/__tests__/integration/catalogoApi.test.tsx (5.118 s)
-PASS src/__tests__/components/ReviewWriteComponents.test.tsx (16.553 s)
-PASS src/__tests__/integration/sesionCompra.test.tsx (5.169 s)
-PASS src/__tests__/components/CartSummary.test.tsx
-PASS src/__tests__/useProductModels.test.tsx
+PASS src/__tests__/components/ChatComponents.test.tsx
+PASS src/__tests__/components/LiveChatComponents.test.tsx
+PASS src/__tests__/integration/compraDeExtremoAExtremo.test.tsx
+PASS src/__tests__/integration/realidadAumentada.test.tsx
+PASS src/__tests__/components/ReviewComponents.test.tsx
+PASS src/__tests__/components/AddressForm.test.tsx
+PASS src/__tests__/components/CartItemRow.test.tsx
+PASS src/__tests__/components/OrderComponents.test.tsx
+PASS src/__tests__/components/ReviewWriteComponents.test.tsx
+PASS src/__tests__/notificationRepository.test.ts
+PASS src/__tests__/useMarkNotificationsRead.test.tsx
+PASS src/__tests__/useNotificationPreferences.test.tsx
+PASS src/__tests__/components/ChatFab.test.tsx
+PASS src/__tests__/components/MyReviewsComponents.test.tsx
+PASS src/__tests__/integration/favoritosApi.test.tsx
+PASS src/__tests__/components/ARButton.test.tsx (5.338 s)
+PASS src/__tests__/components/AddressCard.test.tsx
+PASS src/__tests__/integration/sesionCache.test.tsx
 PASS src/__tests__/reviewRepository.test.ts
-PASS src/__tests__/integration/favoritosApi.test.tsx (5.188 s)
-PASS src/__tests__/institutionalRepository.test.ts
-PASS src/__tests__/medirRendimiento.test.ts
-PASS src/__tests__/useLiveChat.test.tsx
-PASS src/__tests__/integration/sesionCache.test.tsx (5.29 s)
-PASS src/__tests__/useCart.test.tsx
-PASS src/__tests__/components/MyReviewsComponents.test.tsx (19.451 s)
+PASS src/__tests__/components/NotificationComponents.test.tsx (5.32 s)
+PASS src/__tests__/usePayment.test.tsx
+PASS src/__tests__/integration/catalogoApi.test.tsx
+PASS src/__tests__/integration/sesionCompra.test.tsx
+PASS src/__tests__/integration/chatbotYChatEnVivo.test.tsx (5.897 s)
+PASS src/__tests__/components/BannerCarousel.test.tsx (5.628 s)
+PASS src/__tests__/orderRepository.test.ts
+PASS src/__tests__/useProductModels.test.tsx
+PASS src/__tests__/useProductReviews.test.tsx
+PASS src/__tests__/useNotifications.test.tsx
 PASS src/__tests__/apiClient.test.ts
 PASS src/__tests__/useAddresses.test.tsx
-PASS src/__tests__/useProductReviews.test.tsx
-PASS src/__tests__/productRepository.test.ts
-PASS src/__tests__/modelsRepository.test.ts
-PASS src/__tests__/useFavorites.test.tsx
-PASS src/__tests__/favoriteRepository.test.ts
-PASS src/__tests__/useConfirm2FA.test.tsx
-PASS src/__tests__/useChatbot.test.tsx
-PASS src/__tests__/cartRepository.test.ts
-PASS src/__tests__/components/BannerCarousel.test.tsx (21.306 s)
-PASS src/__tests__/chatbotRepository.test.ts
-PASS src/__tests__/useNotificationDetail.test.tsx
-PASS src/__tests__/useProfile.test.tsx
-PASS src/__tests__/useProduct.test.tsx
-PASS src/__tests__/authRepository.test.ts
-PASS src/__tests__/paymentRepository.test.ts
-PASS src/__tests__/brandRepository.test.ts
-PASS src/__tests__/serviceRepository.test.ts
-PASS src/__tests__/categoryRepository.test.ts
 PASS src/__tests__/useRegisterPushToken.test.tsx
-PASS src/__tests__/useMyReviews.test.tsx
-PASS src/__tests__/useVerifyRegistration.test.tsx
-PASS src/__tests__/orderRepository.test.ts
-PASS src/__tests__/profileRepository.test.ts
-PASS src/__tests__/useProductsPreview.test.tsx
-PASS src/__tests__/useProducts.test.tsx
-PASS src/__tests__/useLogout.test.tsx
-PASS src/__tests__/useInstitutional.test.tsx
-PASS src/__tests__/addressRepository.test.ts
-PASS src/__tests__/useServicesPreview.test.tsx
-PASS src/__tests__/useRegister.test.tsx
-PASS src/__tests__/useMe.test.tsx
-PASS src/__tests__/useServices.test.tsx
 PASS src/__tests__/servicesSelectors.test.ts
 PASS src/__tests__/useOrders.test.tsx
-PASS src/__tests__/arSelectors.test.ts
-PASS src/__tests__/useCanReview.test.tsx
-PASS src/__tests__/useBrands.test.tsx
-PASS src/__tests__/useUpdateProfile.test.tsx
+PASS src/__tests__/useOrder.test.tsx
+PASS src/__tests__/useNotificationDetail.test.tsx
+PASS src/__tests__/productRepository.test.ts
+PASS src/__tests__/authRepository.test.ts
+PASS src/__tests__/serviceRepository.test.ts
+PASS src/__tests__/brandRepository.test.ts
+PASS src/__tests__/institutionalRepository.test.ts
 PASS src/__tests__/usePasswordRecovery.test.tsx
+PASS src/__tests__/addressRepository.test.ts
+PASS src/__tests__/useFavorites.test.tsx
+PASS src/__tests__/chatbotRepository.test.ts
+PASS src/__tests__/favoriteRepository.test.ts
+PASS src/__tests__/cartRepository.test.ts
+PASS src/__tests__/useChatbot.test.tsx
 PASS src/__tests__/useCreateReview.test.tsx
+  ● Console
+
+    console.error
+      An update to HookContainer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      at node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:17864:19
+      at runWithFiberInDEV (node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:2663:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:17863:9)
+      at scheduleUpdateOnFiber (node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:15445:11)
+      at forceStoreRerender (node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:6163:24)
+      at node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:6148:11
+      at node_modules/@tanstack/query-core/src/notifyManager.ts:83:11
+      at notifyFn (node_modules/@tanstack/query-core/src/notifyManager.ts:25:5)
+      at node_modules/@tanstack/query-core/src/notifyManager.ts:48:13
+          at Array.forEach (<anonymous>)
+      at node_modules/@tanstack/query-core/src/notifyManager.ts:47:25
+      at batchNotifyFn (node_modules/@tanstack/query-core/src/notifyManager.ts:28:5)
+      at Timeout._onTimeout (node_modules/@tanstack/query-core/src/notifyManager.ts:46:9)
+
+    console.error
+      An update to HookContainer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      at node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:17864:19
+      at runWithFiberInDEV (node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:2663:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:17863:9)
+      at scheduleUpdateOnFiber (node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:15445:11)
+      at forceStoreRerender (node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:6163:24)
+      at node_modules/test-renderer/node_modules/react-reconciler/cjs/react-reconciler.development.js:6148:11
+      at node_modules/@tanstack/query-core/src/notifyManager.ts:83:11
+      at notifyFn (node_modules/@tanstack/query-core/src/notifyManager.ts:25:5)
+      at node_modules/@tanstack/query-core/src/notifyManager.ts:48:13
+          at Array.forEach (<anonymous>)
+      at node_modules/@tanstack/query-core/src/notifyManager.ts:47:25
+      at batchNotifyFn (node_modules/@tanstack/query-core/src/notifyManager.ts:28:5)
+      at Timeout._onTimeout (node_modules/@tanstack/query-core/src/notifyManager.ts:46:9)
+
+PASS src/__tests__/integration/notificacionesPush.test.tsx
+PASS src/__tests__/paymentRepository.test.ts
+PASS src/__tests__/categoryRepository.test.ts
+PASS src/__tests__/useCart.test.tsx
+PASS src/__tests__/useInstitutional.test.tsx
+PASS src/__tests__/useConfirm2FA.test.tsx
+PASS src/__tests__/arSelectors.test.ts
+PASS src/__tests__/modelsRepository.test.ts
+PASS src/__tests__/useBrands.test.tsx
+PASS src/__tests__/components/CartSummary.test.tsx
+PASS src/__tests__/useMyReviews.test.tsx
+PASS src/__tests__/useLogout.test.tsx
+PASS src/__tests__/useVerifyRegistration.test.tsx
+PASS src/__tests__/useProfile.test.tsx
+PASS src/__tests__/useMe.test.tsx
 PASS src/__tests__/useFeaturedProducts.test.tsx
-PASS src/__tests__/session.test.ts
+PASS src/__tests__/useLiveChat.test.tsx
+PASS src/__tests__/useUpdateProfile.test.tsx
+PASS src/__tests__/useServices.test.tsx
+PASS src/__tests__/medirRendimiento.test.ts
+PASS src/__tests__/useRegister.test.tsx
+PASS src/__tests__/useCategories.test.tsx
+PASS src/__tests__/useProduct.test.tsx
 PASS src/__tests__/useResendCode.test.tsx
-PASS src/__tests__/useNotifications.test.tsx
+PASS src/__tests__/profileRepository.test.ts
+PASS src/__tests__/useProducts.test.tsx
+PASS src/__tests__/useService.test.tsx
+PASS src/__tests__/useServicesPreview.test.tsx
+PASS src/__tests__/useProductsPreview.test.tsx
 PASS src/__tests__/url.test.ts
 PASS src/__tests__/useLogin.test.tsx
-PASS src/__tests__/liveChatGateway.test.ts
-PASS src/__tests__/useDebouncedValue.test.tsx
-PASS src/__tests__/useService.test.tsx
-PASS src/__tests__/useOrder.test.tsx
 PASS src/__tests__/cartSelectors.test.ts
-PASS src/__tests__/useCategories.test.tsx
-PASS src/__tests__/addressSelectors.test.ts
-PASS src/__tests__/productDetail.test.ts
-PASS src/__tests__/perfGuard.test.ts
-PASS src/__tests__/addressValidation.test.ts
-PASS src/__tests__/priceValidation.test.ts
-PASS src/__tests__/paymentErrors.test.ts
-PASS src/__tests__/searchFilters.test.ts
-PASS src/__tests__/queryClient.test.ts
 PASS src/__tests__/products.test.ts
-PASS src/__tests__/reviewSelectors.test.ts
-PASS src/__tests__/html.test.ts
-PASS src/__tests__/favoriteSelectors.test.ts
-PASS src/__tests__/notificationSelectors.test.ts
-PASS src/__tests__/liveChatSelectors.test.ts
-PASS src/__tests__/pushNotifications.test.ts
-PASS src/__tests__/paymentReducer.test.ts
+PASS src/__tests__/useDebouncedValue.test.tsx
+PASS src/__tests__/useCanReview.test.tsx
+PASS src/__tests__/session.test.ts
+PASS src/__tests__/perfGuard.test.ts
+PASS src/__tests__/priceValidation.test.ts
 PASS src/__tests__/addressErrors.test.ts
-PASS src/__tests__/liveChatValidation.test.ts
-PASS src/__tests__/serviceGallery.test.ts
-PASS src/__tests__/reviewValidation.test.ts
-PASS src/__tests__/validation.test.ts
-PASS src/__tests__/liveChatReducer.test.ts
-PASS src/__tests__/paymentPolling.test.ts
-PASS src/__tests__/chatSelectors.test.ts
-PASS src/__tests__/errorMessage.test.ts
-PASS src/__tests__/modelViewerHtml.test.ts
-PASS src/__tests__/orderFormat.test.ts
-PASS src/__tests__/paymentConfig.test.ts
+PASS src/__tests__/reviewSelectors.test.ts
+PASS src/__tests__/productDetail.test.ts
+PASS src/__tests__/notificationSelectors.test.ts
+PASS src/__tests__/liveChatGateway.test.ts
+PASS src/__tests__/addressValidation.test.ts
+PASS src/__tests__/queryClient.test.ts
+PASS src/__tests__/liveChatSelectors.test.ts
+PASS src/__tests__/favoriteSelectors.test.ts
+PASS src/__tests__/paymentErrors.test.ts
 PASS src/__tests__/chatStore.test.ts
+PASS src/__tests__/addressSelectors.test.ts
+PASS src/__tests__/paymentReducer.test.ts
 PASS src/__tests__/orderList.test.ts
-PASS src/__tests__/chatValidation.test.ts
-PASS src/__tests__/categories.test.ts
+PASS src/__tests__/chatSelectors.test.ts
+PASS src/__tests__/pushNotifications.test.ts
+PASS src/__tests__/paymentConfig.test.ts
+PASS src/__tests__/searchFilters.test.ts
+PASS src/__tests__/reviewValidation.test.ts
+PASS src/__tests__/paymentPolling.test.ts
 PASS src/__tests__/paymentSelectors.test.ts
+PASS src/__tests__/liveChatReducer.test.ts
+PASS src/__tests__/errorMessage.test.ts
+PASS src/__tests__/validation.test.ts
+PASS src/__tests__/orderFormat.test.ts
+PASS src/__tests__/modelViewerHtml.test.ts
+PASS src/__tests__/categories.test.ts
+PASS src/__tests__/serviceGallery.test.ts
+PASS src/__tests__/html.test.ts
+PASS src/__tests__/liveChatValidation.test.ts
+PASS src/__tests__/chatValidation.test.ts
 -------------------------------------|---------|----------|---------|---------|-------------------
 File                                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------------------------|---------|----------|---------|---------|-------------------
-All files                            |   99.08 |    97.35 |   98.53 |   99.34 |                   
+All files                            |   99.08 |    97.49 |   98.53 |   99.34 |                   
  features/addresses                  |     100 |      100 |     100 |     100 |                   
   addressErrors.ts                   |     100 |      100 |     100 |     100 |                   
   addressSelectors.ts                |     100 |      100 |     100 |     100 |                   
@@ -132,9 +189,9 @@ All files                            |   99.08 |    97.35 |   98.53 |   99.34 |
   useUpdateAddress.ts                |     100 |      100 |     100 |     100 |                   
  features/addresses/repositories     |     100 |      100 |     100 |     100 |                   
   addressRepository.ts               |     100 |      100 |     100 |     100 |                   
- features/ar                         |     100 |    88.88 |     100 |     100 |                   
-  modelViewerHtml.ts                 |     100 |    83.33 |     100 |     100 | 13                
-  selectors.ts                       |     100 |    90.47 |     100 |     100 | 16,31             
+ features/ar                         |     100 |    96.29 |     100 |     100 |                   
+  modelViewerHtml.ts                 |     100 |      100 |     100 |     100 |                   
+  selectors.ts                       |     100 |    95.23 |     100 |     100 | 16                
  features/ar/components              |     100 |    91.66 |     100 |     100 |                   
   ARButton.tsx                       |     100 |    91.66 |     100 |     100 | 43                
  features/ar/hooks                   |     100 |      100 |     100 |     100 |                   
@@ -308,9 +365,9 @@ All files                            |   99.08 |    97.35 |   98.53 |   99.34 |
   url.ts                             |     100 |      100 |     100 |     100 |                   
 -------------------------------------|---------|----------|---------|---------|-------------------
 
-Test Suites: 115 passed, 115 total
-Tests:       1440 passed, 1440 total
+Test Suites: 118 passed, 118 total
+Tests:       1498 passed, 1498 total
 Snapshots:   0 total
-Time:        41.064 s, estimated 83 s
+Time:        12.111 s, estimated 22 s
 Ran all test suites.
 EXIT=0

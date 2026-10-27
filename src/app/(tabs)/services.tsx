@@ -116,7 +116,7 @@ export default function ServicesScreen() {
                 No se pudo cargar más. Toca para reintentar
               </Text>
             </Pressable>
-          ) : null
+          ) : undefined
         }
       />
     </View>

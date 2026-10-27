@@ -57,7 +57,7 @@ export default function MyReviewsList() {
       ListHeaderComponent={
         reviews.length > 0 ? (
           <Text style={[styles.count, { color: c.textMuted }]}>{reviewsCountLabel(data?.total)}</Text>
-        ) : null
+        ) : undefined
       }
       ListEmptyComponent={
         <View style={styles.center}>

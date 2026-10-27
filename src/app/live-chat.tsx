@@ -14,6 +14,7 @@ import {
   StyleSheet,
   Text,
   View,
+  type HostInstance,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -86,7 +87,7 @@ export default function LiveChatScreen() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const { state, start, send, notifyTyping, stillHere, leave, restart } = useLiveChat();
   const listRef = useRef<FlatList<LiveMessage>>(null);
-  const frameRef = useRef<View>(null);
+  const frameRef = useRef<HostInstance>(null);
   // Distancia del contenido al borde superior de la ventana: KeyboardAvoidingView la necesita.
   const [offset, setOffset] = useState(0);
 
@@ -211,7 +212,7 @@ export default function LiveChatScreen() {
               <Text style={{ color: c.textMuted, fontSize: 12, marginTop: spacing.sm }}>
                 El asesor está escribiendo…
               </Text>
-            ) : null
+            ) : undefined
           }
           contentContainerStyle={styles.list}
           keyboardShouldPersistTaps="handled"

@@ -4,7 +4,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, type TextInputInstance } from "react-native";
 
 import AuthScaffold, { FormError, SubmitButton } from "@/features/auth/components/AuthScaffold";
 import PasswordRules from "@/features/auth/components/PasswordRules";
@@ -46,12 +46,12 @@ export default function RegisterScreen() {
   const enviando = register.isPending;
 
   // Refs para encadenar los campos con la tecla "siguiente" del teclado.
-  const refPaterno = useRef<TextInput>(null);
-  const refMaterno = useRef<TextInput>(null);
-  const refCorreo = useRef<TextInput>(null);
-  const refTelefono = useRef<TextInput>(null);
-  const refPassword = useRef<TextInput>(null);
-  const refConfirm = useRef<TextInput>(null);
+  const refPaterno = useRef<TextInputInstance>(null);
+  const refMaterno = useRef<TextInputInstance>(null);
+  const refCorreo = useRef<TextInputInstance>(null);
+  const refTelefono = useRef<TextInputInstance>(null);
+  const refPassword = useRef<TextInputInstance>(null);
+  const refConfirm = useRef<TextInputInstance>(null);
 
   const set = (campo: keyof Campos) => (valor: string) => {
     setDatos((d) => ({ ...d, [campo]: valor }));

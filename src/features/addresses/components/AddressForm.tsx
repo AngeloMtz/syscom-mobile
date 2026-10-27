@@ -2,7 +2,7 @@
 // Valida con validateAddress (mismas reglas que el backend) antes de enviar y
 // muestra, bajo cada campo, el error local o el que devolvió el servidor (400).
 import { useRef, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, type TextInputInstance } from "react-native";
 
 import { validateAddress } from "@/features/addresses/addressValidation";
 import type { AddressErrors, AddressField, AddressInput } from "@/features/addresses/types";
@@ -34,11 +34,11 @@ export default function AddressForm({ initial, submitLabel, submitting, serverEr
   // Campos que se editaron desde el último error del servidor: su error ya no aplica.
   const [edited, setEdited] = useState<Partial<Record<AddressField, true>>>({});
 
-  const refColonia = useRef<TextInput>(null);
-  const refCiudad = useRef<TextInput>(null);
-  const refEstado = useRef<TextInput>(null);
-  const refCp = useRef<TextInput>(null);
-  const refReferencias = useRef<TextInput>(null);
+  const refColonia = useRef<TextInputInstance>(null);
+  const refCiudad = useRef<TextInputInstance>(null);
+  const refEstado = useRef<TextInputInstance>(null);
+  const refCp = useRef<TextInputInstance>(null);
+  const refReferencias = useRef<TextInputInstance>(null);
 
   const set = (field: AddressField) => (value: string) => {
     setValues((v) => ({ ...v, [field]: value }));

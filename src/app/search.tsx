@@ -279,7 +279,7 @@ export default function SearchScreen() {
               <Text style={[styles.count, { color: c.textMuted }]}>
                 {data?.total} {data?.total === 1 ? "resultado" : "resultados"}
               </Text>
-            ) : null
+            ) : undefined
           }
           ListEmptyComponent={
             <View style={styles.center}>
@@ -299,7 +299,7 @@ export default function SearchScreen() {
                   No se pudo cargar más. Toca para reintentar
                 </Text>
               </Pressable>
-            ) : null
+            ) : undefined
           }
         />
       {/* Los resultados anteriores se quedan a la vista mientras llegan los nuevos. */}

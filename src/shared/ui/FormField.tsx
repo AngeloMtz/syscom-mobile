@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   View,
+  type TextInputInstance,
   type TextInputProps,
 } from "react-native";
 
@@ -27,7 +28,7 @@ export interface FormFieldProps extends TextInputProps {
   hint?: string;
 }
 
-const FormField = forwardRef<TextInput, FormFieldProps>(function FormField(
+const FormField = forwardRef<TextInputInstance, FormFieldProps>(function FormField(
   { label, error, icon, prefix, secure, hint, editable = true, style, ...rest },
   ref,
 ) {
@@ -42,8 +43,11 @@ const FormField = forwardRef<TextInput, FormFieldProps>(function FormField(
       <Text style={[styles.label, { color: c.text }]}>{label}</Text>
 
       <View
+        testID="form-field-box"
         style={[
           styles.box,
+          // Varias líneas: la caja crece con el contenido en vez de fijar 48 px.
+          rest.multiline && styles.boxMultiline,
           {
             borderColor,
             backgroundColor: c.inputBg,
@@ -104,6 +108,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     // Alto consistente con el botón primario (48 px de área táctil)
     height: 48,
+  },
+  boxMultiline: {
+    height: undefined,
+    minHeight: 48,
+    alignItems: "flex-start",
+    paddingVertical: spacing.sm,
   },
   input: { flex: 1, fontSize: 15, paddingVertical: 0 },
   msgRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4 },

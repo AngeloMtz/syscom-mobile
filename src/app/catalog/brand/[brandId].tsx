@@ -87,7 +87,7 @@ export default function BrandProductsScreen() {
             <Text style={[styles.count, { color: c.textMuted }]}>
               {data?.total} {data?.total === 1 ? "producto" : "productos"}
             </Text>
-          ) : null
+          ) : undefined
         }
         ListEmptyComponent={
           <View style={styles.center}>
@@ -107,7 +107,7 @@ export default function BrandProductsScreen() {
                 No se pudo cargar más. Toca para reintentar
               </Text>
             </Pressable>
-          ) : null
+          ) : undefined
         }
       />
     </>

@@ -259,7 +259,11 @@ El 2026-10-26 se identificó que producción podía estar **desactualizada respe
 | Despliegue sin CI | Con auto-deploy y sin "Wait for CI", un push despliega aunque el CI falle | **Abierto**: activar "Wait for CI" |
 | Verificación | — | **Pendiente**: pruebas de humo en producción |
 
-**Nota sobre permisos por rol.** El backend usa un cliente de base de datos por rol: `dbPublic`, `dbCustomer`, `dbStaff`, `dbAdmin`, `dbReports` y el dueño. Las tablas y secuencias nuevas deben revisarse con permisos por rol: crear una tabla no basta si el rol que escribe no puede usar su secuencia. Ya se encontró un caso (paso 3 de 8.3). Qué otros roles y tablas nuevas necesitan revisión: PENDIENTE.
+**Nota sobre permisos por rol.** El backend usa un cliente de base de datos por rol: `dbPublic`, `dbCustomer`, `dbStaff`, `dbAdmin`, `dbReports` y el dueño. Las tablas y secuencias nuevas deben revisarse con permisos por rol: crear una tabla no basta si el rol que escribe no puede usar su secuencia. Ya se encontró un caso (paso 3 de 8.3).
+
+Verificación (según Angel): tras aplicar los scripts en una **rama de prueba de Neon** (copia de producción), se corrió una consulta **de solo lectura** que comprueba los privilegios de tabla y de secuencia que necesita cada escritura del código nuevo (módulos de reseñas, chatbot, notificaciones, promociones y carrito). Resultado: **0 faltantes**. Precisión: **en producción solo se comprobaron directamente las dos secuencias de `syscom_admin`**; el resto de la comprobación se hizo en la copia.
+
+Huecos anteriores a este despliegue: las secuencias de favoritos, `push_subscriptions` para staff y `suscriptores_boletin`. Según el análisis del código, ningún rol sin permiso las usa. **Se dejan como están; quedan fuera de alcance.**
 
 ### 8.3 Procedimiento de actualización
 
@@ -317,4 +321,4 @@ La suscripción de Railway fue **renovada** (según Angel, 2026-10-27). Fecha de
 | 13 | `GOOGLE_SERVICES_JSON` en EAS: existencia y entornos donde está cargada | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
 | 14 | Base de usuarios pequeña: los porcentajes del canary son poco significativos | @AngeloMtz | Abierto; tamaño de la base por confirmar |
 | 15 | Pruebas de humo en producción tras el despliegue | @AngeloMtz | Abierto |
-| 16 | Permisos por rol de las tablas y secuencias nuevas (el backend usa un cliente de base de datos por rol) | @AngeloMtz | Abierto: se corrigió `syscom_admin` en `expo_push_tokens` y `promocion_segmentos`; el resto por revisar |
+| 16 | Permisos por rol de las tablas y secuencias nuevas (el backend usa un cliente de base de datos por rol) | @AngeloMtz | Cerrado (según Angel). Consulta de solo lectura en una rama de prueba de Neon (copia de producción): 0 faltantes. En producción solo se comprobaron directamente las dos secuencias de `syscom_admin`. Huecos anteriores (secuencias de favoritos, `push_subscriptions` para staff, `suscriptores_boletin`) no los usa ningún rol sin permiso según el análisis del código; se dejan como están, fuera de alcance |

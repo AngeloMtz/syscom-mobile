@@ -2,7 +2,7 @@
 // Campos según el validador del backend: correo (email, máx. 150) y password.
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput } from "react-native";
+import { Pressable, StyleSheet, Text, type TextInputInstance } from "react-native";
 
 import AuthScaffold, {
   Divider,
@@ -19,7 +19,7 @@ export default function LoginScreen() {
   const c = useColors();
   const router = useRouter();
   const login = useLogin();
-  const passwordRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInputInstance>(null);
 
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");

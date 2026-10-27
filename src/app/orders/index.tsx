@@ -84,7 +84,7 @@ function OrdersList() {
             <Text style={[styles.count, { color: c.textMuted }]}>
               {data?.total} {data?.total === 1 ? "pedido" : "pedidos"}
             </Text>
-          ) : null
+          ) : undefined
         }
         ListEmptyComponent={
           <View style={styles.center}>
@@ -109,7 +109,7 @@ function OrdersList() {
                 No se pudo cargar más. Toca para reintentar
               </Text>
             </Pressable>
-          ) : null
+          ) : undefined
         }
       />
     </>

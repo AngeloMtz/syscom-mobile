@@ -133,7 +133,7 @@ function NotificationsList() {
                 No se pudo cargar más. Toca para reintentar
               </Text>
             </Pressable>
-          ) : null
+          ) : undefined
         }
       />
     </>

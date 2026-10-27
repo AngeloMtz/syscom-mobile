@@ -24,6 +24,8 @@ export async function configureAndroidChannel(): Promise<void> {
   if (Platform.OS !== "android") return;
   await Notifications.setNotificationChannelAsync("default", {
     name: "General",
+    // AndroidImportance sí se exporta (export * de expo-notifications); import/namespace no lo resuelve.
+    // eslint-disable-next-line import/namespace
     importance: Notifications.AndroidImportance.DEFAULT,
   });
 }

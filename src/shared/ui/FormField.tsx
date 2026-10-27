@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   View,
+  type TextInputInstance,
   type TextInputProps,
 } from "react-native";
 
@@ -27,7 +28,7 @@ export interface FormFieldProps extends TextInputProps {
   hint?: string;
 }
 
-const FormField = forwardRef<TextInput, FormFieldProps>(function FormField(
+const FormField = forwardRef<TextInputInstance, FormFieldProps>(function FormField(
   { label, error, icon, prefix, secure, hint, editable = true, style, ...rest },
   ref,
 ) {

@@ -11,6 +11,7 @@ import {
   Text,
   useWindowDimensions,
   View,
+  type ScrollViewInstance,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -22,7 +23,7 @@ export default function OnboardingFlow({ onFinish }: { onFinish: () => void }) {
   const c = useColors();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const [indice, setIndice] = useState(0);
 
   const ultima = indice === SLIDES.length - 1;

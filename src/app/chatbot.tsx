@@ -13,6 +13,7 @@ import {
   StyleSheet,
   Text,
   View,
+  type HostInstance,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -31,7 +32,7 @@ export default function ChatbotScreen() {
   const insets = useSafeAreaInsets();
   const { messages, escalated, isSending, error, send, retry } = useChatbot();
   const listRef = useRef<FlatList<ChatMessage>>(null);
-  const frameRef = useRef<View>(null);
+  const frameRef = useRef<HostInstance>(null);
   // Distancia del contenido al borde superior de la ventana (barra de estado + header):
   // KeyboardAvoidingView la necesita para calcular cuánto subir el teclado.
   const [offset, setOffset] = useState(0);

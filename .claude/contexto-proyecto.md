@@ -5,8 +5,8 @@ App móvil de SYSCOM (React Native + Expo + TypeScript), proyecto de la materia
 Backend reutilizado de SYSCOM (Express + PostgreSQL). Tablero: GitHub Projects #3 de AngeloMtz.
 
 ## Equipo
-- Angel (@AngeloMtz): catálogo, compra y reseñas (issues #6–#15 y #19). Se encarga del cierre del proyecto, del despliegue y de la producción (Railway, Neon y variables de entorno)
-- Luis Ángel (@LAHH18): revisor de PRs (aprueba los PR de Angel). Historias que desarrolló: base, auth, perfil, AR, push, chatbot, E2E (issues #1–#5, #16–#18, #20)
+- Angel (@AngeloMtz): catálogo, compra y reseñas (issues #6–#15 y #19). Se encarga del cierre del proyecto, del despliegue y de la producción (Railway, Neon y variables de entorno). Las pruebas E2E y el build final (#20) están a su cargo
+- Luis Ángel (@LAHH18): revisor de PRs (aprueba los PR de Angel). Historias que desarrolló: base, auth, perfil, AR, push, chatbot (issues #1–#5, #16–#18)
 - Docentes: supervisión (no desarrollan)
 
 ## Metodología

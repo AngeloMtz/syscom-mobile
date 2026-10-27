@@ -28,7 +28,7 @@ La versión mínima está escrita en tres sitios que deben coincidir. Si cambia 
 2. `engines` en `package.json`: la que usa npm para avisar.
 3. `NODE_MINIMO` en `scripts/verificar-entorno.mjs`: la que valida el script.
 
-El mínimo actual (22.13) viene de la documentación de Expo SDK 57.
+El mínimo actual (22.13) coincide con la documentación de Expo SDK 58 (`https://docs.expo.dev/versions/v58.0.0/`, fila de SDK 58.0.0: "22.13.x", consultada el 2026-10-27). Con la migración a SDK 58 (#148) no cambió: `.nvmrc` sigue en 22.13 y `engines` en `>=22.13.0`. La medición del 2026-10-27 se hizo con Node 22.13.0.
 
 ## Pendiente (no automatizado)
 - Comprobar que el backend responde (la URL de `EXPO_PUBLIC_API_URL` está viva) se hace a mano al probar en dispositivo; no forma parte del CI porque depende de un servicio externo.

@@ -5,6 +5,7 @@
 - **Base:** `develop` en `faa8d77` (Merge pull request #141)
 - **Fuentes:** `.github/workflows/ci.yml`, `package.json`, `docs/pruebas/`, ejecuciones de CI y estado de los issues #25 a #46 consultados en GitHub el 2026-10-26.
 - **Responsable:** @AngeloMtz. Revisa: @LAHH18.
+- **Actualizado:** 2026-10-27 (issue #150): SDK 58 (#148), Jest 30 y cifras medidas ese día sobre `develop` en `dbb922e`. Las ejecuciones de CI de la sección 4 no se volvieron a medir.
 
 ## Convenciones de este documento
 
@@ -82,7 +83,7 @@ Notas:
 
 | Tipo | Herramienta | Evento disparador | Ramas | Job | Estado | Evidencia en el repositorio |
 |---|---|---|---|---|---|---|
-| Unitarias | Jest 29 + `jest-expo` + React Native Testing Library (`renderHook` para hooks) | `pull_request` y `push` | `develop`, `main` (y PRs hacia ellas) | `Pruebas unitarias` | **Implementada** | `src/__tests__/` (118 archivos `.test.*` en `src/`, incluidos `components/` e `integration/`); `docs/pruebas/evidencia/sprint-N/jest.txt`; artefacto `cobertura` en CI (14 días) |
+| Unitarias | Jest 30 (`jest ~30.5.2`) + `jest-expo` ~58.0.12 + React Native Testing Library (`renderHook` para hooks) | `pull_request` y `push` | `develop`, `main` (y PRs hacia ellas) | `Pruebas unitarias` | **Implementada** | `src/__tests__/` (119 archivos `.test.*` en `src/`, incluidos `components/` e `integration/`); `docs/pruebas/evidencia/sprint-N/jest.txt`; artefacto `cobertura` en CI (14 días) |
 | Análisis estático | ESLint (`npx expo lint`), TypeScript (`npx tsc --noEmit`), `npm audit` | `pull_request` y `push` | `develop`, `main` (y PRs hacia ellas) | `Análisis estático` | **Implementada** | `lint.txt` y `tsc.txt` en `docs/pruebas/evidencia/sprint-1` a `sprint-4`; resumen del job en cada ejecución |
 | Verificación de entorno | `scripts/verificar-entorno.mjs --ci` | `pull_request` y `push` | igual | `Análisis estático` (primer paso) | **Implementada** | [matriz-de-entornos.md](matriz-de-entornos.md) |
 | Integración (servicios simulados) | Jest, 8 archivos en `src/__tests__/integration/` (catálogo, favoritos, sesión/caché, sesión/compra, compra de extremo a extremo, AR, notificaciones push, chatbot y chat en vivo) | `pull_request` y `push` | igual | `Pruebas unitarias` (sin job propio) | **Parcial.** Axios y los servicios externos están simulados | Archivos citados; secciones de integración de `sprint-2.md`, `sprint-3.md`, `sprint-4.md` |
@@ -93,7 +94,16 @@ Notas:
 | Estrés | Ninguna | — | — | — | **PROPUESTA.** No hay herramienta, script ni medición en el repo | — |
 | Compilación | Ninguna en CI (`expo export` o build de EAS) | — | — | — | **PROPUESTA.** No existe paso de compilación en el workflow | — |
 
-Datos de la última evidencia local de Jest guardada en el repo: `docs/pruebas/evidencia/sprint-4/jest.txt` registra 118 suites y 1498 pruebas pasando, `EXIT=0`. Es una ejecución local del Sprint 4, no de CI, y no se volvió a correr para este documento: **NO EJECUTADO en esta rama**.
+Medición local del 2026-10-27 sobre `develop` en `dbb922e` (SDK 58, Jest 30, Node 22.13.0, npm 11.12.1, tras `npm ci`). No es una ejecución de CI y la salida no se guardó en el repo:
+
+| Verificación | Resultado |
+|---|---|
+| `npx expo lint --no-cache` | exit 0 |
+| `npx tsc --noEmit` | exit 0 |
+| `npx jest --ci --coverage` | exit 0; **119 suites y 1501 pruebas** pasan; cobertura 99.08 % sentencias (1955/1973), 97.5 % ramas (1370/1405), 98.53 % funciones (672/682) y 99.34 % líneas (1672/1683); el umbral global se cumple |
+| `npm audit` | 0 críticas, **3 altas**, 0 moderadas (total 3); `npm audit --audit-level=critical` exit 0. Detalle en [advertencias-y-vulnerabilidades.md](advertencias-y-vulnerabilidades.md) |
+
+La última evidencia guardada en el repo es `docs/pruebas/evidencia/sprint-4/jest.txt` (118 suites y 1498 pruebas con SDK 57, `EXIT=0`); se conserva como historial de ese sprint.
 
 ---
 
@@ -128,6 +138,8 @@ Duración de cada job = `completedAt − startedAt` según la API de GitHub (`gh
 \* La suma es solo aritmética de las duraciones observadas. **No es una ejecución secuencial real**: nunca se ejecutó el workflow con `needs` entre estos dos jobs, así que no hay medición secuencial y no se estima una.
 
 Lectura honesta: en estas 10 ejecuciones, cada job dura entre 34 s y 58 s. Paralelo y secuencial difieren por la duración del job más corto (de 34 s a 54 s en estas ejecuciones). El beneficio es real pero pequeño en términos absolutos.
+
+Las 10 ejecuciones son anteriores a la migración a SDK 58 (#148, fusionada el 2026-10-27 a las 15:35 UTC). Los tiempos de CI con SDK 58 **no se volvieron a medir en este PR: NO EJECUTADO**; en local, Jest tardó 20.13 s en la medición del 2026-10-27 (12 s en la evidencia del Sprint 4 con SDK 57), pero esa cifra no es de CI.
 
 ### Qué etapas futuras llevarían `needs` (todas PROPUESTA)
 

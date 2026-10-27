@@ -16,14 +16,15 @@
 
 Este documento **no contiene valores** de secretos, variables ni cadenas de conexión, solo sus nombres. El repositorio es público.
 
-## Documentación de Expo consultada (SDK 57)
+## Documentación de Expo consultada (SDK 58)
 
-La versión instalada es `expo` `~57.0.25` (`package.json`; `node_modules/expo` 57.0.25). Se consultó el 2026-10-26:
+La versión instalada es `expo` `~58.0.19` (`package.json`; `node_modules/expo` 58.0.19). La primera redacción (2026-10-26) se apoyó en la documentación del SDK 57; el 2026-10-27 (issue #150) se volvieron a consultar estas páginas y la de SDK 58. Las páginas de EAS (`eas/`, `build/`, `build-reference/`, `submit/`, `accounts/`) **no llevan versión de SDK en la dirección** (la de EAS Submit tampoco menciona ningún SDK en el texto); solo la referencia del SDK (`versions/v58.0.0/`) es por versión:
 
 | Tema | Página |
 |---|---|
 | Índice general y correcciones de Expo | https://docs.expo.dev/llms.txt |
-| Existencia de la documentación de SDK 57 | https://docs.expo.dev/versions/v57.0.0/ |
+| Versiones y requisitos del SDK 58 | https://docs.expo.dev/versions/v58.0.0/ |
+| Referencia de `app.config` del SDK 58 (`android.package`, `android.versionCode`, `version`, `android.googleServicesFile`, `owner`) | https://docs.expo.dev/versions/v58.0.0/config/app/ |
 | EAS Submit para Android (primer envío, clave de cuenta de servicio, comandos, CI) | https://docs.expo.dev/submit/android/ |
 | Envío manual a Google Play | https://docs.expo.dev/submit/android-manual/ |
 | Opciones de `submit` en `eas.json` | https://docs.expo.dev/submit/eas-json/ |
@@ -35,6 +36,13 @@ La versión instalada es `expo` `~57.0.25` (`package.json`; `node_modules/expo` 
 | EAS Build en CI | https://docs.expo.dev/build/building-on-ci/ |
 
 Limitaciones de la consulta: la página de la referencia de `eas.json` de build (`build/eas-json`) devolvió 404 y se usó `eas/json`. Varias páginas no indican valores por defecto (por ejemplo, de `buildType` o `track`); en esos casos este documento lo dice y no los asume. No se consultó documentación de Google Play Console: lo que se afirma de la consola queda marcado como pendiente de confirmar.
+
+**Qué cambió al volver a consultar con SDK 58 (2026-10-27):**
+- La versión instalada pasó de `~57.0.25` a `~58.0.19`.
+- Las afirmaciones de este documento sobre EAS Submit (primer envío opcional a mano, pista interna por defecto, `releaseStatus: draft`, clave de la cuenta de servicio y `--non-interactive`), `eas.json` (`track`, `releaseStatus`, `rollout`, `autoIncrement`), AAB/APK, variables de entorno, `EXPO_TOKEN` y la compilación en CI **siguen vigentes**: las páginas coinciden con lo que se registró el 2026-10-26. La de la compilación en CI sigue usando `expo/expo-github-action@v8`.
+- La referencia del SDK 58 confirma `android.package`, `android.versionCode` (entero positivo, "requerido por Google Play"), `version`, `android.googleServicesFile` y `owner`. **No indica si esas propiedades cambiaron respecto de SDK 57.**
+- **Dato nuevo (SDK 58):** la tabla de versiones indica Node.js "22.13.x", React Native 0.88, React 19.3.0, `compileSdkVersion` 37 y `targetSdkVersion` 36. La página recomienda revisar los requisitos de nivel de API de Google Play; **esos requisitos actuales no se verificaron: PENDIENTE DE CONFIRMAR POR ANGEL.**
+- La página `build/eas-json` (404 en la primera consulta) no se volvió a probar.
 
 ---
 
@@ -192,7 +200,7 @@ Notas:
 | `android.versionCode` | Remoto en EAS (`appVersionSource: remote`) | Automático por `autoIncrement: true` en el perfil `production` |
 | Etiqueta de Git | `main` | `vX.Y.Z` coincidente con `version` |
 
-Según `build-reference/app-versions`: con `remote`, EAS guarda la versión de build y, con `autoIncrement`, la incrementa en cada build; el valor remoto parte del valor del proyecto local (su ejemplo: `versionCode` 1 pasa a 2). El proyecto **no define** `android.versionCode`; qué valor inicial toma EAS en ese caso no está en la documentación consultada. PENDIENTE DE CONFIRMAR POR ANGEL (`eas build:version:get` o el panel de EAS).
+Según `build-reference/app-versions`: con `remote`, EAS guarda la versión de build y, con `autoIncrement`, la incrementa en cada build; el valor remoto parte del valor del proyecto local (su ejemplo: `versionCode` 1 pasa a 2). El proyecto **no define** `android.versionCode`. La documentación (consulta del 2026-10-27) dice que, si app config no define versiones de build, **la versión remota empieza en 1**. El valor que hay hoy en EAS, si ya hubo builds: PENDIENTE DE CONFIRMAR POR ANGEL (`eas build:version:get` o el panel de EAS).
 
 ### Conflicto: versión 1.0.0 de la app contra el plan 0.x
 
@@ -317,7 +325,7 @@ La suscripción de Railway fue **renovada** (según Angel, 2026-10-27). Fecha de
 | 9 | Builds de EAS y envíos a Google Play no verificados (sin login en EAS CLI) | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
 | 10 | Cuenta de Google Play, ficha de la tienda y clave de la cuenta de servicio | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
 | 11 | `submit.production` vacío y sin workflow de EAS en el repo | @AngeloMtz y @LAHH18 | Abierto; requiere issue y PR propios |
-| 12 | Valor inicial de `versionCode` remoto sin confirmar (el proyecto no lo define) | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
+| 12 | Valor actual de `versionCode` remoto en EAS (la documentación dice que empieza en 1 si app config no lo define; no se sabe si ya hubo builds) | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
 | 13 | `GOOGLE_SERVICES_JSON` en EAS: existencia y entornos donde está cargada | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
 | 14 | Base de usuarios pequeña: los porcentajes del canary son poco significativos | @AngeloMtz | Abierto; tamaño de la base por confirmar |
 | 15 | Pruebas de humo en producción tras el despliegue | @AngeloMtz | Abierto |

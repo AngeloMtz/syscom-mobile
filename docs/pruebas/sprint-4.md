@@ -1,10 +1,10 @@
 # Reporte de pruebas — Sprint 4
 
 - **Fecha:** 2026-10-25 (aceptación manual dictada el 2026-10-27)
-- **Ramas:** `test/37-38-unitarias-estatico-sprint4` (PR 1), `test/39-integracion-sprint4` (PR 2) `test/40-aceptacion-sprint4` (PR 3) y `test/40-aceptacion-manual-sprint4` (PR 4)
+- **Ramas:** `test/37-38-unitarias-estatico-sprint4` (PR 1), `test/39-integracion-sprint4` (PR 2), `test/40-aceptacion-sprint4` (PR 3) y `test/40-aceptacion-manual-sprint4` (PR 4)
 - **Historias cubiertas:** #16–#18 (Realidad Aumentada, notificaciones push, chatbot de soporte). Como historias adicionales: #104 (Inicio), #105 (Información institucional) y #115 (Servicios)
 - **Responsable de pruebas:** @AngeloMtz
-- **Commit base:** `develop` en `b824bd5` para el PR 1 (incluye los PR #127, #132 y #133) en `5be3bb8` para el PR 2 (incluye además el #136) en `29795b3` para el PR 3 (incluye además #139 y #140) y en `dbb922e` para el PR 4 (incluye la migración a SDK 58, #148)
+- **Commit base:** `develop` en `b824bd5` para el PR 1 (incluye los PR #127, #132 y #133), en `5be3bb8` para el PR 2 (incluye además el #136), en `29795b3` para el PR 3 (incluye además #139 y #140) y en `dbb922e` para el PR 4 (incluye la migración a SDK 58, #148)
 
 ## 1. Resumen
 
@@ -14,7 +14,7 @@
 | Unitarias | 118 suites y 1498 pruebas pasan en la suite completa (58 son de integración); cobertura 99.08 % sentencias / 97.49 % ramas / 98.53 % funciones / 99.34 % líneas | #37 |
 | Integración | 58/58 pasan con servicios simulados (AR, push y chatbot). La integración real con servicios externos queda PENDIENTE DE VALIDACIÓN MANUAL (sección 4) | #39 |
 | Rendimiento | No aplica en este sprint | — |
-| Aceptación (manual) | **24 Cumple, 0 No cumple, 0 Parcial y 0 NO PROBADO** en los criterios de #16, #17, #18, #104, #105 y #115, según los resultados que dictó Angel el 2026-10-27 (sección 5). Con salvedades: modelo y versión de Android del dispositivo PENDIENTES, #17-1 sin evidencia de cambio de estado de pedido y capturas nuevas pendientes | #40 |
+| Aceptación (manual) | **24 Cumple, 0 No cumple, 0 Parcial y 0 NO PROBADO** en los criterios de #16, #17, #18, #104, #105 y #115, según los resultados que dictó Angel el 2026-10-27 (sección 5). Dispositivo: Samsung Galaxy A16, Android 16, con una development build sobre SDK 58. No hay capturas nuevas: la evidencia es de corridas anteriores a SDK 58 | #40 |
 
 Los resultados de las secciones 2 y 3 son de la ejecución local del PR 3. **No se volvieron a ejecutar en el PR 4** (sobre SDK 58): sus cifras no describen el `develop` actual; los checks del PR corren en CI.
 
@@ -155,12 +155,12 @@ Límite: las formas de las respuestas que reproducen los servidores falsos salen
 Nota (PR 3): la fila de push por cambio de estado del pedido depende de que el backend lo envíe; el equipo indicó que hoy no lo envía (límite conocido, sección 7).
 
 ### Estado tras la aceptación manual del 2026-10-27 (PR 4)
-Solo se marca como hecho lo que cubren los resultados dictados por Angel (sección 5). Lo demás sigue PENDIENTE DE VALIDACIÓN MANUAL. No se dictó si el dispositivo fue físico ni contra qué backend se probó.
+Solo se marca como hecho lo que cubren los resultados dictados por Angel (sección 5). Lo demás sigue PENDIENTE DE VALIDACIÓN MANUAL. Dispositivo de la corrida: Samsung Galaxy A16, Android 16. No se dictó contra qué backend se probó.
 
 | Flujo | Hecho (según los resultados dictados) | Sigue pendiente |
 |---|---|---|
 | Push en dispositivo | Permiso de notificaciones (#17-2) y recepción de notificaciones (#17-1), con capturas de promociones en un Android | Segundo plano o app cerrada, interruptor "Notificaciones push" desactivado y cierre de sesión (pasos 4 a 6): no se dictó resultado |
-| Push por cambio de estado del pedido | #17-1 dictado como Cumple | **PENDIENTE DE CONFIRMAR POR ANGEL:** ninguna captura lo muestra y el límite conocido es que el backend no lo enviaba |
+| Push por cambio de estado del pedido | #17-1 dictado como Cumple (confirmado por Angel el 2026-10-27) | Ninguna captura lo muestra (las existentes son de promociones) y no se dictó qué prueba lo respaldó |
 | AR en cámara | Botón "Ver en AR" y modelo en la cámara con un producto con modelo (#16-1, #16-2) | Producto sin modelo (paso 4) y iOS con Quick Look: no se dictó resultado |
 | Chatbot | Enviar un mensaje y recibir respuesta, e historial de la sesión (#18-1, #18-2) | Chat en vivo con un asesor conectado y reconexión tras modo avión: no se dictó resultado. La captura `hu18-chat-sin-comunicacion.jpeg` muestra el caso sin asesores, pero no hay resultado dictado para ese caso |
 
@@ -170,14 +170,14 @@ Solo se marca como hecho lo que cubren los resultados dictados por Angel (secci�
 - **Quién:** las pruebas de aceptación son manuales y las ejecuta Angel (@AngeloMtz).
 - **Resultado (PR 4, dictado por Angel el 2026-10-27):** de los 24 criterios de #16, #17, #18, #104, #105 y #115: **24 Cumple, 0 No cumple, 0 Parcial y 0 NO PROBADO.** Claude no ejecutó ni asumió ningún resultado; el texto de los criterios es el de los issues. Angel dictó los resultados de #16 a #104-3 uno por uno y el resto como "todo aprobado". En #115-7 (pruebas unitarias y CI) el resultado no se midió en esta corrida: lo respaldan la sección 3 y los checks del PR.
 - **Observación de diseño dictada por Angel (no cambia el resultado):** al escribir en el chatbot o en atención, el teclado sube y casi no se ve lo que se escribe. Se registra aquí; no se abrió issue.
-- **Dispositivo y build de la corrida:** build de desarrollo (*development build*) sobre SDK 58 (`develop` en `dbb922e`). **Modelo del dispositivo y versión de Android: PENDIENTE** (Angel no los dictó). Las capturas existentes tienen barra de estado de iPhone y de Android, así que provienen de al menos dos dispositivos, pero no dicen su modelo.
-- **Evidencia:** en este PR **no se agregan capturas nuevas**; las nuevas están **PENDIENTES** de copiarse a `evidencia/sprint-4/`. La columna "Evidencia existente" usa las 27 capturas que ya estaban en `develop` (15 al 26 de octubre), **anteriores a la migración a SDK 58 y a esta corrida**. El 2026-10-27 se abrió cada una y la columna describe lo que muestra, no solo su nombre. Angel indicó que el contenido de las capturas es correcto tal cual.
+- **Dispositivo y build de la corrida:** dispositivo Samsung Galaxy A16, Android 16, con una build de desarrollo (*development build*) sobre SDK 58 (`develop` en `dbb922e`). Las capturas existentes son de corridas anteriores y tienen barra de estado de iPhone y de Android, así que no corresponden a este dispositivo ni a esta build.
+- **Evidencia:** **no hay capturas nuevas** de esta corrida. La evidencia es de corridas anteriores a SDK 58: la columna "Evidencia existente" usa las 27 capturas que ya estaban en `develop` (15 al 26 de octubre). El 2026-10-27 se abrió cada una y la columna describe lo que muestra, no solo su nombre. Angel indicó que el contenido de las capturas es correcto tal cual. Los criterios sin captura dicen "Ninguna" o "Falta" y se registran por lo dictado.
 
 | Historia | Criterio (texto del issue) | Resultado | Evidencia existente (qué muestra) | Nota |
 |---|---|---|---|---|
 | #16 | Botón "Ver en AR" abre la cámara con el modelo del producto | Cumple | `hu16-boton-ar.jpeg` (botón "Ver en Realidad Aumentada" en el detalle de un producto), `hu16-visor-3d.jpeg` (visor 3D con "Ver en tu espacio"), `hu16-ar-escena.jpeg` (el modelo sobre un piso, con la cámara) | |
 | #16 | Funciona en al menos un producto de prueba | Cumple | Las tres anteriores: todas del mismo producto (Lenovo Yoga Convertible Touch) | Falta `hu16-sin-modelo` (no tomada). |
-| #17 | Usuario recibe notificación de prueba al cambiar estado de un pedido | Cumple (dictado) | `hu17-push-recibido.jpeg` (Android; notificación de **promoción** "Prueba 4"), `hu17-inbox-notificaciones.jpeg`, `hu17-notificacion-detalle.jpeg`, `hu17-notificacion-leida.jpeg` | **Salvedad:** ninguna captura muestra un cambio de estado de pedido (todas son promociones) y el límite conocido es que el backend no enviaba push al cambiar el estado. Se registra el resultado dictado; **qué se probó exactamente: PENDIENTE DE CONFIRMAR POR ANGEL.** Falta `hu17-cambio-estado-pedido` (no tomada). |
+| #17 | Usuario recibe notificación de prueba al cambiar estado de un pedido | Cumple | `hu17-push-recibido.jpeg` (Android; notificación de **promoción** "Prueba 4"), `hu17-inbox-notificaciones.jpeg`, `hu17-notificacion-detalle.jpeg`, `hu17-notificacion-leida.jpeg` | Resultado confirmado por Angel el 2026-10-27. Las capturas existentes son todas de promociones y ninguna muestra un cambio de estado de pedido; qué prueba lo respaldó no se dictó. Falta `hu17-cambio-estado-pedido` (no tomada). |
 | #17 | Permiso de notificaciones se solicita correctamente | Cumple | Ninguna | Falta `hu17-permiso-notificaciones` (no tomada). |
 | #18 | Usuario puede enviar mensaje y recibir respuesta del chatbot | Cumple | `hu18-chat-respuesta.jpeg` (saludo, la pregunta "Que laptops tienen?" y la respuesta con 5 productos), `hu18-chat-saludo.jpeg` | `hu18-chat-saludo.jpeg` muestra la pantalla de Inicio con el botón flotante del chat, no el saludo. Observación del teclado (arriba). |
 | #18 | Historial de conversación visible durante la sesión | Cumple | `hu18-chat-respuesta.jpeg` (saludo, pregunta y respuesta juntos en pantalla) | Falta `hu18-chat-historial` (no tomada). |
@@ -226,7 +226,7 @@ Las que mencionó el reporte y no existen (la columna "Evidencia" de la tabla la
 - `hu105-politicas`
 - `hu105-faq`
 - `hu116-detalle-video`
-- Las capturas de la corrida del 2026-10-27 en SDK 58: PENDIENTES de copiarse a `evidencia/sprint-4/`.
+- No hay capturas de la corrida del 2026-10-27 en SDK 58: la evidencia es de corridas anteriores.
 
 ## 6. Fallas encontradas y correcciones
 
@@ -244,10 +244,10 @@ No se encontraron fallos en código de producción con estas pruebas.
 ## 7. Límites conocidos
 
 - **iOS:** no se dictó ninguna prueba en iOS. Varias capturas existentes tienen barra de estado de iPhone, pero no se afirma que iOS esté probado ni que Quick Look funcione.
-- **Dispositivo:** modelo y versión de Android PENDIENTES. Build: *development build* sobre SDK 58.
-- **Evidencia anterior a SDK 58:** las 27 capturas existentes son del 15 al 26 de octubre; no hay capturas de la corrida del 2026-10-27.
+- **Dispositivo:** Samsung Galaxy A16, Android 16, con una *development build* sobre SDK 58.
+- **Evidencia anterior a SDK 58:** las 27 capturas existentes son del 15 al 26 de octubre; no hay capturas nuevas de la corrida del 2026-10-27.
 - **Teclado en el chat:** al escribir en el chatbot o en atención, el teclado sube y casi no se ve lo que se escribe (observación de diseño dictada por Angel).
-- **Push por cambio de estado del pedido:** #17-1 se dictó como Cumple, pero las capturas solo muestran promociones y el equipo había indicado que el backend no lo enviaba. PENDIENTE DE CONFIRMAR POR ANGEL.
+- **Push por cambio de estado del pedido:** #17-1 se dictó como Cumple y Angel lo confirmó el 2026-10-27, pero las capturas existentes solo muestran promociones y el equipo había indicado antes que el backend no lo enviaba. No se dictó qué prueba lo respaldó.
 - **El toque sobre la notificación no está manejado:** no hay un manejador del toque sobre una notificación (no se encontró `addNotificationResponseReceivedListener` en `src`).
 - **Numeración #115/#116:** el issue de Servicios es el #115, pero el PR #118, su commit y los archivos de evidencia (`hu116-*`) usan #116, que no existe.
 - **Capturas faltantes u obsoletas:** `hu105-servicios.jpeg` muestra el marcador "Esta sección estará disponible próximamente" de antes de que existiera Servicios. Según los nombres de los archivos, no hay captura de: el permiso de notificaciones (#17), políticas ni preguntas frecuentes (#105), el resultado de los botones de llamada, correo y WhatsApp (#105), carga, vacío y recarga por arrastre de Inicio (#104), ni paginación, carga y vacío de Servicios (#115).
@@ -257,9 +257,8 @@ No se encontraron fallos en código de producción con estas pruebas.
 
 | Pendiente | Dónde |
 |---|---|
-| Modelo del dispositivo y versión de Android de la corrida del 2026-10-27 | PENDIENTE (Angel) |
-| Copiar a `evidencia/sprint-4/` las capturas de la corrida del 2026-10-27 en SDK 58 | PENDIENTE (Angel) |
-| #17-1: confirmar qué se probó (la evidencia solo muestra promociones y el límite conocido dice que el backend no envía push al cambiar el estado) | PENDIENTE DE CONFIRMAR POR ANGEL |
+| Capturas de la corrida del 2026-10-27 en SDK 58: no se tomaron; la evidencia es de corridas anteriores. Tomarlas si se quiere evidencia de SDK 58 | Pendiente |
+| #17-1: qué prueba respaldó el resultado Cumple (no se dictó; ninguna captura muestra un cambio de estado de pedido) | PENDIENTE (Angel) |
 | Validación manual de la integración real que los resultados dictados no cubren: segundo plano, interruptor y cierre de sesión en push; producto sin modelo e iOS en AR; chat en vivo con asesor y reconexión (sección 4) | PENDIENTE DE VALIDACIÓN MANUAL |
 | Tomar las capturas no tomadas (sección 5) | Pendiente |
 | Teclado que tapa el campo de texto en el chatbot y en atención | Observación de diseño; decidir si se abre un issue |
@@ -274,5 +273,5 @@ Archivos en `docs/pruebas/evidencia/sprint-4/`: `lint.txt`, `tsc.txt` y `jest.tx
 - **Análisis estático:** lint y `tsc` sin errores ni advertencias.
 - **Unitarias:** 118 suites y 1498 pruebas pasan, con 99.34 % de cobertura de líneas.
 - **Integración:** 58/58 pasan con servicios simulados. De la integración real, los resultados dictados cubren AR en cámara y el mensaje con respuesta del chatbot; sigue PENDIENTE DE VALIDACIÓN MANUAL lo que se detalla en la sección 4.
-- **Aceptación:** 24 criterios de #16, #17, #18, #104, #105 y #115: 24 Cumple, 0 No cumple, 0 Parcial y 0 NO PROBADO, según los resultados que dictó Angel el 2026-10-27. Salvedades: #17-1 sin evidencia de cambio de estado de pedido (PENDIENTE DE CONFIRMAR POR ANGEL), modelo y versión de Android PENDIENTES, y capturas de la corrida nueva PENDIENTES; la evidencia existente es anterior a SDK 58. Observación de diseño: el teclado tapa el campo de texto del chat.
-- **Límites conocidos:** iOS sin una prueba dictada; #17-1 por confirmar; el toque sobre una notificación no está manejado; la numeración #115/#116; y las capturas no tomadas u obsoletas.
+- **Aceptación:** 24 criterios de #16, #17, #18, #104, #105 y #115: 24 Cumple, 0 No cumple, 0 Parcial y 0 NO PROBADO, según los resultados que dictó Angel el 2026-10-27, en un Samsung Galaxy A16 con Android 16 y una development build sobre SDK 58. No hay capturas nuevas: la evidencia es de corridas anteriores a SDK 58. Observación de diseño: el teclado tapa el campo de texto del chat.
+- **Límites conocidos:** iOS sin una prueba dictada; #17-1 sin captura de un cambio de estado de pedido; el toque sobre una notificación no está manejado; la numeración #115/#116; y las capturas no tomadas u obsoletas.

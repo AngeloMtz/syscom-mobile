@@ -229,7 +229,7 @@ Cómo se amplía el porcentaje y cómo se pausa: se hace en Play Console; PENDIE
 
 ## 8. Backend en producción
 
-El backend lo despliega y administra Angel. Los datos de esta sección vienen de capturas de Railway y GitHub y del análisis del backend aportados por Angel el 2026-10-26; **no se reverificaron** desde este repositorio.
+El backend lo despliega y administra Angel. Los datos de esta sección vienen de capturas de Railway y GitHub y del análisis del backend aportados por Angel el 2026-10-26, y de la actualización que Angel dictó el 2026-10-27. **Nada se reverificó** desde este repositorio; lo no confirmado queda como PENDIENTE.
 
 ### 8.1 Estado actual
 
@@ -238,39 +238,49 @@ El backend lo despliega y administra Angel. Los datos de esta sección vienen de
 | Plataforma | Railway |
 | Origen del despliegue | `AngeloMtz/syscom-backend` (fork privado de `LAHH18/syscom-backend`), rama `main` |
 | Despliegue automático | Sí, al hacer push |
-| "Wait for CI" | **Desactivado**: Railway despliega sin esperar a que pase el CI |
-| Estado del fork | En el commit `b053447`; es un avance directo de `LAHH18/syscom-backend:main`, con 0 commits propios. A la fecha, el fork está **27 commits atrás** de `LAHH18/syscom-backend:main` |
+| "Wait for CI" | **Desactivado**: Railway despliega sin esperar a que pase el CI. Sigue pendiente activarlo |
+| Estado del fork | El 2026-10-26 estaba en `b053447`, 27 commits atrás de `LAHH18/syscom-backend:main` y con 0 commits propios. **El 2026-10-27 se sincronizó** con `LAHH18/syscom-backend:main` (según Angel) |
+| Despliegue en Railway | **Activo con el commit del chatbot (Groq)** (según Angel, 2026-10-27) |
+| Base de datos (Neon) | Se creó un respaldo como rama de Neon; después se aplicaron `propuesta_aditiva.sql` y un script de permisos de secuencias (sección 8.3) |
+| Suscripción de Railway | **Renovada** (según Angel, 2026-10-27) |
+| Variables nuevas | **Ya estaban cargadas** (solo nombres en 8.2) |
 
-### 8.2 RIESGO: producción puede estar desactualizada
+### 8.2 Riesgo: producción desactualizada (estado al 2026-10-27)
 
-Producción puede estar **desactualizada respecto del backend real**. Lo que lo hace delicado:
+El 2026-10-26 se identificó que producción podía estar **desactualizada respecto del backend real**. Qué lo hacía delicado y cómo está hoy:
 
-- **Faltan funciones que la app móvil usa:** el `schema.prisma` nuevo agrega tablas de push, chatbot, promociones y recomendaciones.
-- **El schema nuevo también elimina `ventas_simuladas` y `restocks`.**
-- **Solo hay una migración baseline y el despliegue no aplica cambios de schema.** Sincronizar el fork **no** actualiza la base de datos por sí solo.
-- **Variables nuevas requeridas** (solo nombres): `GROQ_API_KEY`, `CHATBOT_MODEL`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`.
-- **La ruta `/api/users` pasó a `/api/admin/users`.**
-- **Con auto-deploy y sin "Wait for CI"**, un push al fork despliega de inmediato aunque el CI falle; si faltan variables o tablas, el servicio puede caer.
+| Punto | Situación original (2026-10-26) | Estado (2026-10-27, según Angel) |
+|---|---|---|
+| Tablas nuevas | El `schema.prisma` nuevo agrega tablas de push, chatbot, promociones y recomendaciones | `propuesta_aditiva.sql` aplicado en producción |
+| Tablas eliminadas | El schema nuevo elimina `ventas_simuladas` y `restocks` | **Siguen abiertas**: el borrado queda para el final, con respaldo |
+| Migraciones | Solo hay una migración baseline y el despliegue no aplica cambios de schema | Los cambios de schema se aplicaron a mano con SQL; el despliegue sigue sin aplicarlos |
+| Variables nuevas (solo nombres) | `GROQ_API_KEY`, `CHATBOT_MODEL`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Ya estaban cargadas |
+| Ruta de usuarios | `/api/users` pasó a `/api/admin/users` | **Abierto**: confirmar `/users/activate` con Luis |
+| Despliegue sin CI | Con auto-deploy y sin "Wait for CI", un push despliega aunque el CI falle | **Abierto**: activar "Wait for CI" |
+| Verificación | — | **Pendiente**: pruebas de humo en producción |
 
-### 8.3 Procedimiento de actualización (PROPUESTA hasta que se ejecute)
+**Nota sobre permisos por rol.** El backend usa un cliente de base de datos por rol: `dbPublic`, `dbCustomer`, `dbStaff`, `dbAdmin`, `dbReports` y el dueño. Las tablas y secuencias nuevas deben revisarse con permisos por rol: crear una tabla no basta si el rol que escribe no puede usar su secuencia. Ya se encontró un caso (paso 3 de 8.3). Qué otros roles y tablas nuevas necesitan revisión: PENDIENTE.
 
-El orden importa. Ningún paso se ha ejecutado.
+### 8.3 Procedimiento de actualización
+
+El orden importa. La columna "Estado" distingue lo ejecutado (según Angel) de lo que sigue como PROPUESTA.
 
 | # | Paso | Detalle | Estado |
 |---|---|---|---|
-| 1 | **Respaldo de Neon** | Antes de tocar nada, respaldo de la base de datos. Cómo hacerlo (rama de Neon, volcado u otro): PENDIENTE DE CONFIRMAR POR ANGEL | PROPUESTA |
-| 2 | **SQL aditivo primero** | Aplicar a mano, antes del código nuevo, solo los cambios que **agregan** (tablas de push, chatbot, promociones y recomendaciones). Así, el código viejo sigue funcionando y el nuevo encuentra las tablas | PROPUESTA |
-| 3 | **Variables antes del despliegue** | Cargar en Railway las variables nuevas de 8.2 (solo nombres en la documentación; los valores nunca se escriben en el repo). | PROPUESTA |
-| 4 | **Revisión de migraciones** | Revisar el diff de `schema.prisma` y confirmar qué cambios destructivos hay (`ventas_simuladas` y `restocks` se eliminan). Decidir si esas tablas se eliminan ahora, más tarde o nunca (la eliminación va **al final**, solo con respaldo y tras verificar). Como el despliegue no aplica cambios de schema, la eliminación es una acción manual aparte | PROPUESTA |
-| 5 | **Sincronizar el fork** | Traer `LAHH18/syscom-backend:main` al fork (es un avance directo, sin conflictos esperados). Esto dispara el auto-deploy de Railway | PROPUESTA |
-| 6 | **Verificación** | Comprobar el servicio arriba y los endpoints clave: autenticación, catálogo, pedidos, pago y webhook, push y chatbot. La ruta `/api/admin/users` sustituye a `/api/users`; confirmar que ningún cliente usa la ruta vieja. | PROPUESTA |
-| 7 | **Plan de vuelta atrás** | Si falla: volver al despliegue anterior en Railway (revertir al despliegue previo); el SQL aditivo no afecta al código viejo, así que no hace falta deshacerlo. Si se eliminaron tablas, restaurar desde el respaldo del paso 1. Los detalles de reversión en Railway: PENDIENTE DE CONFIRMAR POR ANGEL | PROPUESTA |
+| 1 | **Respaldo de Neon** | Antes de tocar nada, respaldo de la base de datos. Se creó como **rama de Neon** | **Ejecutado el 2026-10-27** |
+| 2 | **SQL aditivo primero** | Aplicar, antes del código nuevo, solo los cambios que **agregan** (tablas de push, chatbot, promociones y recomendaciones), con `propuesta_aditiva.sql`. Así el código viejo sigue funcionando y el nuevo encuentra las tablas. Se aplicó **con respaldo previo y confirmación explícita** | **Ejecutado el 2026-10-27** |
+| 3 | **Permisos de secuencias** | Otorgar `USAGE` y `SELECT` sobre las secuencias de las tablas nuevas a los roles que escriben. En este caso, `syscom_admin` en `expo_push_tokens` y `promocion_segmentos`. Se aplicó con un script de permisos de secuencias, con respaldo previo y confirmación explícita | **Ejecutado el 2026-10-27** |
+| 4 | **Variables antes del despliegue** | Cargar en Railway las variables nuevas de 8.2 (los valores nunca se escriben en el repo) | **Ya estaban cargadas** |
+| 5 | **Revisión de migraciones y borrado** | Revisar el diff de `schema.prisma`. `ventas_simuladas` y `restocks` se eliminan en el schema nuevo; como el despliegue no aplica cambios de schema, el borrado es una acción manual aparte. Va **al final**, con respaldo y tras verificar | **Pendiente** |
+| 6 | **Sincronizar el fork** | Traer `LAHH18/syscom-backend:main` al fork (avance directo). Esto dispara el auto-deploy de Railway | **Ejecutado el 2026-10-27**; despliegue activo |
+| 7 | **Verificación** | Pruebas de humo en producción de los endpoints clave: autenticación, catálogo, pedidos, pago y webhook, push y chatbot. Confirmar `/users/activate` con Luis y que ningún cliente use `/api/users` | **Pendiente** |
+| 8 | **Plan de vuelta atrás** | Si falla: volver al despliegue anterior en Railway; el SQL aditivo no afecta al código viejo, así que no hace falta deshacerlo. Si se eliminaron tablas, restaurar desde la rama de respaldo de Neon. Los detalles de reversión en Railway: PENDIENTE DE CONFIRMAR POR ANGEL | PROPUESTA (no se ha necesitado) |
 
-Mejora relacionada (no se hace aquí): activar "Wait for CI" en Railway para que un CI en rojo impida el despliegue. PROPUESTA; decisión de Angel.
+Mejora relacionada: activar "Wait for CI" en Railway para que un CI en rojo impida el despliegue. Sigue **pendiente**; decisión de Angel.
 
-### 8.4 Suscripción pendiente
+### 8.4 Suscripción
 
-La suscripción de **[servicio]** está pendiente de renovar **[fecha por confirmar]**. Qué servicio es y la fecha: **PENDIENTE DE CONFIRMAR POR ANGEL.** Si vence antes de la liberación, afecta a la disponibilidad del backend o de la base de datos.
+La suscripción de Railway fue **renovada** (según Angel, 2026-10-27). Fecha del próximo vencimiento: PENDIENTE DE CONFIRMAR POR ANGEL.
 
 ---
 
@@ -292,12 +302,12 @@ La suscripción de **[servicio]** está pendiente de renovar **[fecha por confir
 
 | # | Riesgo o pendiente | Responsable | Estado |
 |---|---|---|---|
-| 1 | Producción del backend puede estar desactualizada: el fork está 27 commits atrás | @AngeloMtz | Abierto; procedimiento de la sección 8.3 sin ejecutar |
+| 1 | Producción del backend desactualizada (el fork estaba 27 commits atrás el 2026-10-26) | @AngeloMtz | Mitigado el 2026-10-27: fork sincronizado y despliegue activo con el commit del chatbot (Groq). Falta verificar con pruebas de humo (fila 15) |
 | 2 | Railway despliega sin esperar al CI ("Wait for CI" desactivado) | @AngeloMtz | Abierto; PROPUESTA de activarlo |
-| 3 | El despliegue no aplica cambios de schema; solo hay una migración baseline | @AngeloMtz | Abierto; SQL aditivo manual (PROPUESTA) |
-| 4 | Variables nuevas del backend por cargar en Railway | @AngeloMtz | Abierto; PENDIENTE DE CONFIRMAR POR ANGEL |
-| 5 | Cambio de ruta `/api/users` → `/api/admin/users` | @AngeloMtz y @LAHH18 | Abierto; verificar que ningún cliente use la ruta vieja |
-| 6 | Suscripción de [servicio] pendiente de renovar [fecha por confirmar] | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
+| 3 | El despliegue no aplica cambios de schema; solo hay una migración baseline. Borrado de `restocks` y `ventas_simuladas` | @AngeloMtz | SQL aditivo aplicado el 2026-10-27 con respaldo previo. **Abierto:** el borrado va al final y con respaldo |
+| 4 | Variables nuevas del backend | @AngeloMtz | Cerrado: ya estaban cargadas (según Angel, 2026-10-27) |
+| 5 | Cambio de ruta `/api/users` → `/api/admin/users` | @AngeloMtz y @LAHH18 | Abierto: confirmar `/users/activate` con Luis; verificar que ningún cliente use la ruta vieja |
+| 6 | Suscripción de Railway pendiente de renovar | @AngeloMtz | Cerrado: renovada (según Angel, 2026-10-27). Próximo vencimiento: PENDIENTE DE CONFIRMAR POR ANGEL |
 | 7 | Conflicto entre `version` 1.0.0 y el plan 0.x | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL (se decide en la entrega final) |
 | 8 | No hay etiquetas ni releases en el repo | @AngeloMtz | Abierto |
 | 9 | Builds de EAS y envíos a Google Play no verificados (sin login en EAS CLI) | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
@@ -306,3 +316,5 @@ La suscripción de **[servicio]** está pendiente de renovar **[fecha por confir
 | 12 | Valor inicial de `versionCode` remoto sin confirmar (el proyecto no lo define) | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
 | 13 | `GOOGLE_SERVICES_JSON` en EAS: existencia y entornos donde está cargada | @AngeloMtz | PENDIENTE DE CONFIRMAR POR ANGEL |
 | 14 | Base de usuarios pequeña: los porcentajes del canary son poco significativos | @AngeloMtz | Abierto; tamaño de la base por confirmar |
+| 15 | Pruebas de humo en producción tras el despliegue | @AngeloMtz | Abierto |
+| 16 | Permisos por rol de las tablas y secuencias nuevas (el backend usa un cliente de base de datos por rol) | @AngeloMtz | Abierto: se corrigió `syscom_admin` en `expo_push_tokens` y `promocion_segmentos`; el resto por revisar |

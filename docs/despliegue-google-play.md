@@ -73,7 +73,7 @@ Ningún perfil declara `android.buildType`, y la documentación consultada no in
 | `android.versionCode` | **No está definido** en el repo (lo gestiona EAS en remoto, ver sección 6) |
 | `android.googleServicesFile` | `process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json"` |
 | `extra.eas.projectId` | definido |
-| `owner` | `elea20` (cuenta de Expo propietaria) |
+| `owner` | `imangeloos-team` (organización de Expo de Angel; antes `elea20`, cuenta de Luis a la que Angel no tenía acceso) |
 | Plugins | `expo-router`, `expo-secure-store`, `expo-font`, `expo-web-browser`, `expo-notifications` |
 
 `google-services.json` está en `.gitignore` y no está en el repositorio (verificado con `git ls-files`). Por eso el build de EAS necesita `GOOGLE_SERVICES_JSON`; el comentario de cabecera de `app.config.js` lo explica.
@@ -91,7 +91,7 @@ Ningún perfil declara `android.buildType`, y la documentación consultada no in
 ### 1.4 Pendientes de cuenta (no verificables desde el repo)
 
 - Cuenta de Google Play Console y app creada con el identificador `com.syscom.mobile`: PENDIENTE DE CONFIRMAR POR ANGEL.
-- Que la cuenta de Expo `elea20` sea la que usará el equipo para los builds: PENDIENTE DE CONFIRMAR POR ANGEL.
+- Cuenta de EAS: el proyecto es `@imangeloos-team/syscom-mobile`, de la organización de Angel (comprobado con `eas project:info` el 2026-10-28, issue #152). Luis puede agregarse como miembro de la organización si hace falta.
 
 ---
 

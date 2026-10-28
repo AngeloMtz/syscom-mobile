@@ -43,6 +43,15 @@ module.exports = {
           color: "#05afe8",
         },
       ],
+      [
+        "expo-build-properties",
+        {
+          android: {
+            // R8 no halla las clases de push provisioning de Stripe (compileOnly, no usadas).
+            extraProguardRules: "-dontwarn com.stripe.android.pushProvisioning.**",
+          },
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,

@@ -66,11 +66,12 @@ Resumen: 11 pasos OK (1, 2, 3, 4, 7, 8, 9, 10, 13, 14 y 15), 2 OK con observaci�
 
 ## 6. Observaciones
 
-Hechos dictados por Angel. La causa NO se ha analizado; se abrirá un issue aparte.
+Hechos dictados por Angel. Las observaciones a) y b) se vieron durante la prueba del 2026-10-28; el estado actual lo dictó Angel el 2026-10-29.
 
-- **a) Precio con promoción en la compra.** En el detalle del producto (Lenovo ThinkPad X1 Carbon) se mostró el precio con la promoción vigente (10 %, $7,380.00), pero el carrito, el pago de Stripe y el pedido confirmado cobraron $8,200.00 (precio base). Capturas: [detalle](evidencia/sprint-5/e20/e20-03-detalle-producto.jpeg), [carrito](evidencia/sprint-5/e20/e20-04-carrito.jpeg), [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) y [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg).
-- **b) Repetición con otra promoción vigente.** Angel lo repitió después con otra promoción vigente: en web y móvil se ve en el catálogo y el detalle, pero no en el carrito ni en el pago. Sin captura.
-- **c) Promoción vencida con el interruptor activo.** Una promoción vencida por fecha pero con el interruptor activo sigue apareciendo en el catálogo y el detalle (web y móvil), mientras el panel de administración la marca "Expirada". Sin captura.
+- **a) Precio con promoción en la compra: CORREGIDO.** En el detalle del producto (Lenovo ThinkPad X1 Carbon) se mostró el precio con la promoción vigente (10 %, $7,380.00), pero el carrito, el pago de Stripe y el pedido confirmado cobraron $8,200.00 (precio base). Capturas de la prueba original: [detalle](evidencia/sprint-5/e20/e20-03-detalle-producto.jpeg), [carrito](evidencia/sprint-5/e20/e20-04-carrito.jpeg), [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) y [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg). Se corrigió en el backend y el arreglo está desplegado en producción. Angel verificó con el APK que el carrito, el pago de Stripe y el pedido coinciden. Sin captura de la verificación.
+- **b) Repetición con otra promoción vigente: CORREGIDO.** Con otra promoción vigente, en web y móvil se veía en el catálogo y el detalle, pero no en el carrito ni en el pago. Con el mismo arreglo, Angel verificó que al activar o desactivar una promoción en el panel el cambio se refleja en el carrito y en el pago. Sin captura.
+- **c) Promoción vencida con el interruptor activo: EN INVESTIGACIÓN.** Una promoción vencida por fecha pero con el interruptor activo sigue apareciendo en el catálogo y el detalle (web y móvil), mientras el panel de administración la marca "Expirada". Posible explicación, no confirmada: otra promoción vigente cubre esos productos. La causa no está establecida. Sin captura.
+- **d) Pendiente en la app móvil (no es un fallo de esta prueba).** El carrito de la app móvil aún no muestra la etiqueta de descuento ni el precio original tachado. Queda pendiente; el issue está por abrir.
 
 ## 7. Capturas retenidas
 
@@ -101,4 +102,6 @@ Criterios de aceptación: ninguna de las seis aparece como criterio en el cuerpo
 - Compartir el APK con los docentes: lo decide y hace Angel. El segundo criterio del #20 no está completo hasta entonces.
 - PR del issue #154 (build): en espera de que se fusione el #153.
 - Pasos opcionales sin probar.
+- Observación c) (promoción vencida con el interruptor activo): en investigación.
+- Etiqueta de descuento y precio original tachado en el carrito de la app móvil: issue por abrir.
 - Capturas retenidas de la sección 7, a reemplazar o confirmar.

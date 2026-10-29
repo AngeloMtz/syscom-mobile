@@ -43,19 +43,19 @@ El commit `d78afdc` (issue #154) añade la regla `-dontwarn com.stripe.android.p
 | 2 | Inicio de sesión | OK | Sin captura publicada | La captura `e20-02-login-exitoso` aún muestra datos personales; no se sube hasta que se corrija |
 | 3 | Detalle de producto | OK | [detalle](evidencia/sprint-5/e20/e20-03-detalle-producto.jpeg) | |
 | 4 | Carrito | OK | [carrito](evidencia/sprint-5/e20/e20-04-carrito.jpeg) | |
-| 5 | Pago con Stripe | OK | [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) | Stripe en modo prueba, tarjeta `4242 4242 4242 4242` |
-| 6 | Pedido confirmado | OK | [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg) | Pedido #13 (folio SYS-000013). La captura de la notificación de confirmación (`e20-06-pedido-confirmado-notificacion`) no se publica todavía (ver sección 6) |
+| 5 | Pago con Stripe | OK con observación (ver sección de observaciones) | [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) | Stripe en modo prueba, tarjeta `4242 4242 4242 4242`. Se cobraron $8,200.00 (ver observación a) |
+| 6 | Pedido confirmado | OK con observación (ver sección de observaciones) | [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg) | Pedido #13 (folio SYS-000013). La captura de la notificación de confirmación (`e20-06-pedido-confirmado-notificacion`) no se publica todavía (ver sección 7) |
 | 7 | Mis pedidos | OK | [mis pedidos](evidencia/sprint-5/e20/e20-07-mis-pedidos.jpeg) | |
 | 8 | App cerrada | OK | Sin captura | Es preparación del paso 9, no lleva captura |
-| 9 | Acción en el panel de administración | OK | Sin captura publicada | Angel marcó el pedido #13 como Entregado desde el panel de administración. La captura `e20-08-accion-admin` no se publica todavía (ver sección 6) |
+| 9 | Acción en el panel de administración | OK | Sin captura publicada | Angel marcó el pedido #13 como Entregado desde el panel de administración. La captura `e20-08-accion-admin` no se publica todavía (ver sección 7) |
 | 10 | Notificación recibida | OK | [notificación](evidencia/sprint-5/e20/e20-09-notificacion-recibida.jpeg) | "Pedido #13: Entregado" a las 11:10 p. m. La notificación llegó con la app cerrada y con la app abierta |
-| 11 | Tocar la notificación | OK (sin evidencia clara) | Sin captura publicada | La captura `e20-10-notificacion-abre-app` muestra la pantalla de Inicio a las 10:58, y la notificación del paso 10 es de las 11:10. No demuestra que tocar la notificación abra la app |
+| 11 | Tocar la notificación | OK según Angel; captura no concluyente | Sin captura publicada | Angel confirma que al tocar la notificación la app abre. No hay captura que lo demuestre: `e20-10-notificacion-abre-app` muestra Inicio a las 10:58 y la notificación del paso 10 es de las 11:10 |
 | 12 | AR ("Ver en tu espacio") | **FALLÓ** | Sin captura (`e20-11` no existe) | Ver sección 5 |
 | 13 | Reseña | OK | [reseña](evidencia/sprint-5/e20/e20-12-resena.jpeg) | La captura es el formulario "Escribir reseña" de Lenovo ThinkPad X1 Carbon; no muestra el envío |
 | 14 | Chatbot | OK | [chatbot](evidencia/sprint-5/e20/e20-13-chatbot.jpeg) | Consulta sobre productos de la marca HP |
 | 15 | Información de la app | OK | [info de la app](evidencia/sprint-5/e20/e20-00-info-app.jpeg) | Versión 1.0.0 |
 
-Resumen: 14 pasos OK (en el 11, sin evidencia clara), 1 FALLÓ (12) y 0 NO PROBADO.
+Resumen: 11 pasos OK (1, 2, 3, 4, 7, 8, 9, 10, 13, 14 y 15), 2 OK con observación (5 y 6), 1 OK según Angel con captura no concluyente (11), 1 FALLÓ (12) y 0 NO PROBADO.
 
 ## 5. Fallo del paso 12: AR
 
@@ -64,7 +64,15 @@ Resumen: 14 pasos OK (en el 11, sin evidencia clara), 1 FALLÓ (12) y 0 NO PROBA
 - **Causa:** NO identificada.
 - **Hipótesis NO verificada:** en Android el visor depende de Google Scene Viewer / servicios de Google para RA ([selectors.ts:46](../../src/features/ar/selectors.ts#L46)). Angel está revisando si esos servicios están en su teléfono.
 
-## 6. Capturas retenidas
+## 6. Observaciones
+
+Hechos dictados por Angel. La causa NO se ha analizado; se abrirá un issue aparte.
+
+- **a) Precio con promoción en la compra.** En el detalle del producto (Lenovo ThinkPad X1 Carbon) se mostró el precio con la promoción vigente (10 %, $7,380.00), pero el carrito, el pago de Stripe y el pedido confirmado cobraron $8,200.00 (precio base). Capturas: [detalle](evidencia/sprint-5/e20/e20-03-detalle-producto.jpeg), [carrito](evidencia/sprint-5/e20/e20-04-carrito.jpeg), [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) y [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg).
+- **b) Repetición con otra promoción vigente.** Angel lo repitió después con otra promoción vigente: en web y móvil se ve en el catálogo y el detalle, pero no en el carrito ni en el pago. Sin captura.
+- **c) Promoción vencida con el interruptor activo.** Una promoción vencida por fecha pero con el interruptor activo sigue apareciendo en el catálogo y el detalle (web y móvil), mientras el panel de administración la marca "Expirada". Sin captura.
+
+## 7. Capturas retenidas
 
 Estas capturas no se incluyen en el commit de evidencia:
 
@@ -73,9 +81,9 @@ Estas capturas no se incluyen en el commit de evidencia:
 | `e20-02-login-exitoso` | Todavía muestra el nombre completo y parte del correo |
 | `e20-06-pedido-confirmado-notificacion` | Quedan restos legibles a medias del correo en la notificación de Gmail |
 | `e20-08-accion-admin` | Muestra nombre, correo y teléfono del cliente, el nombre del administrador y el identificador del pago de Stripe; además el estado del pedido sigue en "En camino" con "Entregado" solo seleccionado en la lista, es decir, antes de pulsar "Actualizar" |
-| `e20-10-notificacion-abre-app` | No es evidencia de que la app abra al tocar la notificación (ver paso 11) |
+| `e20-10-notificacion-abre-app` | No es evidencia de que la app abra al tocar la notificación: es de otra hora que la notificación (ver paso 11) |
 
-## 7. Limitaciones conocidas
+## 8. Limitaciones conocidas
 
 Dictadas por Angel:
 
@@ -88,9 +96,9 @@ Comportamiento en el código de esas seis opciones: están declaradas con `disab
 
 Criterios de aceptación: ninguna de las seis aparece como criterio en el cuerpo de los issues #1 a #20 (revisado con `gh issue view`; no se revisaron comentarios ni el tablero). El #3 habla de pantallas de login y registro, no de cambio de contraseña ni 2FA en el perfil.
 
-## 8. Pendiente
+## 9. Pendiente
 
 - Compartir el APK con los docentes: lo decide y hace Angel. El segundo criterio del #20 no está completo hasta entonces.
 - PR del issue #154 (build): en espera de que se fusione el #153.
 - Pasos opcionales sin probar.
-- Capturas retenidas de la sección 6, a reemplazar o confirmar.
+- Capturas retenidas de la sección 7, a reemplazar o confirmar.

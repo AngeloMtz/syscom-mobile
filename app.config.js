@@ -10,7 +10,7 @@ module.exports = {
     slug: "syscom-mobile",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/images/icon.png",
     scheme: "syscommobile",
     userInterfaceStyle: "light",
     ios: {
@@ -20,10 +20,9 @@ module.exports = {
       package: "com.syscom.mobile",
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
       adaptiveIcon: {
-        backgroundColor: "#E6F4FE",
-        foregroundImage: "./assets/android-icon-foreground.png",
-        backgroundImage: "./assets/android-icon-background.png",
-        monochromeImage: "./assets/android-icon-monochrome.png",
+        backgroundColor: "#0A4780",
+        foregroundImage: "./assets/images/adaptive-icon-foreground.png",
+        monochromeImage: "./assets/images/adaptive-icon-monochrome.png",
       },
       predictiveBackGestureEnabled: false,
     },

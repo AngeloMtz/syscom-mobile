@@ -50,9 +50,9 @@ module.exports = {
     extra: {
       router: {},
       eas: {
-        projectId: "927a2213-b3b3-42f6-98c8-662ef2e27b30",
+        projectId: "d59c39b8-b07c-4b4d-9fe4-e79def2ecb6c",
       },
     },
-    owner: "elea20",
+    owner: "imangeloos-team",
   },
 };

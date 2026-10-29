@@ -38,8 +38,8 @@ module.exports = {
       [
         "expo-notifications",
         {
-          icon: "./assets/android-icon-monochrome.png",
-          color: "#05afe8",
+          icon: "./assets/images/notification-icon.png",
+          color: "#0A4780",
         },
       ],
     ],

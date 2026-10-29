@@ -43,8 +43,8 @@ El commit `d78afdc` (issue #154) añade la regla `-dontwarn com.stripe.android.p
 | 2 | Inicio de sesión | OK | Sin captura publicada | La captura `e20-02-login-exitoso` aún muestra datos personales; no se sube hasta que se corrija |
 | 3 | Detalle de producto | OK | [detalle](evidencia/sprint-5/e20/e20-03-detalle-producto.jpeg) | |
 | 4 | Carrito | OK | [carrito](evidencia/sprint-5/e20/e20-04-carrito.jpeg) | |
-| 5 | Pago con Stripe | OK con observación (ver sección de observaciones) | [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) | Stripe en modo prueba, tarjeta `4242 4242 4242 4242`. Se cobraron $8,200.00 (ver observación a) |
-| 6 | Pedido confirmado | OK con observación (ver sección de observaciones) | [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg) | Pedido #13 (folio SYS-000013). La captura de la notificación de confirmación (`e20-06-pedido-confirmado-notificacion`) no se publica todavía (ver sección 7) |
+| 5 | Pago con Stripe | OK con observación (corregida después en el backend; ver sección de observaciones) | [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) | Stripe en modo prueba, tarjeta `4242 4242 4242 4242`. Se cobraron $8,200.00 (ver observación a) |
+| 6 | Pedido confirmado | OK con observación (corregida después en el backend; ver sección de observaciones) | [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg) | Pedido #13 (folio SYS-000013). La captura de la notificación de confirmación (`e20-06-pedido-confirmado-notificacion`) no se publica todavía (ver sección 7) |
 | 7 | Mis pedidos | OK | [mis pedidos](evidencia/sprint-5/e20/e20-07-mis-pedidos.jpeg) | |
 | 8 | App cerrada | OK | Sin captura | Es preparación del paso 9, no lleva captura |
 | 9 | Acción en el panel de administración | OK | Sin captura publicada | Angel marcó el pedido #13 como Entregado desde el panel de administración. La captura `e20-08-accion-admin` no se publica todavía (ver sección 7) |

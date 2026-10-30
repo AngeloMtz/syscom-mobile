@@ -10,6 +10,12 @@ jest.mock("expo-secure-store", () => ({
 
 const URL_API = "https://api.example.com/api";
 const ENV_ORIGINAL = process.env.EXPO_PUBLIC_API_URL;
+const DEV_ORIGINAL = (globalThis as { __DEV__?: boolean }).__DEV__;
+
+/** Simula una compilación de producción (__DEV__ = false) o de desarrollo (true). */
+const fijarDev = (valor: boolean) => {
+  (globalThis as { __DEV__?: boolean }).__DEV__ = valor;
+};
 
 /**
  * Carga client.ts y secureToken.ts del mismo registro de módulos (la URL se lee
@@ -38,6 +44,8 @@ function cargarCliente(apiUrl?: string) {
 afterEach(() => {
   if (ENV_ORIGINAL === undefined) delete process.env.EXPO_PUBLIC_API_URL;
   else process.env.EXPO_PUBLIC_API_URL = ENV_ORIGINAL;
+  fijarDev(DEV_ORIGINAL ?? true);
+  jest.restoreAllMocks();
 });
 
 describe("cliente HTTP: configuración", () => {
@@ -47,9 +55,49 @@ describe("cliente HTTP: configuración", () => {
     expect(api.defaults.baseURL).toBe(URL_API);
   });
 
-  it("cae a localhost:4000 si EXPO_PUBLIC_API_URL no está definida", () => {
+  it("en desarrollo cae a localhost:4000 con una advertencia si EXPO_PUBLIC_API_URL no está definida", () => {
+    fijarDev(true);
+    const aviso = jest.spyOn(console, "warn").mockImplementation(() => undefined);
+
     const { api } = cargarCliente(undefined);
+
     expect(api.defaults.baseURL).toBe("http://localhost:4000/api");
+    expect(aviso).toHaveBeenCalledTimes(1);
+    expect(aviso.mock.calls[0][0]).toContain("EXPO_PUBLIC_API_URL");
+  });
+
+  it("en producción falla con un mensaje claro si EXPO_PUBLIC_API_URL no está definida", () => {
+    fijarDev(false);
+
+    expect(() => cargarCliente(undefined)).toThrow(/EXPO_PUBLIC_API_URL/);
+    expect(() => cargarCliente(undefined)).toThrow(/compilaci[oó]n/);
+  });
+
+  it("en producción trata una EXPO_PUBLIC_API_URL vacía o en blanco como ausente", () => {
+    fijarDev(false);
+
+    expect(() => cargarCliente("")).toThrow(/EXPO_PUBLIC_API_URL/);
+    expect(() => cargarCliente("   ")).toThrow(/EXPO_PUBLIC_API_URL/);
+  });
+
+  it("en producción con la variable definida usa su valor, sin advertencias", () => {
+    fijarDev(false);
+    const aviso = jest.spyOn(console, "warn").mockImplementation(() => undefined);
+
+    const { api } = cargarCliente(URL_API);
+
+    expect(api.defaults.baseURL).toBe(URL_API);
+    expect(aviso).not.toHaveBeenCalled();
+  });
+
+  it("en desarrollo con la variable definida usa su valor, sin advertencias", () => {
+    fijarDev(true);
+    const aviso = jest.spyOn(console, "warn").mockImplementation(() => undefined);
+
+    const { api } = cargarCliente(URL_API);
+
+    expect(api.defaults.baseURL).toBe(URL_API);
+    expect(aviso).not.toHaveBeenCalled();
   });
 
   it("corta las peticiones a los 15 segundos", () => {

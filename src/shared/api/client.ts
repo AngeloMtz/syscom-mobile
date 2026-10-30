@@ -6,8 +6,27 @@ import axios from "axios";
 import { getTokenSync } from "./secureToken";
 
 // En dispositivo físico localhost no apunta a la PC: definir EXPO_PUBLIC_API_URL
-// en .env con la IP LAN o la URL del backend en Render.
-export const API_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000/api";
+// en .env con la IP LAN o la URL del backend en Render. En una compilación de
+// producción la variable es obligatoria (se define como variable de entorno de
+// EAS): sin ella la app apuntaría en silencio a un localhost que nunca responde.
+// Se lee con el nombre completo porque Expo solo la sustituye al empaquetar así.
+function resolveApiUrl(): string {
+  const url = process.env.EXPO_PUBLIC_API_URL?.trim();
+  if (url) return url;
+  if (__DEV__) {
+    console.warn(
+      "EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. " +
+        "En un dispositivo físico define la variable en .env.",
+    );
+    return "http://localhost:4000/api";
+  }
+  throw new Error(
+    "Falta EXPO_PUBLIC_API_URL: esta compilación no sabe a qué servidor conectarse. " +
+      "Defínela como variable de entorno de EAS para el perfil con el que compilas y vuelve a compilar.",
+  );
+}
+
+export const API_URL = resolveApiUrl();
 
 // El default export de axios expone `create`; la regla avisa por el named
 // export homónimo, pero aquí el uso es el correcto.

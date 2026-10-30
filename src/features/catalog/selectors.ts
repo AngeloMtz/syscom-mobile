@@ -23,3 +23,23 @@ export function getPrincipalImageUrl(product: Pick<ProductListItem, "imagenes">)
 export function getTotalStock(product: Pick<ProductListItem, "variantes">): number {
   return (product.variantes ?? []).reduce((sum, v) => sum + (Number(v.stock) || 0), 0);
 }
+
+/** Tamaño de página y tope del recorrido que arma la lista de promociones. */
+export const ON_SALE_PAGE_SIZE = 100;
+/**
+ * Límite conocido: el backend no filtra por `en_promocion`, así que la lista se arma
+ * recorriendo el catálogo (como la web). Con 10 páginas de 100 solo se revisan los
+ * primeros 1000 productos; si el catálogo crece más, las ofertas del resto no aparecen
+ * hasta que el servidor ofrezca ese filtro.
+ */
+export const ON_SALE_MAX_PAGES = 10;
+
+/**
+ * Productos con una promoción que de verdad rebaja el precio, de mayor a menor
+ * descuento. El orden entre descuentos iguales se conserva.
+ */
+export function selectOnSale(products: ProductListItem[]): ProductListItem[] {
+  return products
+    .filter((p) => p.en_promocion && p.precio_final < p.precio_base)
+    .sort((a, b) => b.porcentaje_descuento - a.porcentaje_descuento);
+}

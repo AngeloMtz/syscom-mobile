@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
+import { StyleSheet } from "react-native";
 
 import { toCartLineData } from "@/features/cart/cartSelectors";
 import CartItemRow from "@/features/cart/components/CartItemRow";
@@ -17,7 +18,9 @@ const handlers = () => ({
 });
 
 const line = (over: Parameters<typeof makeCartItemFor>[1] = {}) =>
-  toCartLineData(makeCartItemFor(1, { cantidad: 2, precio_unitario: "250.00", ...over }));
+  toCartLineData(
+    makeCartItemFor(1, { cantidad: 2, precio_unitario: "250.00", producto: { precio_base: "250.00" }, ...over }),
+  );
 
 describe("CartItemRow: datos", () => {
   it("muestra nombre, marca, precio unitario, cantidad y subtotal del servidor", async () => {
@@ -44,6 +47,57 @@ describe("CartItemRow: datos", () => {
     await fireEvent.press(screen.getByLabelText(`${NOMBRE}, ver producto`));
 
     expect(onOpen).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("CartItemRow: descuento", () => {
+  const conDescuento = (over: Parameters<typeof makeCartItemFor>[1] = {}) =>
+    toCartLineData(
+      makeCartItemFor(1, {
+        cantidad: 1,
+        precio_unitario: "7380.00",
+        producto: { precio_base: "8200.00" },
+        ...over,
+      }),
+    );
+
+  it("con promoción muestra el precio original tachado, el final y la etiqueta", async () => {
+    await render(<CartItemRow line={conDescuento()} {...handlers()} />);
+
+    const original = screen.getByText("$8,200.00");
+    expect(StyleSheet.flatten(original.props.style).textDecorationLine).toBe("line-through");
+    expect(screen.getByText("$7,380.00 c/u")).toBeTruthy();
+    expect(screen.getByText("-10 %")).toBeTruthy();
+  });
+
+  it("describe el descuento para el lector de pantalla", async () => {
+    await render(<CartItemRow line={conDescuento()} {...handlers()} />);
+
+    expect(
+      screen.getByLabelText("10 por ciento de descuento, antes $8,200.00, ahora $7,380.00"),
+    ).toBeTruthy();
+  });
+
+  it("sin descuento queda como siempre: sin tachado ni etiqueta", async () => {
+    await render(<CartItemRow line={line()} {...handlers()} />);
+
+    expect(screen.getByText("$250.00 c/u")).toBeTruthy();
+    expect(screen.queryByText(/^-\d+ %$/)).toBeNull();
+    expect(screen.queryByLabelText(/por ciento de descuento/)).toBeNull();
+  });
+
+  it("con cupón muestra solo el precio del cupón, sin tachado ni etiqueta", async () => {
+    await render(
+      <CartItemRow
+        line={conDescuento({ precio_unitario: "7380.00", codigo_promo_aplicado: "VERANO10" })}
+        {...handlers()}
+      />,
+    );
+
+    expect(screen.getByText("$7,380.00 c/u")).toBeTruthy();
+    expect(screen.queryByText("$8,200.00")).toBeNull();
+    expect(screen.queryByText(/^-\d+ %$/)).toBeNull();
+    expect(screen.queryByLabelText(/por ciento de descuento/)).toBeNull();
   });
 });
 

@@ -10,6 +10,7 @@ import {
   getCartTotal,
   getItemStatus,
   getItemStock,
+  getLineDiscount,
   lineSubtotalCents,
   maxQuantity,
   toCartLineData,
@@ -121,9 +122,65 @@ describe("getItemStatus", () => {
   });
 });
 
+/** Línea cuyo precio_unitario ya viene con la promoción que aplica el backend. */
+const conPromo = (base: unknown, unitario: unknown, over: Parameters<typeof makeCartItemFor>[1] = {}) =>
+  makeCartItemFor(1, {
+    precio_unitario: unitario as string,
+    producto: { precio_base: base as string },
+    ...over,
+  });
+
+describe("getLineDiscount", () => {
+  it("promoción: 8200 → 7380 es 10 % y devuelve el precio original en centavos", () => {
+    expect(getLineDiscount(conPromo("8200.00", "7380.00"))).toEqual({
+      originalCents: 820000,
+      percent: 10,
+    });
+  });
+  it("acepta precios como número o texto", () => {
+    expect(getLineDiscount(conPromo(8200, 7380))).toEqual({ originalCents: 820000, percent: 10 });
+  });
+  it("sin descuento (unitario igual a la base) devuelve null", () => {
+    expect(getLineDiscount(conPromo("1000.00", "1000.00"))).toBeNull();
+  });
+  it("con cupón devuelve null aunque el unitario sea menor que la base", () => {
+    expect(getLineDiscount(conPromo("1000.00", "850.00", { codigo_promo_aplicado: "VERANO15" }))).toBeNull();
+  });
+  it("no puede asegurar el descuento si la base o el unitario no son números válidos", () => {
+    expect(getLineDiscount(conPromo("n/d", "850.00"))).toBeNull();
+    expect(getLineDiscount(conPromo("1000.00", "n/d"))).toBeNull();
+    expect(getLineDiscount(conPromo(undefined, "850.00"))).toBeNull();
+    expect(getLineDiscount(conPromo("1000.00", null))).toBeNull();
+    expect(getLineDiscount(conPromo("", "850.00"))).toBeNull();
+    expect(getLineDiscount(conPromo("-5", "-10"))).toBeNull();
+  });
+  it("con la base en cero devuelve null", () => {
+    expect(getLineDiscount(conPromo("0.00", "0.00"))).toBeNull();
+  });
+  it("unitario mayor que la base devuelve null", () => {
+    expect(getLineDiscount(conPromo("1000.00", "1200.00"))).toBeNull();
+  });
+  it("redondea el porcentaje al entero más cercano", () => {
+    expect(getLineDiscount(conPromo("300.00", "199.00"))?.percent).toBe(34); // 33.67
+    expect(getLineDiscount(conPromo("1000.00", "855.00"))?.percent).toBe(15); // 14.5 exacto
+    expect(getLineDiscount(conPromo("1000.00", "851.00"))?.percent).toBe(15); // 14.9
+    expect(getLineDiscount(conPromo("1000.00", "981.00"))?.percent).toBe(2); // 1.9
+  });
+  it("un descuento que redondea a 0 % no se etiqueta", () => {
+    expect(getLineDiscount(conPromo("1000.00", "997.00"))).toBeNull(); // 0.3 %
+  });
+  it("100 %: producto gratis", () => {
+    expect(getLineDiscount(conPromo("500.00", "0.00"))).toEqual({ originalCents: 50000, percent: 100 });
+  });
+});
+
 describe("toCartLineData", () => {
   it("arma los datos de la línea con precio y subtotal del servidor", () => {
-    const item = makeCartItemFor(7, { cantidad: 2, precio_unitario: "250.00" });
+    const item = makeCartItemFor(7, {
+      cantidad: 2,
+      precio_unitario: "250.00",
+      producto: { precio_base: "250.00" },
+    });
     expect(toCartLineData(item)).toEqual({
       id: 7,
       nombre: "Laptop de prueba",
@@ -132,6 +189,8 @@ describe("toCartLineData", () => {
       cantidad: 2,
       precioUnitario: 250,
       subtotal: 500,
+      precioOriginal: null,
+      descuentoPorcentaje: null,
       stock: 10,
       maxQuantity: 10,
       status: "ok",
@@ -178,6 +237,24 @@ describe("toCartLineData", () => {
       precioUnitario: null,
       subtotal: null,
     });
+  });
+  it("con promoción llena precioOriginal (en pesos) y descuentoPorcentaje", () => {
+    const line = toCartLineData(conPromo("8200.00", "7380.00", { cantidad: 2 }));
+    expect(line).toMatchObject({
+      precioUnitario: 7380,
+      subtotal: 14760,
+      precioOriginal: 8200,
+      descuentoPorcentaje: 10,
+    });
+  });
+  it("sin descuento o con cupón deja precioOriginal y descuentoPorcentaje en null", () => {
+    expect(toCartLineData(conPromo("1000.00", "1000.00"))).toMatchObject({
+      precioOriginal: null,
+      descuentoPorcentaje: null,
+    });
+    expect(
+      toCartLineData(conPromo("1000.00", "850.00", { codigo_promo_aplicado: "VERANO15" })),
+    ).toMatchObject({ precioUnitario: 850, precioOriginal: null, descuentoPorcentaje: null });
   });
 });
 

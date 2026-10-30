@@ -1,9 +1,10 @@
 // src/features/cart/cartSelectors.ts — Reglas de presentación del carrito.
 // Funciones puras: no tocan la red ni React.
 //
-// Precios: la app usa solo `precio_unitario` que manda el backend, en centavos
-// enteros. No suma `precio_extra` ni usa `precio_final`: el backend cobra la
-// foto de `precio_base` guardada al agregar.
+// Precios: la app usa `precio_unitario` que manda el backend, en centavos
+// enteros. GET /cart ya lo entrega resuelto (promoción vigente o cupón), no es
+// una foto del `precio_base` de cuando se agregó. No suma `precio_extra` ni usa
+// `precio_final`. `productos.precio_base` solo sirve para mostrar el descuento.
 
 import type { CartItem, CartItemStatus, CartLineData, CartResult } from "@/features/cart/types";
 
@@ -70,12 +71,37 @@ export function getItemStatus(item: CartItem): CartItemStatus {
   return "ok";
 }
 
+/** Descuento de promoción de una línea: precio original y porcentaje entero (1 a 100). */
+export interface LineDiscount {
+  originalCents: number;
+  percent: number;
+}
+
+/**
+ * Descuento de promoción de la línea, o null si no se puede asegurar. El backend
+ * manda `precio_unitario` ya con la promoción y `productos.precio_base` como el
+ * precio sin ella (es la misma base con la que calcula el descuento). Con cupón
+ * (`codigo_promo_aplicado`) el precio es el del cupón y no se muestra descuento.
+ * Si la base o el unitario no son números válidos, o el unitario no es menor que
+ * la base, o el porcentaje redondea a 0, la línea se pinta como siempre.
+ */
+export function getLineDiscount(item: CartItem): LineDiscount | null {
+  if (item.codigo_promo_aplicado != null) return null;
+  const base = toCents(item.productos?.precio_base);
+  const unit = toCents(item.precio_unitario);
+  if (base === null || unit === null || base <= 0 || unit >= base) return null;
+  // Enteros hasta el final del redondeo: (base - unit) * 100 / base sin decimales flotantes.
+  const percent = Math.round(((base - unit) * 100) / base);
+  return percent >= 1 ? { originalCents: base, percent } : null;
+}
+
 /** Datos de una línea del carrito listos para pintar. */
 export function toCartLineData(item: CartItem): CartLineData {
   const status = getItemStatus(item);
   const max = maxQuantity(item);
   const unit = toCents(item.precio_unitario);
   const subtotal = lineSubtotalCents(item);
+  const discount = getLineDiscount(item);
   return {
     id: item.productos.id_producto,
     nombre: item.productos.nombre,
@@ -84,6 +110,8 @@ export function toCartLineData(item: CartItem): CartLineData {
     cantidad: item.cantidad,
     precioUnitario: unit === null ? null : unit / 100,
     subtotal: subtotal === null ? null : subtotal / 100,
+    precioOriginal: discount === null ? null : discount.originalCents / 100,
+    descuentoPorcentaje: discount === null ? null : discount.percent,
     stock: getItemStock(item),
     maxQuantity: max,
     status,

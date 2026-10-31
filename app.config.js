@@ -6,7 +6,7 @@
 // En tu máquina local, sin esa variable, sigue usando el archivo físico.
 module.exports = {
   expo: {
-    name: "syscom-mobile",
+    name: "SYSCOM",
     slug: "syscom-mobile",
     version: "1.0.0",
     orientation: "portrait",

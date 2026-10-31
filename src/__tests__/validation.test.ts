@@ -47,12 +47,25 @@ describe("profile/validateProfile", () => {
   it("no devuelve errores con datos válidos", () => {
     expect(validateProfile(valido)).toEqual({});
   });
-  it("valida el largo del nombre (4 a 25)", () => {
-    expect(validateProfile({ ...valido, nombre: "Ana" }).nombre).toMatch(/al menos 4/);
-    expect(validateProfile({ ...valido, nombre: "a".repeat(26) }).nombre).toMatch(/25/);
+  it.each([3, 4, 25, 26, 40])("acepta un nombre de %i caracteres (igual que el registro, 3 a 40)", (largo) => {
+    expect(validateProfile({ ...valido, nombre: "a".repeat(largo) }).nombre).toBeUndefined();
+  });
+  it("acepta «Ana», que el registro permite", () => {
+    expect(validateProfile({ ...valido, nombre: "Ana" })).toEqual({});
+  });
+  it("rechaza un nombre de 2 caracteres con el mensaje del mínimo", () => {
+    expect(validateProfile({ ...valido, nombre: "An" }).nombre).toBe(
+      "El nombre debe tener al menos 3 caracteres",
+    );
+  });
+  it("rechaza un nombre de 41 caracteres con el mensaje del máximo", () => {
+    expect(validateProfile({ ...valido, nombre: "a".repeat(41) }).nombre).toBe(
+      "El nombre no puede exceder 40 caracteres",
+    );
   });
   it("ignora espacios al medir el nombre", () => {
-    expect(validateProfile({ ...valido, nombre: "  Ana  " }).nombre).toBeDefined();
+    expect(validateProfile({ ...valido, nombre: "  An  " }).nombre).toBeDefined();
+    expect(validateProfile({ ...valido, nombre: "  Ana  " }).nombre).toBeUndefined();
   });
   it("valida apellidos (2 a 100)", () => {
     const e = validateProfile({ ...valido, apellido_paterno: "M", apellido_materno: "x".repeat(101) });

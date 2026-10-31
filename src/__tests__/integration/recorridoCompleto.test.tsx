@@ -11,8 +11,7 @@
 // Valida el contrato que la app espera de un servidor falso, NO el comportamiento del backend real ni del
 // dispositivo. El servidor de la tienda solo modela una cuenta (carrito y pedidos son únicos): por eso la
 // comprobación entre cuentas se hace sobre la caché, el perfil, Mis reseñas y el Bearer de cada petición.
-import { notifyManager } from "@tanstack/react-query";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, notifyManager } from "@tanstack/react-query";
 import { act, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 

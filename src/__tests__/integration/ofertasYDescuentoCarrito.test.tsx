@@ -77,7 +77,6 @@ const MONITOR: ProductoFalso = { id: 11, nombre: "Monitor 24 pulgadas", precio: 
 
 let auth: ServidorAuth;
 let tienda: ServidorTienda;
-let enrutador: ReturnType<typeof instalarEnrutador>;
 
 /** Monta los servidores falsos con esos productos. */
 function montarServidores(productos: ProductoFalso[]) {
@@ -85,7 +84,7 @@ function montarServidores(productos: ProductoFalso[]) {
   auth = crearServidorAuth();
   const t = crearTiendaEnrutable(productos);
   tienda = t.servidor;
-  enrutador = instalarEnrutador(adapter as never, [auth.manejar, t.manejador, contenidoPublicoVacio]);
+  instalarEnrutador(adapter as never, [auth.manejar, t.manejador, contenidoPublicoVacio]);
 }
 
 /** Una sesión que ya existía: cuenta del servidor, token vigente y store con el usuario. */

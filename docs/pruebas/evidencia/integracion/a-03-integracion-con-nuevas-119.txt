@@ -1,0 +1,6 @@
+
+Test Suites: 12 passed, 12 total
+Tests:       119 passed, 119 total
+Snapshots:   0 total
+Time:        7.308 s, estimated 15 s
+Ran all test suites matching src/__tests__/integration.

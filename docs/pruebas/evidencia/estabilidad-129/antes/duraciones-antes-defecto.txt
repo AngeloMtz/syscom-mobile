@@ -1,0 +1,40 @@
+INTEGRACION: archivo | 1ª prueba ms | prueba más lenta ms | suite ms | fallan
+integration/recorridoCompleto.test.tsx | 1501 | 1501 | 7773 | 0
+integration/chatbotYChatEnVivo.test.tsx | 1394 | 1394 | 7013 | 0
+integration/autenticacion.test.tsx | 1162 | 1162 | 7927 | 0
+integration/ofertasYDescuentoCarrito.test.tsx | 961 | 961 | 7294 | 0
+integration/arranqueDeLaApp.test.tsx | 793 | 793 | 6847 | 0
+integration/realidadAumentada.test.tsx | 229 | 229 | 2221 | 0
+integration/resenas.test.tsx | 143 | 785 | 7040 | 0
+integration/compraDeExtremoAExtremo.test.tsx | 92 | 92 | 5132 | 0
+integration/sesionCompra.test.tsx | 88 | 88 | 1022 | 0
+integration/sesionCache.test.tsx | 88 | 135 | 1033 | 0
+integration/notificacionesPush.test.tsx | 56 | 1049 | 6934 | 0
+integration/perfilYMiCuenta.test.tsx | 33 | 1041 | 6553 | 0
+integration/favoritosApi.test.tsx | 32 | 32 | 896 | 0
+integration/catalogoApi.test.tsx | 20 | 20 | 858 | 0
+integration/sesionCaducada.test.tsx | 16 | 16 | 1010 | 0
+integration/extensionesServidorTienda.test.tsx | 4 | 8 | 571 | 0
+
+TOP 12 pruebas más lentas (todas):
+1501 | integration/recorridoCompleto.test.tsx | login con 2FA → Ofertas → carrito con descuento → pago → ped | passed
+1394 | integration/chatbotYChatEnVivo.test.tsx | muestra el saludo y las sugerencias; al tocar una se envía y | passed
+1162 | integration/autenticacion.test.tsx | login sin 2FA: la sesión nace, el token se guarda y el Beare | passed
+1049 | integration/notificacionesPush.test.tsx | carga la bandeja y las preferencias del servidor, con la ses | passed
+1041 | integration/perfilYMiCuenta.test.tsx | con sesión, saluda con el nombre que devuelve el servidor y  | passed
+1000 | components/ProfileScreen.test.tsx | no muestra la opción sin desarrollar «Cambiar contraseña» | passed
+961 | integration/ofertasYDescuentoCarrito.test.tsx | el Inicio muestra la sección Ofertas cuando hay productos co | passed
+793 | integration/arranqueDeLaApp.test.tsx | primer arranque: sin bandera ni token muestra la bienvenida, | passed
+785 | integration/resenas.test.tsx | sin compra, la pantalla de escribir reseña dice «No puedes r | passed
+692 | medirRendimiento.test.ts | --webhook=2: espera Enter, imprime el comando de Stripe y mi | passed
+644 | apiClient.test.ts | usa EXPO_PUBLIC_API_URL como baseURL | passed
+577 | components/MyReviewsComponents.test.tsx | sin reseñas muestra el estado vacío | passed
+
+FALLADAS: 0
+
+components 1ª prueba top5:
+components/ProfileScreen.test.tsx 1000
+components/CartItemRow.test.tsx 337
+components/PersonalDataScreen.test.tsx 334
+components/FormField.test.tsx 258
+components/BannerCarousel.test.tsx 209

@@ -1,0 +1,16 @@
+--------------------|---------|----------|---------|---------|-------------------
+File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------------|---------|----------|---------|---------|-------------------
+All files           |     100 |    92.59 |     100 |     100 |                   
+ catalog            |     100 |    86.66 |     100 |     100 |                   
+  selectors.ts      |     100 |    86.66 |     100 |     100 | 18,24             
+ catalog/components |     100 |      100 |     100 |     100 |                   
+  OnSaleList.tsx    |     100 |      100 |     100 |     100 |                   
+  OnSaleSection.tsx |     100 |      100 |     100 |     100 |                   
+--------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 5 passed, 5 total
+Tests:       28 passed, 28 total
+Snapshots:   0 total
+Time:        3.727 s, estimated 15 s
+Ran all test suites matching src/__tests__/onSaleSelectors.test.ts|src/__tests__/components/OnSaleComponents.test.tsx|src/__tests__/useOnSaleProducts.test.tsx|src/__tests__/categories.test.ts|src/__tests__/products.test.ts.

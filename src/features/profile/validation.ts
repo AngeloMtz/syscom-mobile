@@ -1,7 +1,7 @@
 // src/features/profile/validation.ts
-// Espejo de updateProfileSchema del backend. OJO: el nombre aquí admite 4–25
-// caracteres, no 3–40 como en el registro — son dos schemas distintos y manda
-// el del endpoint que se va a llamar.
+// Espejo de updateProfileSchema del backend (src/modules/profile/validation.ts). El nombre admite
+// 3–40 caracteres, igual que en el registro: lo que se puede registrar se puede guardar. Antes el
+// perfil pedía 4–25 y un nombre como "Ana" no se podía guardar (LAHH18/syscom-backend#5).
 import type { UpdateProfileDTO } from "./types";
 
 export type ProfileErrors = Partial<Record<keyof UpdateProfileDTO, string>>;
@@ -12,8 +12,8 @@ export function validateProfile(datos: UpdateProfileDTO): ProfileErrors {
   const paterno = datos.apellido_paterno.trim();
   const materno = datos.apellido_materno.trim();
 
-  if (nombre.length < 4) e.nombre = "El nombre debe tener al menos 4 caracteres";
-  else if (nombre.length > 25) e.nombre = "El nombre no puede exceder 25 caracteres";
+  if (nombre.length < 3) e.nombre = "El nombre debe tener al menos 3 caracteres";
+  else if (nombre.length > 40) e.nombre = "El nombre no puede exceder 40 caracteres";
 
   if (paterno.length < 2) e.apellido_paterno = "Debe tener al menos 2 caracteres";
   else if (paterno.length > 100) e.apellido_paterno = "No puede exceder 100 caracteres";

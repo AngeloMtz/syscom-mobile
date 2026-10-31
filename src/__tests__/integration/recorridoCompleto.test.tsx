@@ -96,7 +96,8 @@ jest.setTimeout(30000);
 const { adapter } = crearAxiosFalso();
 
 // Excepción a "un QueryClient por prueba": authStore.logout vacía el singleton de shared/api/queryClient,
-// así que esa instancia es la que se usa (con reintentos apagados y sin retención), vaciada entre pruebas.
+/// así que esa instancia es la que se usa, vaciada entre pruebas. Con reintentos apagados y SIN descarte automático
+// de consultas (gcTime infinito): así solo `clear()` puede quitar los datos y la prueba detecta si el cierre de sesión no lo hace.
 const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
@@ -104,7 +105,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 beforeAll(() => {
   notifyManager.setScheduler((callback) => callback());
   queryClient.setDefaultOptions({
-    queries: { ...queryClient.getDefaultOptions().queries, retry: false, gcTime: 0 },
+    queries: { ...queryClient.getDefaultOptions().queries, retry: false, gcTime: Infinity },
     mutations: { retry: false, gcTime: 0 },
   });
 });
@@ -284,6 +285,12 @@ describe("integración: recorrido completo de un cliente", () => {
     expect(screen.getByLabelText("Total $225.00")).toBeTruthy();
     expect(screen.getByText("1 × $225.00")).toBeTruthy();
     expect(screen.getByText("Confirmado")).toBeTruthy();
+    await screen.unmount();
+
+    // 5b. El detalle normal de un pedido que aún no se entrega no ofrece reseñar sus productos.
+    mockParams = { id: String(idPedido) };
+    await render(<OrderScreen />, { wrapper });
+    expect(await screen.findByText("Confirmado")).toBeTruthy();
     expect(screen.queryByLabelText("Reseñar Mouse inalámbrico")).toBeNull();
     await screen.unmount();
 

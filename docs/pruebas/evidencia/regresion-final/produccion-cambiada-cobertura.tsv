@@ -1,0 +1,109 @@
+M	src/app/(auth)/login.tsx	fuera de collectCoverageFrom	integration/autenticacion.test.tsx, integration/recorridoCompleto.test.tsx
+M	src/app/(auth)/register.tsx	fuera de collectCoverageFrom	integration/autenticacion.test.tsx
+M	src/app/(auth)/reset-password.tsx	fuera de collectCoverageFrom	integration/autenticacion.test.tsx
+M	src/app/(auth)/verify-code.tsx	fuera de collectCoverageFrom	integration/autenticacion.test.tsx, integration/recorridoCompleto.test.tsx
+M	src/app/(tabs)/_layout.tsx	fuera de collectCoverageFrom	—
+M	src/app/(tabs)/index.tsx	fuera de collectCoverageFrom	integration/ofertasYDescuentoCarrito.test.tsx, integration/recorridoCompleto.test.tsx
+M	src/app/(tabs)/more.tsx	fuera de collectCoverageFrom	—
+M	src/app/(tabs)/services.tsx	fuera de collectCoverageFrom	—
+M	src/app/_layout.tsx	fuera de collectCoverageFrom	integration/arranqueDeLaApp.test.tsx
+M	src/app/catalog/[categoryId].tsx	fuera de collectCoverageFrom	—
+M	src/app/catalog/brand/[brandId].tsx	fuera de collectCoverageFrom	—
+A	src/app/chatbot.tsx	fuera de collectCoverageFrom	integration/chatbotYChatEnVivo.test.tsx
+M	src/app/favorites.tsx	fuera de collectCoverageFrom	—
+A	src/app/live-chat.tsx	fuera de collectCoverageFrom	integration/chatbotYChatEnVivo.test.tsx
+A	src/app/notifications/[id].tsx	fuera de collectCoverageFrom	—
+A	src/app/notifications/index.tsx	fuera de collectCoverageFrom	integration/notificacionesPush.test.tsx
+M	src/app/orders/[id].tsx	fuera de collectCoverageFrom	integration/recorridoCompleto.test.tsx
+M	src/app/orders/index.tsx	fuera de collectCoverageFrom	integration/recorridoCompleto.test.tsx
+M	src/app/product/[id].tsx	fuera de collectCoverageFrom	—
+M	src/app/profile/index.tsx	fuera de collectCoverageFrom	components/PersonalDataScreen.test.tsx, components/ProfileScreen.test.tsx, integration/perfilYMiCuenta.test.tsx, integration/recorridoCompleto.test.tsx
+M	src/app/profile/personal-data.tsx	fuera de collectCoverageFrom	components/PersonalDataScreen.test.tsx, integration/perfilYMiCuenta.test.tsx
+A	src/app/promociones.tsx	fuera de collectCoverageFrom	integration/ofertasYDescuentoCarrito.test.tsx
+A	src/app/reviews/index.tsx	fuera de collectCoverageFrom	integration/recorridoCompleto.test.tsx, integration/resenas.test.tsx
+A	src/app/reviews/new.tsx	fuera de collectCoverageFrom	integration/recorridoCompleto.test.tsx, integration/resenas.test.tsx
+M	src/app/search.tsx	fuera de collectCoverageFrom	—
+M	src/app/service/[id].tsx	fuera de collectCoverageFrom	—
+A	src/app/viewer3d.tsx	fuera de collectCoverageFrom	integration/realidadAumentada.test.tsx
+M	src/features/addresses/components/AddressForm.tsx	85.7%	components/AddressForm.test.tsx
+M	src/features/addresses/hooks/useAddresses.ts	100%	integration/compraDeExtremoAExtremo.test.tsx, integration/sesionCaducada.test.tsx, integration/sesionCompra.test.tsx, useAddresses.test.tsx
+A	src/features/ar/components/ARButton.tsx	100%	components/ARButton.test.tsx, integration/realidadAumentada.test.tsx
+A	src/features/ar/components/ModelViewer3D.tsx	fuera de collectCoverageFrom	—
+A	src/features/ar/hooks/useProductModels.ts	100%	components/ARButton.test.tsx, useProductModels.test.tsx
+A	src/features/ar/modelViewerHtml.ts	100%	modelViewerHtml.test.ts
+A	src/features/ar/repositories/modelsRepository.ts	100%	modelsRepository.test.ts, useProductModels.test.tsx
+A	src/features/ar/selectors.ts	100%	arSelectors.test.ts
+A	src/features/ar/types.ts	fuera de collectCoverageFrom	arSelectors.test.ts, modelsRepository.test.ts
+A	src/features/auth/hooks/useLogout.ts	100%	components/ProfileScreen.test.tsx, integration/notificacionesPush.test.tsx, useLogout.test.tsx
+M	src/features/cart/cartSelectors.ts	100%	cartSelectors.test.ts, components/CartItemRow.test.tsx, integration/extensionesServidorTienda.test.tsx
+M	src/features/cart/components/CartItemRow.tsx	90%	components/CartItemRow.test.tsx
+M	src/features/cart/hooks/useCart.ts	100%	integration/autenticacion.test.tsx, integration/compraDeExtremoAExtremo.test.tsx, integration/sesionCaducada.test.tsx, integration/sesionCompra.test.tsx, useCart.test.tsx, usePayment.test.tsx
+M	src/features/cart/types.ts	fuera de collectCoverageFrom	fixtures/cart.ts
+A	src/features/catalog/components/OnSaleList.tsx	fuera de collectCoverageFrom	components/OnSaleComponents.test.tsx
+A	src/features/catalog/components/OnSaleSection.tsx	fuera de collectCoverageFrom	components/OnSaleComponents.test.tsx
+A	src/features/catalog/hooks/useOnSaleProducts.ts	100%	useOnSaleProducts.test.tsx
+M	src/features/catalog/repositories/productRepository.ts	100%	integration/extensionesServidorTienda.test.tsx, productRepository.test.ts, useFeaturedProducts.test.tsx, useOnSaleProducts.test.tsx, useProduct.test.tsx, useProducts.test.tsx, useProductsPreview.test.tsx
+M	src/features/catalog/selectors.ts	fuera de collectCoverageFrom	categories.test.ts, onSaleSelectors.test.ts, products.test.ts
+A	src/features/chatbot/chatSelectors.ts	100%	chatSelectors.test.ts, integration/chatbotYChatEnVivo.test.tsx
+A	src/features/chatbot/chatStore.ts	100%	chatStore.test.ts, integration/chatbotYChatEnVivo.test.tsx, integration/notificacionesPush.test.tsx, integration/perfilYMiCuenta.test.tsx, integration/recorridoCompleto.test.tsx, useChatbot.test.tsx, useLogout.test.tsx
+A	src/features/chatbot/components/ChatBubble.tsx	100%	components/ChatComponents.test.tsx
+A	src/features/chatbot/components/ChatComposer.tsx	93.8%	components/ChatComponents.test.tsx
+A	src/features/chatbot/components/ChatFab.tsx	100%	components/ChatFab.test.tsx
+A	src/features/chatbot/components/LiveGuestForm.tsx	100%	components/LiveChatComponents.test.tsx
+A	src/features/chatbot/components/LiveMessageBubble.tsx	100%	components/LiveChatComponents.test.tsx
+A	src/features/chatbot/hooks/useChatbot.ts	100%	useChatbot.test.tsx
+A	src/features/chatbot/hooks/useLiveChat.ts	100%	integration/chatbotYChatEnVivo.test.tsx, useLiveChat.test.tsx
+A	src/features/chatbot/liveChat/liveChatGateway.ts	100%	liveChatGateway.test.ts, useLiveChat.test.tsx
+A	src/features/chatbot/liveChat/liveChatReducer.ts	100%	liveChatReducer.test.ts
+A	src/features/chatbot/liveChat/liveChatSelectors.ts	100%	integration/chatbotYChatEnVivo.test.tsx, liveChatSelectors.test.ts
+A	src/features/chatbot/liveChat/types.ts	fuera de collectCoverageFrom	components/LiveChatComponents.test.tsx, liveChatReducer.test.ts
+A	src/features/chatbot/liveChat/validation.ts	100%	liveChatValidation.test.ts
+A	src/features/chatbot/repositories/chatbotRepository.ts	100%	chatbotRepository.test.ts, integration/chatbotYChatEnVivo.test.tsx, useChatbot.test.tsx
+A	src/features/chatbot/types.ts	fuera de collectCoverageFrom	components/ChatComponents.test.tsx
+A	src/features/chatbot/validation.ts	100%	chatValidation.test.ts
+M	src/features/favorites/hooks/useFavorites.ts	100%	integration/favoritosApi.test.tsx, integration/sesionCache.test.tsx, integration/sesionCaducada.test.tsx, useFavorites.test.tsx
+A	src/features/notifications/components/NotificationCard.tsx	100%	components/NotificationComponents.test.tsx
+A	src/features/notifications/components/PreferencesCard.tsx	100%	components/NotificationComponents.test.tsx
+A	src/features/notifications/hooks/useMarkNotificationsRead.ts	100%	useMarkNotificationsRead.test.tsx
+A	src/features/notifications/hooks/useNotificationDetail.ts	100%	useNotificationDetail.test.tsx
+A	src/features/notifications/hooks/useNotificationPreferences.ts	100%	components/NotificationComponents.test.tsx, useNotificationPreferences.test.tsx
+A	src/features/notifications/hooks/useNotifications.ts	100%	useMarkNotificationsRead.test.tsx, useNotifications.test.tsx
+A	src/features/notifications/hooks/useRegisterPushToken.ts	100%	integration/notificacionesPush.test.tsx, useRegisterPushToken.test.tsx
+A	src/features/notifications/notificationSelectors.ts	100%	notificationSelectors.test.ts
+A	src/features/notifications/pushNotifications.ts	96%	pushNotifications.test.ts, useLogout.test.tsx, useRegisterPushToken.test.tsx
+A	src/features/notifications/repositories/notificationRepository.ts	100%	notificationRepository.test.ts, useLogout.test.tsx, useMarkNotificationsRead.test.tsx, useNotificationDetail.test.tsx, useNotificationPreferences.test.tsx, useNotifications.test.tsx, useRegisterPushToken.test.tsx
+A	src/features/notifications/types.ts	fuera de collectCoverageFrom	fixtures/notification.ts, useMarkNotificationsRead.test.tsx, useNotificationPreferences.test.tsx
+M	src/features/onboarding/components/OnboardingFlow.tsx	fuera de collectCoverageFrom	—
+M	src/features/orders/components/OrderDetailView.tsx	100%	components/OrderComponents.test.tsx
+M	src/features/orders/orderFormat.ts	100%	integration/compraDeExtremoAExtremo.test.tsx, orderFormat.test.ts
+M	src/features/profile/validation.ts	89.5%	validation.test.ts
+A	src/features/reviews/components/MyReviewCard.tsx	87.5%	components/MyReviewsComponents.test.tsx
+A	src/features/reviews/components/MyReviewsList.tsx	100%	components/MyReviewsComponents.test.tsx
+A	src/features/reviews/components/ProductReviewsSection.tsx	94.1%	components/ReviewComponents.test.tsx, integration/resenas.test.tsx
+A	src/features/reviews/components/RatingInput.tsx	100%	components/ReviewWriteComponents.test.tsx
+A	src/features/reviews/components/ReviewCard.tsx	100%	components/ReviewComponents.test.tsx
+A	src/features/reviews/components/ReviewForm.tsx	100%	components/ReviewWriteComponents.test.tsx
+A	src/features/reviews/components/ReviewStatusBadge.tsx	100%	components/MyReviewsComponents.test.tsx
+A	src/features/reviews/components/ReviewSummary.tsx	100%	components/ReviewComponents.test.tsx
+A	src/features/reviews/components/StarRating.tsx	100%	components/ReviewComponents.test.tsx
+A	src/features/reviews/components/WriteReview.tsx	93.1%	components/ReviewWriteComponents.test.tsx
+A	src/features/reviews/components/WriteReviewAction.tsx	100%	components/ReviewComponents.test.tsx, components/ReviewWriteComponents.test.tsx
+A	src/features/reviews/hooks/useCanReview.ts	100%	components/ReviewWriteComponents.test.tsx, useCanReview.test.tsx
+A	src/features/reviews/hooks/useCreateReview.ts	100%	components/ReviewWriteComponents.test.tsx, useCreateReview.test.tsx
+A	src/features/reviews/hooks/useMyReviews.ts	100%	components/MyReviewsComponents.test.tsx, useMyReviews.test.tsx
+A	src/features/reviews/hooks/useProductReviews.ts	100%	components/ReviewComponents.test.tsx, useProductReviews.test.tsx
+A	src/features/reviews/repositories/reviewRepository.ts	100%	reviewRepository.test.ts, useCanReview.test.tsx, useCreateReview.test.tsx, useMyReviews.test.tsx, useProductReviews.test.tsx
+A	src/features/reviews/reviewKeys.ts	100%	useCreateReview.test.tsx
+A	src/features/reviews/reviewSelectors.ts	100%	reviewSelectors.test.ts
+A	src/features/reviews/reviewValidation.ts	100%	reviewValidation.test.ts
+A	src/features/reviews/types.ts	fuera de collectCoverageFrom	fixtures/review.ts
+A	src/features/services/components/ImageZoomModal.tsx	fuera de collectCoverageFrom	—
+A	src/features/services/components/ServiceGallery.tsx	fuera de collectCoverageFrom	—
+A	src/features/services/components/ZoomableImage.tsx	fuera de collectCoverageFrom	—
+A	src/features/services/gallery.ts	100%	serviceGallery.test.ts
+M	src/features/services/selectors.ts	100%	servicesSelectors.test.ts
+M	src/shared/api/client.ts	100%	apiClient.test.ts, authRepository.test.ts, integration/extensionesServidorTienda.test.tsx, liveChatGateway.test.ts, url.test.ts, utils/axiosFake.ts
+M	src/shared/api/errorMessage.ts	100%	errorMessage.test.ts
+M	src/shared/store/authStore.ts	100%	components/ReviewWriteComponents.test.tsx, integration/arranqueDeLaApp.test.tsx, integration/autenticacion.test.tsx, integration/chatbotYChatEnVivo.test.tsx, integration/compraDeExtremoAExtremo.test.tsx, integration/favoritosApi.test.tsx, integration/notificacionesPush.test.tsx, integration/ofertasYDescuentoCarrito.test.tsx, integration/perfilYMiCuenta.test.tsx, integration/recorridoCompleto.test.tsx, integration/resenas.test.tsx, integration/sesionCache.test.tsx, integration/sesionCaducada.test.tsx, integration/sesionCompra.test.tsx, session.test.ts, useAddresses.test.tsx, useCanReview.test.tsx, useCart.test.tsx, useChatbot.test.tsx, useConfirm2FA.test.tsx, useFavorites.test.tsx, useLogin.test.tsx, useLogout.test.tsx, useMe.test.tsx, useMyReviews.test.tsx, useNotificationDetail.test.tsx, useNotificationPreferences.test.tsx, useNotifications.test.tsx, useOrder.test.tsx, useOrders.test.tsx, useProfile.test.tsx, useRegister.test.tsx, useRegisterPushToken.test.tsx, useUpdateProfile.test.tsx, useVerifyRegistration.test.tsx, utils/authHooksSetup.ts
+M	src/shared/ui/BannerCarousel.tsx	100%	components/BannerCarousel.test.tsx
+M	src/shared/ui/FormField.tsx	fuera de collectCoverageFrom	components/FormField.test.tsx

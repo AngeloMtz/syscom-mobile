@@ -42,4 +42,25 @@ describe("apiErrorMessage", () => {
     expect(apiErrorMessage(undefined)).toBe("Ocurrió un error. Intenta de nuevo.");
     expect(apiErrorMessage({}, "Otro")).toBe("Otro");
   });
+
+  describe("tiempo de espera agotado", () => {
+    const MENSAJE = "El servidor tardó demasiado en responder. Intenta de nuevo.";
+
+    it("explica el timeout de Axios («timeout of 15000ms exceeded»)", () => {
+      expect(apiErrorMessage({ code: "ECONNABORTED", message: "timeout of 15000ms exceeded" })).toBe(MENSAJE);
+    });
+    it("lo reconoce por el texto aunque no venga el código", () => {
+      expect(apiErrorMessage({ message: "timeout of 15000ms exceeded" }, "Verifica tus datos")).toBe(MENSAJE);
+    });
+    it("lo reconoce por el código aunque el texto cambie", () => {
+      expect(apiErrorMessage({ code: "ECONNABORTED", message: "otro texto" })).toBe(MENSAJE);
+    });
+    it("no cambia los demás mensajes: sin red, con respuesta del backend y fallback", () => {
+      expect(apiErrorMessage(makeNetworkError())).toBe(
+        "Sin conexión con el servidor. Revisa tu internet e intenta de nuevo.",
+      );
+      expect(apiErrorMessage(makeApiError({ status: 500, message: "Error del servidor" }))).toBe("Error del servidor");
+      expect(apiErrorMessage({ message: "algo raro" }, "Mi fallback")).toBe("Mi fallback");
+    });
+  });
 });

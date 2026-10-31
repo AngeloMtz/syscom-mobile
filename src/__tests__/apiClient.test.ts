@@ -177,3 +177,167 @@ describe("cliente HTTP: interceptor de autenticación", () => {
     await expect(api.get("/auth/me")).rejects.toBe(error);
   });
 });
+
+describe("cliente HTTP: sesión caducada", () => {
+  /** El adapter rechaza como lo hace Axios: el error lleva la `config` de la petición que lo causó. */
+  const rechazar = (
+    adapter: jest.Mock,
+    status: number,
+    message: string,
+    antes?: () => Promise<void> | void,
+  ) =>
+    adapter.mockImplementationOnce(async (config: InternalAxiosRequestConfig) => {
+      await antes?.();
+      throw Object.assign(makeApiError({ status, message }), { config });
+    });
+
+  const RUTAS_PUBLICAS = [
+    "/auth/login",
+    "/auth/verify-2fa-login",
+    "/auth/register",
+    "/auth/verify-registration",
+    "/auth/resend-code",
+    "/auth/forgot-password",
+    "/auth/verify-recovery",
+    "/auth/reset-password",
+  ];
+
+  async function conSesion() {
+    const cliente = cargarCliente(URL_API);
+    await cliente.saveToken("jwt-actual");
+    const caducada = jest.fn();
+    cliente.setSessionExpiredHandler(caducada);
+    return { ...cliente, caducada };
+  }
+
+  it("el texto del backend para un token caducado vive en una constante", () => {
+    const { SESSION_EXPIRED_MESSAGE } = cargarCliente(URL_API);
+    expect(SESSION_EXPIRED_MESSAGE).toBe("Token inválido o expirado");
+  });
+
+  it("un 401 de una petición con el token actual cierra la sesión y el error sigue llegando a quien llamó", async () => {
+    const { api, adapter, caducada } = await conSesion();
+    rechazar(adapter, 401, "Tu cuenta ha sido suspendida. Contacta al administrador.");
+
+    await expect(api.get("/cart")).rejects.toMatchObject({ response: { status: 401 } });
+
+    expect(caducada).toHaveBeenCalledTimes(1);
+  });
+
+  it("un 403 con «Token inválido o expirado» cierra la sesión", async () => {
+    const { api, adapter, caducada, SESSION_EXPIRED_MESSAGE } = await conSesion();
+    rechazar(adapter, 403, SESSION_EXPIRED_MESSAGE);
+
+    await expect(api.get("/profile")).rejects.toMatchObject({ response: { status: 403 } });
+
+    expect(caducada).toHaveBeenCalledTimes(1);
+  });
+
+  it("un 403 de otro tipo (por ejemplo, un rol sin permiso) no cierra la sesión", async () => {
+    const { api, adapter, caducada } = await conSesion();
+    rechazar(adapter, 403, "No tienes permisos para realizar esta acción");
+
+    await expect(api.get("/profile")).rejects.toMatchObject({ response: { status: 403 } });
+
+    expect(caducada).not.toHaveBeenCalled();
+  });
+
+  it.each(RUTAS_PUBLICAS)("un 401 en %s (credenciales o código incorrectos) no cierra la sesión", async (ruta) => {
+    const { api, adapter, caducada } = await conSesion();
+    rechazar(adapter, 401, "Correo o contraseña incorrectos.");
+
+    await expect(api.post(ruta, {})).rejects.toMatchObject({ response: { status: 401 } });
+
+    expect(caducada).not.toHaveBeenCalled();
+  });
+
+  it("un 403 en una ruta pública (acceso móvil denegado) no cierra la sesión aunque lleve el mensaje de token", async () => {
+    const { api, adapter, caducada, SESSION_EXPIRED_MESSAGE } = await conSesion();
+    rechazar(adapter, 403, SESSION_EXPIRED_MESSAGE);
+
+    await expect(api.post("/auth/login", {})).rejects.toMatchObject({ response: { status: 403 } });
+
+    expect(caducada).not.toHaveBeenCalled();
+  });
+
+  it("sin token (la petición no llevaba Authorization) no hay sesión que cerrar", async () => {
+    const cliente = cargarCliente(URL_API);
+    const caducada = jest.fn();
+    cliente.setSessionExpiredHandler(caducada);
+    rechazar(cliente.adapter, 401, "No autenticado");
+
+    await expect(cliente.api.get("/cart")).rejects.toMatchObject({ response: { status: 401 } });
+
+    expect(caducada).not.toHaveBeenCalled();
+  });
+
+  it("si mientras tanto se inició otra sesión (token distinto al enviado) no la cierra", async () => {
+    const { api, adapter, caducada, saveToken } = await conSesion();
+    rechazar(adapter, 403, "Token inválido o expirado", () => saveToken("jwt-nuevo"));
+
+    await expect(api.get("/cart")).rejects.toMatchObject({ response: { status: 403 } });
+
+    expect(caducada).not.toHaveBeenCalled();
+  });
+
+  it("tres peticiones en paralelo con el mismo token vencido cierran la sesión una sola vez", async () => {
+    const { api, adapter, caducada } = await conSesion();
+    // El cierre tarda: no libera el token, así que solo la bandera evita las repeticiones.
+    caducada.mockReturnValue(new Promise(() => undefined));
+    for (let i = 0; i < 3; i += 1) rechazar(adapter, 403, "Token inválido o expirado");
+
+    await Promise.allSettled([api.get("/cart"), api.get("/profile"), api.get("/favorites")]);
+
+    expect(caducada).toHaveBeenCalledTimes(1);
+  });
+
+  it("terminado el cierre, una sesión posterior que también caduca vuelve a cerrarse", async () => {
+    const { api, adapter, caducada } = await conSesion();
+    caducada.mockResolvedValue(undefined);
+    rechazar(adapter, 403, "Token inválido o expirado");
+    await expect(api.get("/cart")).rejects.toBeDefined();
+    await new Promise((resolver) => setTimeout(resolver, 0));
+
+    rechazar(adapter, 403, "Token inválido o expirado");
+    await expect(api.get("/cart")).rejects.toBeDefined();
+
+    expect(caducada).toHaveBeenCalledTimes(2);
+  });
+
+  it("un error sin `config` (no es de una petición) se propaga y no cierra la sesión", async () => {
+    const { api, adapter, caducada } = await conSesion();
+    const error = makeApiError({ status: 401, message: "sin config" });
+    adapter.mockRejectedValueOnce(error);
+
+    await expect(api.get("/cart")).rejects.toBe(error);
+
+    expect(caducada).not.toHaveBeenCalled();
+  });
+
+  it("sin manejador registrado el error se propaga igual", async () => {
+    const { api, adapter, setSessionExpiredHandler, saveToken } = cargarCliente(URL_API);
+    await saveToken("jwt-actual");
+    setSessionExpiredHandler(null);
+    rechazar(adapter, 401, "No autenticado");
+
+    await expect(api.get("/cart")).rejects.toMatchObject({ response: { status: 401 } });
+  });
+
+  it("si el manejador falla, quien llamó recibe el error original de la petición", async () => {
+    const { api, adapter, caducada } = await conSesion();
+    caducada.mockImplementation(() => {
+      throw new Error("falló el cierre");
+    });
+    rechazar(adapter, 403, "Token inválido o expirado");
+
+    await expect(api.get("/cart")).rejects.toMatchObject({ response: { status: 403 } });
+  });
+
+  it("una respuesta correcta no toca la sesión", async () => {
+    const { api, caducada } = await conSesion();
+
+    await api.get("/cart");
+
+    expect(caducada).not.toHaveBeenCalled();
+  });
+});

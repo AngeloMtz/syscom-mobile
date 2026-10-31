@@ -1,0 +1,37 @@
+A | no se excluyen las rutas públicas de /auth/ | ['Tests:       9 failed, 31 passed, 40 total']
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/forgot-password (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/login (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/register (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/resend-code (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/reset-password (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/verify-2fa-login (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/verify-recovery (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/verify-registration (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 403 en una ruta pública (acceso móvil denegado) no cierra la sesión aunque lleve el mensaje de token
+B | ya no se compara el token enviado con el actual | ['Tests:       1 failed, 39 passed, 40 total']
+    FALLA: cliente HTTP: sesión caducada › si mientras tanto se inició otra sesión (token distinto al enviado) no la cierra
+C | se quita la bandera de un solo cierre | ['Tests:       2 failed, 38 passed, 40 total']
+    FALLA: cliente HTTP: sesión caducada › tres peticiones en paralelo con el mismo token vencido cierran la sesión una sola vez
+    FALLA: integración: sesión caducada › las tres consultas en paralelo cierran la sesión una sola vez y ninguna se reintenta con el token vencido
+D | cualquier 403 cierra la sesión (se ignora el mensaje) | ['Tests:       2 failed, 38 passed, 40 total']
+    FALLA: cliente HTTP: sesión caducada › un 403 de otro tipo (por ejemplo, un rol sin permiso) no cierra la sesión
+    FALLA: integración: sesión caducada › un 403 de otro tipo no cierra la sesión: el usuario sigue dentro
+E | el error original ya no llega a quien hizo la petición | ['Tests:       18 failed, 22 passed, 40 total']
+    FALLA: cliente HTTP: interceptor de autenticación › propaga el error del servidor sin alterarlo
+    FALLA: cliente HTTP: sesión caducada › si el manejador falla, quien llamó recibe el error original de la petición
+    FALLA: cliente HTTP: sesión caducada › si mientras tanto se inició otra sesión (token distinto al enviado) no la cierra
+    FALLA: cliente HTTP: sesión caducada › sin manejador registrado el error se propaga igual
+    FALLA: cliente HTTP: sesión caducada › sin token (la petición no llevaba Authorization) no hay sesión que cerrar
+    FALLA: cliente HTTP: sesión caducada › un 401 de una petición con el token actual cierra la sesión y el error sigue llegando a quien llamó
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/forgot-password (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/login (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/register (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/resend-code (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/reset-password (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/verify-2fa-login (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/verify-recovery (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 401 en /auth/verify-registration (credenciales o código incorrectos) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 403 con «Token inválido o expirado» cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 403 de otro tipo (por ejemplo, un rol sin permiso) no cierra la sesión
+    FALLA: cliente HTTP: sesión caducada › un 403 en una ruta pública (acceso móvil denegado) no cierra la sesión aunque lleve el mensaje de token
+    FALLA: cliente HTTP: sesión caducada › un error sin `config` (no es de una petición) se propaga y no cierra la sesión

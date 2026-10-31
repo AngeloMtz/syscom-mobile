@@ -181,12 +181,12 @@ describe("integración: datos personales", () => {
 
     await fireEvent.press(screen.getByText("Guardar cambios"));
 
-    expect(await screen.findByText("El nombre debe tener al menos 4 caracteres")).toBeTruthy();
+    expect(await screen.findByText("El nombre debe tener al menos 3 caracteres")).toBeTruthy();
     expect(enrutador.de("PUT", "/profile")).toHaveLength(0);
   });
 
   it("si el servidor rechaza el guardado muestra su mensaje y no cambia la caché ni el usuario", async () => {
-    // El perfil exige 4 caracteres o más en el nombre (el registro acepta 3): se parte de un nombre válido.
+    // El perfil acepta de 3 a 40 caracteres en el nombre, igual que el registro: se parte de un nombre válido.
     const { cuenta } = await conSesion("Ana María");
     auth.fallarProxima("PUT /profile", {
       status: 400,

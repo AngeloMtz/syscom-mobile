@@ -175,12 +175,12 @@ function PersonalDataForm({ perfil }: { perfil: Profile }) {
           value={datos.nombre}
           onChangeText={set("nombre")}
           error={errores.nombre}
-          hint="Entre 4 y 25 caracteres"
+          hint="Entre 3 y 40 caracteres"
           autoCapitalize="words"
           returnKeyType="next"
           onSubmitEditing={() => refPaterno.current?.focus()}
           editable={!guardar.isPending}
-          maxLength={25}
+          maxLength={40}
         />
 
         <FormField

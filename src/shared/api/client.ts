@@ -52,4 +52,71 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+/**
+ * Texto exacto con el que el backend rechaza un JWT vencido o inválido: responde 403, no 401
+ * (authenticateToken, syscom-backend/src/middlewares/auth.middleware.ts). Si cambia allá, cambia aquí.
+ */
+export const SESSION_EXPIRED_MESSAGE = "Token inválido o expirado";
+
+/**
+ * Rutas de /auth/ que se usan SIN sesión. Un 401 o 403 ahí significa credenciales o código incorrectos
+ * (o acceso móvil denegado), nunca una sesión caducada.
+ */
+const PUBLIC_AUTH_ROUTES = [
+  "/auth/login",
+  "/auth/verify-2fa-login",
+  "/auth/register",
+  "/auth/verify-registration",
+  "/auth/resend-code",
+  "/auth/forgot-password",
+  "/auth/verify-recovery",
+  "/auth/reset-password",
+];
+
+let onSessionExpired: (() => void | Promise<void>) | null = null;
+let closingSession = false;
+
+/**
+ * Quién cierra la sesión cuando el servidor dice que caducó. Lo registra authStore: así este módulo
+ * no importa el store (el store ya importa el cliente) y no hay ciclo de importaciones.
+ */
+export function setSessionExpiredHandler(handler: (() => void | Promise<void>) | null): void {
+  onSessionExpired = handler;
+}
+
+/** ¿Esta respuesta de error significa que la sesión que enviaba la petición ya no sirve? */
+function isSessionExpired(error: any): boolean {
+  const config = error?.config;
+  const status = error?.response?.status;
+  if (!config || (status !== 401 && status !== 403)) return false;
+
+  // Solo cuenta si la petición llevaba el token ACTUAL: una respuesta tardía de una sesión anterior
+  // no debe cerrar la nueva.
+  const token = getTokenSync();
+  if (!token || String(config.headers?.Authorization ?? "") !== `Bearer ${token}`) return false;
+
+  const route = String(config.url ?? "");
+  if (PUBLIC_AUTH_ROUTES.some((publica) => route.startsWith(publica))) return false;
+
+  return status === 401 || error.response?.data?.message === SESSION_EXPIRED_MESSAGE;
+}
+
+// Sesión caducada: un solo cierre aunque lleguen varias respuestas a la vez. El error SIEMPRE se
+// devuelve a quien hizo la petición; el cierre no puede taparlo ni fallar hacia afuera.
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (onSessionExpired && !closingSession && isSessionExpired(error)) {
+      closingSession = true;
+      Promise.resolve()
+        .then(() => onSessionExpired?.())
+        .catch(() => undefined)
+        .finally(() => {
+          closingSession = false;
+        });
+    }
+    return Promise.reject(error);
+  },
+);
+
 export default api;

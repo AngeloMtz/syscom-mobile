@@ -57,6 +57,8 @@ interface PedidoFalso {
 interface IntentFalso {
   id: string;
   id_direccion: number;
+  /** Lo que Stripe cobraría: el total del carrito (con descuentos) al crear el PaymentIntent. */
+  monto: number;
   pagado: boolean;
   consultas: number;
 }
@@ -246,7 +248,7 @@ export function crearServidorTienda(adapter: Adapter, productos: ProductoFalso[]
         }
       }
       const id = `pi_${siguienteIntent++}`;
-      intents.set(id, { id, id_direccion: cuerpo.id_direccion, pagado: false, consultas: 0 });
+      intents.set(id, { id, id_direccion: cuerpo.id_direccion, monto: total(), pagado: false, consultas: 0 });
       return ok(config, { data: { clientSecret: `${id}_secret_abc`, paymentIntentId: id } });
     }
 
@@ -357,6 +359,45 @@ export function crearServidorTienda(adapter: Adapter, productos: ProductoFalso[]
         l.cupon = codigo;
         l.precio_unitario = precioUnitario;
       }
+    },
+    /**
+     * Crea de golpe un pedido de una compra anterior (sin recorrer el pago) con esos productos a su precio
+     * vigente. Por defecto ya entregado. No toca el carrito ni el stock.
+     */
+    sembrarPedido: (ids: number[], estadoPedido = "entregado") => {
+      const idPedido = siguientePedido++;
+      const items = ids.map((id, i) => {
+        const p = catalogo.get(id);
+        const unitario = p?.precioPromocion ?? p?.precio ?? 0;
+        return {
+          id_pedido_detalle: idPedido * 10 + i,
+          id_producto: id,
+          cantidad: 1,
+          precio_unitario: dinero(unitario),
+          subtotal: dinero(unitario),
+        };
+      });
+      const pedido: PedidoFalso = {
+        id_pedido: idPedido,
+        estado: estadoPedido,
+        total: dinero(items.reduce((s, i) => s + Number(i.subtotal), 0)),
+        fecha_pedido: "2026-10-05T15:00:00.000Z",
+        direccion: {
+          id_direccion: 0,
+          calle: "Av. Juárez 123",
+          colonia: "Centro",
+          ciudad: "Huejutla",
+          estado: "Hidalgo",
+          codigo_postal: "43000",
+          referencias: null,
+          created_at: "2026-10-01T10:00:00.000Z",
+        },
+        items,
+        pago: { id_pago: idPedido, metodo_pago: "stripe", estado_pago: "completado", stripe_payment_intent_id: `pi_previo_${idPedido}` },
+        paymentIntent: `pi_previo_${idPedido}`,
+      };
+      pedidos.unshift(pedido);
+      return pedido;
     },
     /** El administrador marca el pedido como entregado. */
     marcarEntregado: (idPedido: number) => {

@@ -1,0 +1,7 @@
+# Después de tocar las utilidades (servidorAuth.cuentaDe, servidorTienda.monto, servidorResenas y servidorContenidoPublico nuevos)
+# Comando: npx jest --ci --maxWorkers=2 src/__tests__/integration
+# NOTA: la primera corrida tras el cambio dio 2 pruebas fallidas (autenticacion y notificacionesPush, suites de 20-24 s) y NO se guardó su mensaje.
+# No se repitieron: esas 2 suites solas dieron 33/33 y dos corridas completas posteriores dieron 123/123. Causa no confirmada (sospecha: tiempo de espera por carga de la máquina).
+# Resultado de la corrida completa repetida:
+Test Suites: 13 passed, 13 total
+Tests:       123 passed, 123 total

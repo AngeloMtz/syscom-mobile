@@ -57,6 +57,8 @@ interface PedidoFalso {
 interface IntentFalso {
   id: string;
   id_direccion: number;
+  /** Lo que Stripe cobraría: el total del carrito (con descuentos) al crear el PaymentIntent. */
+  monto: number;
   pagado: boolean;
   consultas: number;
 }
@@ -246,7 +248,7 @@ export function crearServidorTienda(adapter: Adapter, productos: ProductoFalso[]
         }
       }
       const id = `pi_${siguienteIntent++}`;
-      intents.set(id, { id, id_direccion: cuerpo.id_direccion, pagado: false, consultas: 0 });
+      intents.set(id, { id, id_direccion: cuerpo.id_direccion, monto: total(), pagado: false, consultas: 0 });
       return ok(config, { data: { clientSecret: `${id}_secret_abc`, paymentIntentId: id } });
     }
 

@@ -1,6 +1,7 @@
 // src/app/(auth)/register.tsx — Crear cuenta.
 // Campos y reglas tomados del validador del backend, que es el que valida de
-// verdad. Nota: la web usa nombre 4–25 y el backend 3–40; manda el backend.
+// verdad. Nota: el registro de la web (syscom-frontend, src/lib/validations/auth.ts) pide nombre de
+// 4–25 caracteres y el backend admite 3–40; manda el backend. Su formulario de perfil no mide el nombre.
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";

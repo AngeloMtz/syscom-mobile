@@ -256,6 +256,11 @@ export function crearServidorAuth() {
     fallarProxima: (clave: string, fallo: Fallo) => {
       fallos.set(clave, [...(fallos.get(clave) ?? []), fallo]);
     },
+    /** La cuenta dueña del Bearer de la petición, o undefined si no trae un token vigente (no lanza). */
+    cuentaDe: (config: InternalAxiosRequestConfig): CuentaFalsa | undefined => {
+      const correo = tokens.get(String(config.headers?.Authorization ?? "").replace(/^Bearer /, ""));
+      return correo ? cuentas.get(correo) : undefined;
+    },
     /** Invalida un token: la sesión que lo use recibe 401. */
     revocarToken: (token: string) => tokens.delete(token),
   };

@@ -1,0 +1,15 @@
+A src/shared/api/secureToken.ts | restoreToken ya no hidrata el token en memoria | arranque | ['Tests:       1 failed, 6 passed, 7 total']
+    FALLA: integración: arranque de la app › con un token guardado reconoce la sesión al abrir y el Bearer viaja en la primera petición
+B src/shared/store/authStore.ts | setSession ya no guarda el token | autenticacion | ['Tests:       3 failed, 9 passed, 12 total']
+    FALLA: integración: 2FA › login con 2FA → pantalla de código → sesión: no hay sesión hasta confirmar el código
+    FALLA: integración: inicio de sesión › login sin 2FA: la sesión nace, el token se guarda y el Bearer viaja a perfil y carrito
+    FALLA: integración: registro › registro → código del correo → la cuenta se activa y la sesión nace sin pasar por el login
+C src/features/auth/hooks/useLogout.ts | el cierre de sesión borra la sesión ANTES de desregistrar el token push | perfilYMiCuenta | ['Tests:       1 failed, 8 passed, 9 total']
+    FALLA: integración: guarda de sesión y Mi cuenta › cerrar sesión: desregistra el token del dispositivo con la sesión aún vigente y luego la borra
+D src/features/profile/hooks/useUpdateProfile.ts | guardar el perfil ya no actualiza el usuario de la sesión | perfilYMiCuenta | ['Tests:       1 failed, 8 passed, 9 total']
+    FALLA: integración: datos personales › editar y guardar: PUT con los campos nuevos, el servidor, la caché y el usuario de la sesión quedan al día
+E src/shared/storage/onboarding.ts | si falla la lectura de la bandera asume que NO vio la bienvenida | arranque | ['Tests:       1 failed, 6 passed, 7 total']
+    FALLA: integración: arranque de la app › si el almacenamiento de la bandera falla, asume que ya la vio y no deja al usuario atrapado en la bienvenida
+F src/features/auth/hooks/useVerifyRegistration.ts | verificar el registro ya no inicia la sesión | autenticacion | ['Tests:       2 failed, 10 passed, 12 total']
+    FALLA: integración: registro › reenviar el código: se habilita a los 60 s, pide el tipo correcto y el código anterior deja de servir
+    FALLA: integración: registro › registro → código del correo → la cuenta se activa y la sesión nace sin pasar por el login

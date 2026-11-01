@@ -10,6 +10,27 @@ import type {
   User,
 } from "@/features/auth/types";
 
+/**
+ * Un 200 sin user o token no debe tratarse como sesión válida. El error imita la
+ * forma { response.data.message } de la API para que authErrorMessage lo muestre
+ * tal cual en vez del texto de respaldo de cada pantalla.
+ */
+function exigirSesion(data: { user?: User; token?: string } | undefined): {
+  user: User;
+  token: string;
+} {
+  if (!data?.user || !data.token) {
+    throw Object.assign(new Error("Respuesta incompleta del servidor."), {
+      response: {
+        data: {
+          message: "Respuesta incompleta del servidor. Intenta de nuevo.",
+        },
+      },
+    });
+  }
+  return { user: data.user, token: data.token };
+}
+
 /** La baseURL del client ya incluye /api, así que las rutas van sin ese prefijo. */
 export const authRepository = {
   /**
@@ -22,15 +43,12 @@ export const authRepository = {
       if (data.requires2FA) {
         return { requires2FA: true, correo: data.correo ?? payload.correo };
       }
-      return { requires2FA: false, user: data.user, token: data.token };
+      return { requires2FA: false, ...exigirSesion(data) };
     }),
 
   /** Segundo paso del login cuando la cuenta tiene 2FA activo. */
   confirm2FA: (correo: string, code: string): Promise<{ user: User; token: string }> =>
-    api.post("/auth/verify-2fa-login", { correo, code }).then((r) => ({
-      user: r.data.data.user,
-      token: r.data.data.token,
-    })),
+    api.post("/auth/verify-2fa-login", { correo, code }).then((r) => exigirSesion(r.data?.data)),
 
   /** Crea la cuenta y dispara el código de 6 dígitos al correo. No inicia sesión. */
   register: (payload: RegisterPayload): Promise<void> =>
@@ -38,10 +56,7 @@ export const authRepository = {
 
   /** Confirma el registro. El backend hace auto-login y devuelve user + token. */
   verifyRegistration: (correo: string, code: string): Promise<{ user: User; token: string }> =>
-    api.post("/auth/verify-registration", { correo, code }).then((r) => ({
-      user: r.data.data.user,
-      token: r.data.data.token,
-    })),
+    api.post("/auth/verify-registration", { correo, code }).then((r) => exigirSesion(r.data?.data)),
 
   resendCode: (correo: string, type: CodeType): Promise<void> =>
     api.post("/auth/resend-code", { correo, type }).then(() => undefined),

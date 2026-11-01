@@ -1,0 +1,19 @@
+defecto-2.json fallan 0 | máx integración 10185 | máx componentes 6982 | máx otras 2547 apiClient.test.ts
+INTEGRACION: archivo | 1ª prueba ms | prueba más lenta ms | suite ms | fallan
+integration/chatbotYChatEnVivo.test.tsx | 10185 | 10185 | 25229 | 0
+integration/recorridoCompleto.test.tsx | 9522 | 9522 | 30511 | 0
+integration/autenticacion.test.tsx | 8650 | 8650 | 25608 | 0
+integration/ofertasYDescuentoCarrito.test.tsx | 7890 | 7890 | 27908 | 0
+integration/arranqueDeLaApp.test.tsx | 4981 | 4981 | 16745 | 0
+integration/realidadAumentada.test.tsx | 1552 | 1552 | 13759 | 0
+integration/resenas.test.tsx | 690 | 6805 | 26843 | 0
+integration/compraDeExtremoAExtremo.test.tsx | 136 | 136 | 13217 | 0
+integration/sesionCompra.test.tsx | 83 | 139 | 1658 | 0
+integration/sesionCache.test.tsx | 80 | 147 | 2809 | 0
+integration/notificacionesPush.test.tsx | 59 | 9192 | 24745 | 0
+integration/favoritosApi.test.tsx | 46 | 48 | 2492 | 0
+integration/perfilYMiCuenta.test.tsx | 40 | 7786 | 14946 | 0
+integration/catalogoApi.test.tsx | 24 | 24 | 2151 | 0
+integration/sesionCaducada.test.tsx | 20 | 20 | 1551 | 0
+integration/extensionesServidorTienda.test.tsx | 6 | 11 | 1856 | 0
+

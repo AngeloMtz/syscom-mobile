@@ -1,0 +1,19 @@
+w2-1.json fallan 0 | máx integración 3568 | máx componentes 91 | máx otras 628 medirRendimiento.test.ts
+INTEGRACION: archivo | 1ª prueba ms | prueba más lenta ms | suite ms | fallan
+integration/chatbotYChatEnVivo.test.tsx | 3568 | 3568 | 8840 | 0
+integration/recorridoCompleto.test.tsx | 645 | 645 | 3430 | 0
+integration/autenticacion.test.tsx | 362 | 362 | 1699 | 0
+integration/arranqueDeLaApp.test.tsx | 231 | 231 | 1571 | 0
+integration/ofertasYDescuentoCarrito.test.tsx | 131 | 131 | 913 | 0
+integration/sesionCompra.test.tsx | 73 | 131 | 580 | 0
+integration/sesionCache.test.tsx | 63 | 123 | 661 | 0
+integration/realidadAumentada.test.tsx | 46 | 46 | 688 | 0
+integration/notificacionesPush.test.tsx | 41 | 3258 | 8654 | 0
+integration/resenas.test.tsx | 18 | 94 | 1340 | 0
+integration/compraDeExtremoAExtremo.test.tsx | 17 | 17 | 527 | 0
+integration/sesionCaducada.test.tsx | 12 | 12 | 437 | 0
+integration/catalogoApi.test.tsx | 11 | 11 | 509 | 0
+integration/favoritosApi.test.tsx | 7 | 7 | 413 | 0
+integration/perfilYMiCuenta.test.tsx | 3 | 89 | 778 | 0
+integration/extensionesServidorTienda.test.tsx | 2 | 4 | 334 | 0
+

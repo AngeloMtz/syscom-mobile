@@ -23,7 +23,7 @@ No se repite aquí. Las tablas de trazabilidad por sprint están en [sprint-1.md
 | `npx expo-doctor` | **19/20. FALLA 1 verificación**: 12 paquetes de Expo/React Native con parche anterior al esperado por el SDK 58. #121 está cerrado como obsoleto y no hay issue abierto para esto | #45 |
 | Comparación con la primera pasada (#1–#15) | Ninguna historia bajó; ningún archivo de prueba desapareció (sección 3) | #45 |
 | Producción sin prueba (cambios desde `ef804cf`) | 109 archivos cambiados; **15 sin ninguna prueba que los importe** (pantallas y componentes de vista) (sección 4) | #45 |
-| Regresión manual (APK `5df5c1be`, commit `68a572c`, Samsung A16, 2026-11-01) | 51 filas: 9 ya cubiertas en #43/#40, **37 Pasa (según Angel, sin captura)**, **5 No verificable** (AR en el A16, anotación dudosa de B08 y enlace del APK sin compartir), **0 Falla**, 0 pendientes (sección 5) | #45 |
+| Regresión manual (APK `5df5c1be`, commit `68a572c`, Samsung A16, 2026-11-01) | 51 filas: 9 ya cubiertas en #43/#40, **39 Pasa (según Angel, sin captura)**, **3 No verificable** (AR en el A16 ×2 y enlace del APK sin compartir), **0 Falla**, 0 pendientes (sección 5) | #45 |
 
 ## 2. Parte automática
 
@@ -252,8 +252,8 @@ Los criterios salen de los issues #1–#20. La regresión manual **se ejecutó e
 **HU #4 — Perfil de usuario**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Muestra nombre, correo y datos de contacto | 1. Más → Perfil. 2. Confirmar nombre, correo y teléfono/contacto de la cuenta. | **No verificable** — guía B08. En la columna «Resultado» la guía escribe «No verificable: el Samsung A16 no es compatible con ARCore». Ese texto corresponde a la AR (C09) y parece pegado por error en B08, y la tabla de cierre de la misma guía cuenta B08 como «Pasa». No se interpreta: la fila queda como la guía la registró, hasta que Angel confirme. |
-| Edita y guarda contra la API | 1. Más → Perfil → datos personales. 2. Cambiar un dato y guardar. 3. Salir y volver: el cambio persiste. 4. Probar un dato inválido: muestra error. | **No verificable** — guía B08 (mismo resultado que la fila anterior). Aparte, la guía A2 (**Pasa (según Angel, sin captura)**) anota que desde Perfil se puede editar el nombre a otro de 3 letras; eso no cubre los otros datos ni el dato inválido que pide B08. |
+| Muestra nombre, correo y datos de contacto | 1. Más → Perfil. 2. Confirmar nombre, correo y teléfono/contacto de la cuenta. | **Pasa (según Angel, sin captura)** — guía B08. Angel corrigió la guía el 2026-11-02: el «No verificable» que traía B08 era un texto pegado por error (pertenecía a la AR, C09). |
+| Edita y guarda contra la API | 1. Más → Perfil → datos personales. 2. Cambiar un dato y guardar. 3. Salir y volver: el cambio persiste. 4. Probar un dato inválido: muestra error. | **Pasa (según Angel, sin captura)** — guía B08 (misma corrección que la fila anterior); la guía A2 (**Pasa (según Angel, sin captura)**) confirma además que desde Perfil se edita el nombre. |
 | Cerrar sesión funcional | 1. Tocar cerrar sesión. 2. Confirmar que regresa a login y que el carrito/perfil ya no son accesibles. | **Pasa (según Angel, sin captura)** — guía B07. Cierra sesión y reabre: pide login y Carrito/Perfil no son accesibles. |
 
 **HU #5 — Onboarding y splash**
@@ -375,18 +375,18 @@ Se explican en [integracion-completa.md](integracion-completa.md), sección «Ha
 | Estado | Filas |
 |---|---|
 | Ya cubiertas en #43/e43 o #40 (no se repitieron) | 9 |
-| **Pasa (según Angel, sin captura)** | 37 |
-| **No verificable** | 5 |
+| **Pasa (según Angel, sin captura)** | 39 |
+| **No verificable** | 3 |
 | **Falla** | 0 |
 | Pendientes de validación | 0 |
 
 Además hay una fila agrupada de «Cambios del Sprint 5» (10 pasos de #43, ya cubiertos) que no se cuenta arriba, y la prueba A3 de la guía (nombre e ícono de la app, #168; «Pasa» según Angel: «Se muestra bien en todo momento, hasta en las notis»), que corresponde a esa fila agrupada y no se cuenta aparte.
 
-**Filas no verificables (5):** «Muestra nombre, correo y datos de contacto» y «Edita y guarda contra la API» (HU #4, por el resultado de B08 que parece un error de la guía); «Botón Ver en AR» y «Funciona en al menos un producto de prueba» (HU #16, el A16 no es compatible con ARCore) y «Build de APK compartido con los docentes» (HU #20, el enlace no se ha compartido).
+**Filas no verificables (3):** «Botón Ver en AR» y «Funciona en al menos un producto de prueba» (HU #16, el A16 no es compatible con ARCore) y «Build de APK compartido con los docentes» (HU #20, el enlace no se ha compartido).
 
-### Incoherencias de la guía (no corregidas)
-- **B08:** su resultado dice «No verificable: el Samsung A16 no es compatible con ARCore», texto que no corresponde a un Perfil. Se copió tal cual.
-- **Tabla de cierre de la guía:** cuenta 20/20 de la Parte B y 11/11 de la Parte C como «Pasan» con 0 no probados, pero las filas B08 y C09 dicen «No verificable». Este reporte usa lo que dicen las filas, no esa tabla.
+### Corrección de la guía y coherencia de su cierre
+- **B08:** la primera versión de la guía traía «No verificable: el Samsung A16 no es compatible con ARCore», texto pegado por error. Angel la corrigió el 2026-11-02 a «Pasa» y la guía de este repositorio es la versión corregida. En la guía corregida también cambió la tabla de cierre de la Parte C, de 11/11 a 10 pasan y 1 no probado (C09).
+- **Tabla de cierre de la guía, ahora coherente con las filas:** Parte A 3/3, Parte B 20/20 (B08 incluida) y Parte C 10 de 11 con 1 no probado (C09). Ya no hay contradicción entre las filas y esa tabla.
 - **Conteo:** la guía tiene 34 puntos (3 + 20 + 11) y este reporte 51 filas, porque varias filas se cubren con el mismo punto de la guía (por ejemplo B09 cubre dos y B14 otras dos).
 
 ### Limitaciones de la regresión manual
@@ -423,10 +423,10 @@ No se encontraron fallas de aserción en las pruebas, salvo la de `perfilYMiCuen
 - No se corrigió nada, según lo pedido. [advertencias-y-vulnerabilidades.md](advertencias-y-vulnerabilidades.md) quedó desactualizado respecto a las cifras de hoy (45 contra 3); no lo edité.
 
 ## 8. Pendientes
-- **Regresión manual:** ejecutada (sección 5). Quedan **5 filas no verificables**: Perfil (HU #4, 2 filas, por la anotación dudosa de B08), AR (HU #16, 2 filas, sin teléfono compatible con ARCore) y el enlace del APK a los docentes (HU #20). Falta confirmar B08 con Angel.
+- **Regresión manual:** ejecutada (sección 5). Quedan **3 filas no verificables**: AR (HU #16, 2 filas, sin teléfono compatible con ARCore) y el enlace del APK a los docentes (HU #20).
 - **Investigar los timeouts** del paralelismo por defecto (sección 2.4) y decidir si se sube el tiempo límite de las pruebas de integración o se reduce el trabajo de su primera prueba. Sin issue todavía.
 - **Alinear los 12 paquetes de Expo** (`npx expo install --check`) y revisar las 42 moderadas de `npm audit`.
-- **#45:** el PR de esta actualización lo cierra; si Angel prefiere cerrarlo a mano, conviene hacerlo tras revisar las 5 filas no verificables.
+- **#45:** el PR de esta actualización lo cierra; si Angel prefiere cerrarlo a mano, conviene hacerlo tras revisar las 3 filas no verificables.
 - Heredados de #44 y #43: la sesión caducada y el nombre de 3 a 40 letras ya se probaron (según Angel, sin captura; ver las limitaciones de la sección 5) y la reseña aprobada visible pasó (B20). Siguen pendientes la AR en otro dispositivo, iOS (no hay build) y compartir el APK con los docentes.
 - Las 15 vistas sin ninguna prueba (sección 4) quedan solo con regresión manual.
 

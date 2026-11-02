@@ -100,7 +100,7 @@ Son los puntos que más riesgo tienen de haberse roto y que #43 no cubrió compl
 | B05 | Errores de credenciales claros | Prueba contraseña incorrecta, correo inexistente y registro con contraseña débil. Lee cada mensaje | Cada caso da un mensaje claro y distinto, sin pantalla rota | Pasa |  |
 | B06 | Recuperar contraseña | «Olvidé mi contraseña» → código y nueva contraseña → inicia con la nueva | Entra con la contraseña nueva | Pasa |  |
 | B07 | Sesión se restaura y se cierra | Inicia sesión. Cierra y reabre la app. Después cierra sesión y reabre | Primero sigue iniciada; después pide login y Carrito/Perfil no son accesibles | Pasa |  |
-| B08 | Perfil muestra y edita datos | Más → Perfil: revisa nombre, correo y teléfono. Cambia un dato, guarda, sal y vuelve. Prueba un dato inválido | Muestra los datos; el cambio persiste; el dato inválido da error | No verificable: el Samsung A16 no es compatible con ARCore |  |
+| B08 | Perfil muestra y edita datos | Más → Perfil: revisa nombre, correo y teléfono. Cambia un dato, guarda, sal y vuelve. Prueba un dato inválido | Muestra los datos; el cambio persiste; el dato inválido da error | Pasa |  |
 | B09 | Pestañas y transiciones | Toca Inicio, Catálogo, Carrito, Servicios y Más. Entra y sal de un producto y un servicio. Cambia de pestaña varias veces | Cada pestaña abre su pantalla; sin parpadeos, cierres ni pantallas en blanco | Pasa |  |
 | B10 | Catálogo: carga y categoría | Abre Catálogo (con red lenta si puedes). Toca una categoría | Se ve el indicador de carga y después solo productos de esa categoría | Pasa |  |
 | B11 | Paginación y estado vacío | Baja hasta el final de una categoría grande. Busca algo que no exista | Se cargan más productos sin duplicados; la búsqueda vacía muestra el mensaje de vacío | Pasa |  |
@@ -140,7 +140,7 @@ Cuando termines, llena este resumen y pégamelo (o pégaselo a Claude Code): con
 | --- | --- | --- | --- | --- |
 | Parte A (lo nuevo) | 3 | 3 | 0 | 0 |
 | Parte B (prioritarios) | 20 | 20 | 0 | 0 |
-| Parte C (restantes) | 11 | 11 | 0 | 0 |
+| Parte C (restantes) | 11 | 10 | 0 | 1 |
 
 **Defectos encontrados**
 

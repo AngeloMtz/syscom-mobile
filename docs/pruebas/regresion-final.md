@@ -3,9 +3,9 @@
 - **Fecha:** 2026-10-31
 - **Rama:** `test/45-regresion-final`
 - **Historias cubiertas:** #1–#20 (Sprints 1 a 5)
-- **Responsable de pruebas:** @AngeloMtz (parte automática ejecutada con Claude; parte manual pendiente)
+- **Responsable de pruebas:** @AngeloMtz (parte automática ejecutada con Claude; parte manual ejecutada por Angel el 2026-11-01)
 - **Commit probado:** `67391840b7a38b3cec1cee44dcb471a9131a0380` (`develop`, Merge pull request #177, «test: integración completa de los módulos (#44)»). El CI de `develop` en ese commit está en verde (workflow CI, conclusión `success`).
-- **Alcance:** parte automática de la regresión final y redacción de la lista manual. Este PR usa `Refs #45` y **no** cierra #45: el cierre lo hace Angel después de la parte manual.
+- **Alcance:** parte automática de la regresión final y redacción de la lista manual. La parte automática se entregó en el PR #178 (`Refs #45`). **Actualización 2026-11-02:** la parte manual ya se ejecutó (sección 5) y el PR que la registra cierra #45.
 - **Sin cambios de código de producción** en este PR: solo documentos y evidencia.
 
 ## Planeación: trazabilidad historia → funciones → pruebas
@@ -23,7 +23,7 @@ No se repite aquí. Las tablas de trazabilidad por sprint están en [sprint-1.md
 | `npx expo-doctor` | **19/20. FALLA 1 verificación**: 12 paquetes de Expo/React Native con parche anterior al esperado por el SDK 58. #121 está cerrado como obsoleto y no hay issue abierto para esto | #45 |
 | Comparación con la primera pasada (#1–#15) | Ninguna historia bajó; ningún archivo de prueba desapareció (sección 3) | #45 |
 | Producción sin prueba (cambios desde `ef804cf`) | 109 archivos cambiados; **15 sin ninguna prueba que los importe** (pantallas y componentes de vista) (sección 4) | #45 |
-| Regresión manual | **PENDIENTE DE VALIDACIÓN MANUAL**: 51 filas, 9 ya cubiertas en #43/#40, 4 parciales y 38 pendientes (sección 5) | #45 |
+| Regresión manual (APK `5df5c1be`, commit `68a572c`, Samsung A16, 2026-11-01) | 51 filas: 9 ya cubiertas en #43/#40, **37 Pasa (según Angel, sin captura)**, **5 No verificable** (AR en el A16, anotación dudosa de B08 y enlace del APK sin compartir), **0 Falla**, 0 pendientes (sección 5) | #45 |
 
 ## 2. Parte automática
 
@@ -206,122 +206,133 @@ Ya estaban declaradas como «sin prueba automática» en [sprint-4.md](sprint-4.
 
 ## 5. Regresión manual
 
-Los criterios salen de los issues #1–#20. Ejecutar en el APK final (o Expo Go/emulador) con una cuenta de prueba (ver [datos-de-prueba.md](datos-de-prueba.md)) y Stripe en modo de prueba. Esta sección **no se ejecutó**: Claude solo la redactó. Cada fila tiene uno de dos estados:
+Los criterios salen de los issues #1–#20. La regresión manual **se ejecutó el 2026-11-01** y Angel la registró en la [guía de regresión manual](regresion-manual-sprint-5.md), copiada sin cambios. Este reporte copia sus resultados; Claude no ejecutó nada en el dispositivo.
 
-- **Ya cubierta en #43/e43** (o en #40 para #16–#18): [sprint-5-aceptacion.md](sprint-5-aceptacion.md) o [sprint-4.md](sprint-4.md) ya la validó, con el enlace a la captura o al reporte. «Cubierta» respeta las reservas que esos reportes anotan (por ejemplo, «OK según Angel» sin captura).
-- **PENDIENTE DE VALIDACIÓN MANUAL:** marcar `[ ] Pasa` o `[ ] Falla` y anotar observaciones. Si algo falla, guardar captura en `docs/pruebas/evidencia/regresion-final/` y abrir un issue; no se corrige dentro de este PR.
+**APK probado**
 
-Una fila queda como pendiente aunque #43 haya cubierto una parte: en esos casos se dice qué parte falta.
+| Dato | Valor |
+|---|---|
+| Build de EAS | `5df5c1be-f073-4c20-8f68-384ede518e18` |
+| Commit de `develop` | `68a572c` (incluye #172, #174, #179, #180 y #181) |
+| Dispositivo | Samsung A16, Android 16 |
+| Fecha y hora | 01/11/2026, 10:00 p. m. |
+| Probado por | Angel |
+| Excepción | La fila de **sesión caducada** (A1) no se hizo con el APK, sino en Expo Go con el backend local y la rama de pruebas de Neon, para no tocar producción |
 
-Resultado de las pendientes: `[ ] Pasa` · `[ ] Falla` · Observaciones: ______
+**Cómo leer los resultados**
+- **Pasa (según Angel, sin captura):** el resultado es el que Angel anotó en la guía. La guía prevé guardar capturas, pero no se entregó ninguna con estos resultados; por eso ninguna fila tiene captura. Claude no pudo comprobarlos.
+- **Falla:** ninguna fila.
+- **No verificable:** la guía lo registró así, o falta una condición que no se ha dado.
+- **Ya cubierta en #43/e43** (o #40): [sprint-5-aceptacion.md](sprint-5-aceptacion.md) o [sprint-4.md](sprint-4.md) ya la validó, con las reservas que esos reportes anotan. No se repitió en esta pasada.
+- La columna de observaciones de la guía está vacía salvo C02, C09 y C11, y las observaciones de A1, A2 y A3.
 
 ### Sprint 1
 **HU #1 — Proyecto base**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Corre en Expo Go sin errores | 1. `npx expo start`. 2. Abrir en Expo Go (SDK 58). 3. Ver que carga sin pantalla roja ni errores en consola. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla. Nota: el APK `preview` de #43 abrió y cargó datos reales (sección 4.3, paso 3.9), pero eso no es Expo Go |
-| Estructura documentada en el README | 1. Abrir `README.md`. 2. Confirmar que describe la estructura de carpetas. (La sección «Estructura del proyecto» existe en la línea 82 del README de este commit.) | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Variable de entorno con la URL base | 1. Revisar `.env.example` con la variable `EXPO_PUBLIC_*` de la API. 2. Con `.env` creado, confirmar que la app consume esa URL (el catálogo carga datos). | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla. Nota: #43 3.9 «OK implícito», sin prueba específica con un build sin la variable |
+| Corre en Expo Go sin errores | 1. `npx expo start`. 2. Abrir en Expo Go (SDK 58). 3. Ver que carga sin pantalla roja ni errores en consola. | **Pasa (según Angel, sin captura)** — guía C01. |
+| Estructura documentada en el README | 1. Abrir `README.md`. 2. Confirmar que describe la estructura de carpetas. (La sección «Estructura del proyecto» existe en la línea 82 del README de este commit.) | **Pasa (según Angel, sin captura)** — guía C02. Observación de Angel (copiada): «Aqui falta actualizar el readme sobre algunos, apartados nuevos como el de promociones y servcios. Al igual que los cambios en los issues, como el de E2E.» |
+| Variable de entorno con la URL base | 1. Revisar `.env.example` con la variable `EXPO_PUBLIC_*` de la API. 2. Con `.env` creado, confirmar que la app consume esa URL (el catálogo carga datos). | **Pasa (según Angel, sin captura)** — guía C03. |
 
 **HU #2 — Navegación principal** (contra las 5 pestañas vigentes: Inicio, Catálogo, Carrito, Servicios, Más)
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Las pestañas navegan sin errores | 1. Tocar en orden Inicio, Catálogo, Carrito, Servicios, Más. 2. Confirmar que cada una abre su pantalla y los títulos e íconos son correctos. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla. (Sin pruebas automáticas; `(tabs)/_layout.tsx` está en la lista de la sección 4) |
-| Perfil desde Más | 1. Entrar a Más. 2. Abrir Perfil. 3. Volver con atrás. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Transiciones fluidas | 1. Entrar y salir de un detalle (producto, servicio). 2. Cambiar de pestaña repetidamente. 3. Sin parpadeos, cierres ni pantallas en blanco. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Las pestañas navegan sin errores | 1. Tocar en orden Inicio, Catálogo, Carrito, Servicios, Más. 2. Confirmar que cada una abre su pantalla y los títulos e íconos son correctos. | **Pasa (según Angel, sin captura)** — guía B09. |
+| Perfil desde Más | 1. Entrar a Más. 2. Abrir Perfil. 3. Volver con atrás. | **Pasa (según Angel, sin captura)** — guía C04. |
+| Transiciones fluidas | 1. Entrar y salir de un detalle (producto, servicio). 2. Cambiar de pestaña repetidamente. 3. Sin parpadeos, cierres ni pantallas en blanco. | **Pasa (según Angel, sin captura)** — guía B09. |
 
 **HU #3 — Registro e inicio de sesión**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Usuario puede registrarse y loguearse | 1. Registrar usuario nuevo y confirmar con el código de verificación. 2. Cerrar sesión. 3. Iniciar sesión (con 2FA si aplica). | **Parcial.** El inicio de sesión ya está cubierto en #43: paso 2, [e43-13](evidencia/sprint-5/e43/e43-13-inicio-sesion-iniciada.jpeg). **Falta** el registro con código de verificación y el 2FA: PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Token guardado de forma segura | 1. Iniciar sesión. 2. Cerrar y reabrir la app: la sesión se restaura. 3. Cerrar sesión: al reabrir pide login. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Mensajes de error claros con credenciales inválidas | 1. Login con contraseña incorrecta. 2. Login con correo inexistente. 3. Registro con correo inválido o contraseña débil. 4. Leer el mensaje en cada caso. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Recuperación de contraseña (flujo asociado) | 1. «Olvidé mi contraseña». 2. Código y nueva contraseña. 3. Iniciar con la nueva. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Usuario puede registrarse y loguearse | 1. Registrar usuario nuevo y confirmar con el código de verificación. 2. Cerrar sesión. 3. Iniciar sesión (con 2FA si aplica). | **Pasa (según Angel, sin captura)** — guía B03 (registro con código) y B04 (inicio de sesión con 2FA).. El inicio de sesión ya estaba cubierto en #43 ([e43-13](evidencia/sprint-5/e43/e43-13-inicio-sesion-iniciada.jpeg)). |
+| Token guardado de forma segura | 1. Iniciar sesión. 2. Cerrar y reabrir la app: la sesión se restaura. 3. Cerrar sesión: al reabrir pide login. | **Pasa (según Angel, sin captura)** — guía B07. |
+| Mensajes de error claros con credenciales inválidas | 1. Login con contraseña incorrecta. 2. Login con correo inexistente. 3. Registro con correo inválido o contraseña débil. 4. Leer el mensaje en cada caso. | **Pasa (según Angel, sin captura)** — guía B05. |
+| Recuperación de contraseña (flujo asociado) | 1. «Olvidé mi contraseña». 2. Código y nueva contraseña. 3. Iniciar con la nueva. | **Pasa (según Angel, sin captura)** — guía B06. |
 
 **HU #4 — Perfil de usuario**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Muestra nombre, correo y datos de contacto | 1. Más → Perfil. 2. Confirmar nombre, correo y teléfono/contacto de la cuenta. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla. (#43 3.6 solo validó que Mi cuenta no muestre las seis opciones sin desarrollar: [e43-20](evidencia/sprint-5/e43/e43-20-mi-cuenta.jpeg)) |
-| Edita y guarda contra la API | 1. Más → Perfil → datos personales. 2. Cambiar un dato y guardar. 3. Salir y volver: el cambio persiste. 4. Probar un dato inválido: muestra error. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla. Ver también la fila «Nombre de 3 a 40 letras» más abajo |
-| Cerrar sesión funcional | 1. Tocar cerrar sesión. 2. Confirmar que regresa a login y que el carrito/perfil ya no son accesibles. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Muestra nombre, correo y datos de contacto | 1. Más → Perfil. 2. Confirmar nombre, correo y teléfono/contacto de la cuenta. | **No verificable** — guía B08. En la columna «Resultado» la guía escribe «No verificable: el Samsung A16 no es compatible con ARCore». Ese texto corresponde a la AR (C09) y parece pegado por error en B08, y la tabla de cierre de la misma guía cuenta B08 como «Pasa». No se interpreta: la fila queda como la guía la registró, hasta que Angel confirme. |
+| Edita y guarda contra la API | 1. Más → Perfil → datos personales. 2. Cambiar un dato y guardar. 3. Salir y volver: el cambio persiste. 4. Probar un dato inválido: muestra error. | **No verificable** — guía B08 (mismo resultado que la fila anterior). Aparte, la guía A2 (**Pasa (según Angel, sin captura)**) anota que desde Perfil se puede editar el nombre a otro de 3 letras; eso no cubre los otros datos ni el dato inválido que pide B08. |
+| Cerrar sesión funcional | 1. Tocar cerrar sesión. 2. Confirmar que regresa a login y que el carrito/perfil ya no son accesibles. | **Pasa (según Angel, sin captura)** — guía B07. Cierra sesión y reabre: pide login y Carrito/Perfil no son accesibles. |
 
 **HU #5 — Onboarding y splash**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Aparece la primera vez y no vuelve | 1. Instalar/limpiar datos de la app. 2. Abrir: se ve el onboarding. 3. Terminarlo, cerrar y reabrir: no vuelve a aparecer. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Botón «Omitir» funcional | 1. Con datos limpios, abrir y tocar «Omitir». 2. Llega a la app y al reabrir no reaparece. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Aparece la primera vez y no vuelve | 1. Instalar/limpiar datos de la app. 2. Abrir: se ve el onboarding. 3. Terminarlo, cerrar y reabrir: no vuelve a aparecer. | **Pasa (según Angel, sin captura)** — guía B01. |
+| Botón «Omitir» funcional | 1. Con datos limpios, abrir y tocar «Omitir». 2. Llega a la app y al reabrir no reaparece. | **Pasa (según Angel, sin captura)** — guía B02. |
 
 ### Sprint 2
 **HU #6 — Listado de categorías**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Carga desde la API con estado de loading | 1. Abrir Catálogo (con red lenta si es posible). 2. Ver indicador de carga y luego las categorías. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Tap en categoría lleva al listado filtrado | 1. Tocar una categoría. 2. Ver solo productos de esa categoría. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Carga desde la API con estado de loading | 1. Abrir Catálogo (con red lenta si es posible). 2. Ver indicador de carga y luego las categorías. | **Pasa (según Angel, sin captura)** — guía B10. |
+| Tap en categoría lleva al listado filtrado | 1. Tocar una categoría. 2. Ver solo productos de esa categoría. | **Pasa (según Angel, sin captura)** — guía B10. |
 
 **HU #7 — Productos por categoría**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Muestra imagen, nombre y precio | 1. Abrir una categoría con productos. 2. Cada tarjeta muestra imagen, nombre y precio. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Paginación / scroll infinito | 1. Bajar hasta el final de una categoría grande. 2. Se cargan más productos sin duplicados. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Estado vacío | 1. Abrir una categoría sin productos (o buscar algo sin resultados). 2. Aparece el mensaje de vacío. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Muestra imagen, nombre y precio | 1. Abrir una categoría con productos. 2. Cada tarjeta muestra imagen, nombre y precio. | **Pasa (según Angel, sin captura)** — guía C05. |
+| Paginación / scroll infinito | 1. Bajar hasta el final de una categoría grande. 2. Se cargan más productos sin duplicados. | **Pasa (según Angel, sin captura)** — guía B11. |
+| Estado vacío | 1. Abrir una categoría sin productos (o buscar algo sin resultados). 2. Aparece el mensaje de vacío. | **Pasa (según Angel, sin captura)** — guía B11. |
 
 **HU #8 — Buscador**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Búsqueda por texto relevante | 1. Abrir el buscador. 2. Escribir un nombre de producto conocido. 3. Los resultados corresponden al texto. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Filtros de precio mín/máx | 1. Aplicar mínimo y máximo. 2. Todos los resultados están dentro del rango. 3. Probar mínimo > máximo: muestra error. 4. Quitar filtros. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Filtro por categoría | 1. Filtrar por una categoría. 2. Solo salen productos de ella. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Búsqueda por texto relevante | 1. Abrir el buscador. 2. Escribir un nombre de producto conocido. 3. Los resultados corresponden al texto. | **Pasa (según Angel, sin captura)** — guía B12. |
+| Filtros de precio mín/máx | 1. Aplicar mínimo y máximo. 2. Todos los resultados están dentro del rango. 3. Probar mínimo > máximo: muestra error. 4. Quitar filtros. | **Pasa (según Angel, sin captura)** — guía B12. |
+| Filtro por categoría | 1. Filtrar por una categoría. 2. Solo salen productos de ella. | **Pasa (según Angel, sin captura)** — guía C06. |
 
 **HU #9 — Detalle de producto**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Carrusel de imágenes | 1. Abrir un producto con varias imágenes. 2. Deslizar entre ellas. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Variantes y stock | 1. Abrir un producto con variantes y elegir una. 2. Una variante sin stock aparece deshabilitada. 3. Producto agotado: no se puede agregar. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Carrusel de imágenes | 1. Abrir un producto con varias imágenes. 2. Deslizar entre ellas. | **Pasa (según Angel, sin captura)** — guía C07. |
+| Variantes y stock | 1. Abrir un producto con variantes y elegir una. 2. Una variante sin stock aparece deshabilitada. 3. Producto agotado: no se puede agregar. | **Pasa (según Angel, sin captura)** — guía B13. |
 | Botón «Agregar al carrito» visible | 1. En el detalle, ver el botón sin tener que buscarlo. 2. Tocarlo y confirmar que el producto aparece en Carrito. | **Ya cubierta en #43/e43** (pasos 3 y 4 del #20): [e43-08](evidencia/sprint-5/e43/e43-08-detalle-producto.jpeg) y [e43-09](evidencia/sprint-5/e43/e43-09-carrito.jpeg). Reserva: ninguna captura muestra el toque del botón; se infiere de que el producto llega al carrito |
 
 **HU #10 — Favoritos**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Corazón alterna favorito | 1. Tocar el corazón en un producto: queda activo. 2. Tocarlo otra vez: se desactiva. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Lista persiste entre sesiones | 1. Marcar 2 favoritos. 2. Abrir favoritos (Más → Perfil → Favoritos). 3. Cerrar sesión, volver a entrar (o reiniciar la app): siguen ahí. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Corazón alterna favorito | 1. Tocar el corazón en un producto: queda activo. 2. Tocarlo otra vez: se desactiva. | **Pasa (según Angel, sin captura)** — guía B14. |
+| Lista persiste entre sesiones | 1. Marcar 2 favoritos. 2. Abrir favoritos (Más → Perfil → Favoritos). 3. Cerrar sesión, volver a entrar (o reiniciar la app): siguen ahí. | **Pasa (según Angel, sin captura)** — guía B14. |
 
 ### Sprint 3
 **HU #11 — Carrito**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Suma total en tiempo real | 1. Agregar 2 productos. 2. Cambiar cantidades con +/−. 3. El total se actualiza al instante y coincide con precio × cantidad. | **Parcial.** #43 validó el total con y sin descuento ([e43-18](evidencia/sprint-5/e43/e43-18-carrito-descuento.jpeg), [e43-19](evidencia/sprint-5/e43/e43-19-carrito-con-y-sin-descuento.jpeg)). **Falta** cambiar cantidades con +/−: PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Eliminar quita producto y total | 1. Eliminar un producto. 2. Desaparece de la lista y el total baja. 3. Vaciar el carrito: aparece el estado vacío. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Suma total en tiempo real | 1. Agregar 2 productos. 2. Cambiar cantidades con +/−. 3. El total se actualiza al instante y coincide con precio × cantidad. | **Pasa (según Angel, sin captura)** — guía B15. El total con descuento ya estaba cubierto en #43 ([e43-18](evidencia/sprint-5/e43/e43-18-carrito-descuento.jpeg)). |
+| Eliminar quita producto y total | 1. Eliminar un producto. 2. Desaparece de la lista y el total baja. 3. Vaciar el carrito: aparece el estado vacío. | **Pasa (según Angel, sin captura)** — guía B15. |
 
 **HU #12 — Dirección de envío**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Valida campos obligatorios | 1. Desde el checkout, nueva dirección. 2. Dejar campos vacíos o inválidos (código postal, teléfono) y guardar. 3. Muestra errores por campo. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Guardar para futuras compras | 1. Guardar una dirección válida. 2. Salir y volver al checkout: aparece para seleccionar. 3. Editar y eliminar funcionan. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla. (#43 usó una dirección ya guardada: se ve en [e43-09](evidencia/sprint-5/e43/e43-09-carrito.jpeg), pero no se probó crear, editar ni eliminar) |
+| Valida campos obligatorios | 1. Desde el checkout, nueva dirección. 2. Dejar campos vacíos o inválidos (código postal, teléfono) y guardar. 3. Muestra errores por campo. | **Pasa (según Angel, sin captura)** — guía B16. |
+| Guardar para futuras compras | 1. Guardar una dirección válida. 2. Salir y volver al checkout: aparece para seleccionar. 3. Editar y eliminar funcionan. | **Pasa (según Angel, sin captura)** — guía B16. |
 
 **HU #13 — Pago con Stripe (sandbox)**
 | Criterio | Pasos | Resultado |
 |---|---|---|
 | Pago de prueba procesado | 1. Checkout con carrito y dirección. 2. Pagar con tarjeta de prueba la tarjeta de prueba aprobada de Stripe (ver datos-de-prueba.md). 3. El pago se confirma y el pedido aparece (requiere webhook activo, `stripe listen` o el webhook de producción). | **Ya cubierta en #43/e43** (paso 5 y 6 del #20): el pedido aparece confirmado en [e43-10](evidencia/sprint-5/e43/e43-10-pedido-confirmado.jpeg). Reserva: el paso 5 (pago) es «OK según Angel» y no hay captura publicada por datos personales |
-| Errores de pago con mensaje claro | 1. Pagar con tarjeta rechazada de prueba la tarjeta de prueba rechazada de Stripe (ver datos-de-prueba.md). 2. Mensaje claro y el carrito se conserva. 3. Cancelar la hoja de pago: no se crea cobro. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Errores de pago con mensaje claro | 1. Pagar con tarjeta rechazada de prueba la tarjeta de prueba rechazada de Stripe (ver datos-de-prueba.md). 2. Mensaje claro y el carrito se conserva. 3. Cancelar la hoja de pago: no se crea cobro. | **Pasa (según Angel, sin captura)** — guía B17. |
 
 **HU #14 — Confirmación y resumen**
 | Criterio | Pasos | Resultado |
 |---|---|---|
 | Muestra folio de orden | 1. Tras un pago exitoso, ver la confirmación. 2. Muestra folio, productos, total y método de pago. | **Ya cubierta en #43/e43** (paso 6): [e43-10](evidencia/sprint-5/e43/e43-10-pedido-confirmado.jpeg), folio y total. Reserva: el reporte de #43 anota folio y total; no anota productos ni método de pago |
-| Botón para volver al inicio | 1. Tocar el botón desde la confirmación. 2. Llega a Inicio. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Botón para volver al inicio | 1. Tocar el botón desde la confirmación. 2. Llega a Inicio. | **Pasa (según Angel, sin captura)** — guía C08. |
 
 **HU #15 — Historial de pedidos**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Fecha, total y estado de cada pedido | 1. Abrir el historial (Más → Perfil → Pedidos). 2. Cada pedido muestra fecha, total y estado. 3. Sin pedidos: estado vacío. | **Parcial.** Ya cubierta en #43/e43 (paso 7) la lista con pedidos: [e43-11](evidencia/sprint-5/e43/e43-11-mis-pedidos.jpeg). **Falta** el estado vacío con una cuenta sin pedidos: PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| Tap abre el detalle | 1. Tocar un pedido. 2. Ver su detalle (productos, total, estado). 3. Volver. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| Fecha, total y estado de cada pedido | 1. Abrir el historial (Más → Perfil → Pedidos). 2. Cada pedido muestra fecha, total y estado. 3. Sin pedidos: estado vacío. | **Pasa (según Angel, sin captura)** — guía B18. La lista con pedidos ya estaba cubierta en #43 ([e43-11](evidencia/sprint-5/e43/e43-11-mis-pedidos.jpeg)); B18 añade el estado vacío con la cuenta sin pedidos. |
+| Tap abre el detalle | 1. Tocar un pedido. 2. Ver su detalle (productos, total, estado). 3. Volver. | **Pasa (según Angel, sin captura)** — guía B18. |
 
 ### Sprint 4
 **HU #16 — Realidad aumentada**
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| Botón «Ver en AR» abre la cámara con el modelo del producto | 1. Abrir un producto con modelo 3D. 2. Tocar «Ver en Realidad Aumentada». 3. Tocar «Ver en tu espacio» y colocar el modelo. | PENDIENTE DE VALIDACIÓN MANUAL **en el APK final y en otro dispositivo**. En #40 cumplió ([hu16-boton-ar](evidencia/sprint-4/hu16-boton-ar.jpeg), [hu16-visor-3d](evidencia/sprint-4/hu16-visor-3d.jpeg), [hu16-ar-escena](evidencia/sprint-4/hu16-ar-escena.jpeg)) con una development build **anterior a SDK 58**. En #43 (APK final, Samsung Galaxy A16) **no funciona**: paso 12, según Angel Google Play Services para RA indica que el teléfono ya no es compatible; Claude no lo verificó. Es un resultado contradictorio entre los dos reportes, sin resolver. [ ] Pasa [ ] Falla |
-| Funciona en al menos un producto de prueba | 1. Repetir con otro producto con modelo. 2. Producto sin modelo: no aparece el botón. | PENDIENTE DE VALIDACIÓN MANUAL (mismo motivo). [ ] Pasa [ ] Falla |
+| Botón «Ver en AR» abre la cámara con el modelo del producto | 1. Abrir un producto con modelo 3D. 2. Tocar «Ver en Realidad Aumentada». 3. Tocar «Ver en tu espacio» y colocar el modelo. | **No verificable** — guía C09. Angel anota: el Samsung A16 ya no es compatible con ARCore (Google Play Services para RA) y no hay otro teléfono compatible para probarlo. La contradicción entre #40 (cumple en una development build anterior a SDK 58) y #43 (no funciona en el A16) sigue sin resolverse. |
+| Funciona en al menos un producto de prueba | 1. Repetir con otro producto con modelo. 2. Producto sin modelo: no aparece el botón. | **No verificable** — guía C09 (ver fila anterior). La parte «un producto sin modelo no muestra el botón» pasó en C10 (**Pasa (según Angel, sin captura)**); la parte con modelo en un segundo producto no es verificable en el A16. |
 
 **HU #17 — Notificaciones push**
 | Criterio | Pasos | Resultado |
@@ -333,7 +344,7 @@ Resultado de las pendientes: `[ ] Pasa` · `[ ] Falla` · Observaciones: ______
 | Criterio | Pasos | Resultado |
 |---|---|---|
 | Usuario puede enviar mensaje y recibir respuesta | 1. Abrir el asistente. 2. Escribir una pregunta. 3. Llega la respuesta del bot. | **Ya cubierta en #43/e43** (paso 14): [e43-14](evidencia/sprint-5/e43/e43-14-chatbot.jpeg); y en #40: [hu18-chat-respuesta](evidencia/sprint-4/hu18-chat-respuesta.jpeg) |
-| Historial de conversación visible durante la sesión | 1. Enviar 2 o más mensajes. 2. Salir y volver al chat sin cerrar sesión: siguen ahí. 3. Cerrar sesión: el chat se borra. | PENDIENTE DE VALIDACIÓN MANUAL en el APK final. #40 lo dio por Cumple con la development build anterior a SDK 58 (sección 5 de [sprint-4.md](sprint-4.md)); #43 solo mostró un mensaje. [ ] Pasa [ ] Falla |
+| Historial de conversación visible durante la sesión | 1. Enviar 2 o más mensajes. 2. Salir y volver al chat sin cerrar sesión: siguen ahí. 3. Cerrar sesión: el chat se borra. | **Pasa (según Angel, sin captura)** — guía B19. |
 
 ### Sprint 5
 **HU #19 — Reseñas y calificaciones**
@@ -341,13 +352,13 @@ Resultado de las pendientes: `[ ] Pasa` · `[ ] Falla` · Observaciones: ______
 |---|---|---|
 | Solo usuarios que compraron el producto pueden reseñar | 1. Producto sin compra: no aparece «Escribir reseña». 2. Producto comprado (pedido entregado): aparece el formulario. | **Ya cubierta en #43/e43** (pasos 1.1 y 1.2): [e43-01](evidencia/sprint-5/e43/e43-01-sin-compra.jpeg), [e43-02](evidencia/sprint-5/e43/e43-02-formulario-resena.jpeg) |
 | Reseña se muestra en el detalle del producto | 1. Enviar una reseña. 2. Verla en Mis reseñas (Pendiente). 3. Abrir el detalle del producto. | **Ya cubierta en #43/e43** (pasos 1.3 a 1.5): [e43-03](evidencia/sprint-5/e43/e43-03-mis-resenas.jpeg), [e43-04](evidencia/sprint-5/e43/e43-04-detalle-con-resenas.jpeg), [e43-05](evidencia/sprint-5/e43/e43-05-detalle-sin-resenas.jpeg). Reserva: lo que se vio fue la reseña propia **pendiente** |
-| Reseña **aprobada** visible para cualquier usuario (adicional) | 1. Desde el panel, aprobar la reseña. 2. Con otra cuenta (o sin reseñar), abrir el detalle del producto. 3. Ver la reseña con el autor abreviado y el promedio actualizado. 4. Probar también una rechazada: no aparece. | PENDIENTE DE VALIDACIÓN MANUAL. #43 no probó una reseña aprobada. [ ] Pasa [ ] Falla |
+| Reseña **aprobada** visible para cualquier usuario (adicional) | 1. Desde el panel, aprobar la reseña. 2. Con otra cuenta (o sin reseñar), abrir el detalle del producto. 3. Ver la reseña con el autor abreviado y el promedio actualizado. 4. Probar también una rechazada: no aparece. | **Pasa (según Angel, sin captura)** — guía B20. |
 
 **HU #20 — Pruebas end-to-end y build final**
 | Criterio | Pasos | Resultado |
 |---|---|---|
 | Los 3 flujos críticos funcionan sin errores en un dispositivo real (login → compra → notificación) | Guía de 15 pasos de [sprint-5-aceptacion.md](sprint-5-aceptacion.md) sección 4.2 | **Ya cubierta en #43/e43**: 14 de 15 pasos OK; el paso 12 (AR) no funciona en ese dispositivo (ver HU #16). Pasos 5, 8, 9 y 11 son «OK según Angel», sin captura |
-| Build de APK/TestFlight generado y compartido con los docentes | 1. Confirmar que el build existe y está terminado. 2. Compartir el enlace de instalación con los docentes. | **Parcial.** El build `b4efc5c0` (Android, `preview`) terminó: [sprint-5-aceptacion.md](sprint-5-aceptacion.md) sección 2. **Falta** confirmar que el enlace se compartió con los docentes y que el APK instalado es ese build: PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla. Sin build de iOS/TestFlight |
+| Build de APK/TestFlight generado y compartido con los docentes | 1. Confirmar que el build existe y está terminado. 2. Compartir el enlace de instalación con los docentes. | **No verificable** — guía C11. El ID del build coincide con el anotado (`5df5c1be-f073-4c20-8f68-384ede518e18`; **Pasa (según Angel, sin captura)**). El enlace **no se ha compartido con los docentes**: lo verán desde el dispositivo de Angel y después en Google Play. El criterio «compartido con los docentes» sigue sin cumplirse. Sin build de iOS/TestFlight. |
 
 **Cambios del Sprint 5 validados en el APK final** (ofertas, descuento en el carrito, Mi cuenta, nombre e iconos de la app, conexión con producción, build `preview`): **ya cubiertos en #43/e43**, pasos 3.1 a 3.10 de [sprint-5-aceptacion.md](sprint-5-aceptacion.md) ([e43-16](evidencia/sprint-5/e43/e43-16-ofertas-inicio.jpeg) a [e43-22](evidencia/sprint-5/e43/e43-22-icono-notificacion.jpeg)). Con reservas anotadas allí: 3.2 y 3.5 «según Angel»; TalkBack no se probó; 3.9 sin prueba con un build sin `EXPO_PUBLIC_API_URL`.
 
@@ -356,18 +367,37 @@ Se explican en [integracion-completa.md](integracion-completa.md), sección «Ha
 
 | Criterio | Pasos | Resultado |
 |---|---|---|
-| **Sesión caducada** (hallazgo A, #172): al vencer el token, la app cierra la sesión y lleva a iniciar sesión | 1. Entorno de prueba (no producción): obtener un token vencido. Las dos vías posibles, **sin verificar** que apliquen en este backend: (a) hacer que el JWT dure muy poco (si el backend lo permite configurar; revisar la variable en `syscom-backend`), o (b) invalidarlo cambiando el secreto del JWT en ese entorno. No cambiar el secreto de producción: cierra la sesión de todos los usuarios. 2. Iniciar sesión en la app. 3. Esperar a que venza (o invalidar el token). 4. Con la app abierta, ir a Carrito o Perfil. 5. Esperado: mensaje de sesión caducada, vuelve a Login, sin pantallas rotas. 6. Iniciar sesión otra vez y confirmar que todo carga. 7. Anotar en Obs. el texto exacto de la respuesta 403 (la app solo cierra sesión si el texto coincide con «Token inválido o expirado»). | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
-| **Nombre de 3 a 40 letras** (hallazgo B, #174 y PR #6 del backend) | 1. Confirmar que el backend desplegado (fork de Railway) ya incluye el PR #6 del backend: sincronizar el fork con el original y comprobar el despliegue. 2. En **Registro**: nombre de 3 letras (por ejemplo «Ana»): se acepta. 3. Nombre de 40 letras: se acepta. 4. Nombre de 2 letras: muestra «El nombre debe tener al menos 3 caracteres». 5. Nombre de 41 letras: lo rechaza. 6. En **Perfil → datos personales**: repetir 3 y 40 letras y guardar; recargar el perfil y ver que persiste. 7. Si el registro de la **web** (que sigue pidiendo 4 a 25) se usa con el mismo nombre, anotar la diferencia. | PENDIENTE DE VALIDACIÓN MANUAL. [ ] Pasa [ ] Falla |
+| **Sesión caducada** (hallazgo A, #172): al vencer el token, la app cierra la sesión y lleva a iniciar sesión | 1. Entorno de prueba (no producción): obtener un token vencido. Las dos vías posibles, **sin verificar** que apliquen en este backend: (a) hacer que el JWT dure muy poco (si el backend lo permite configurar; revisar la variable en `syscom-backend`), o (b) invalidarlo cambiando el secreto del JWT en ese entorno. No cambiar el secreto de producción: cierra la sesión de todos los usuarios. 2. Iniciar sesión en la app. 3. Esperar a que venza (o invalidar el token). 4. Con la app abierta, ir a Carrito o Perfil. 5. Esperado: mensaje de sesión caducada, vuelve a Login, sin pantallas rotas. 6. Iniciar sesión otra vez y confirmar que todo carga. 7. Anotar en Obs. el texto exacto de la respuesta 403 (la app solo cierra sesión si el texto coincide con «Token inválido o expirado»). | **Pasa (según Angel, sin captura)** — guía A1, **en Expo Go con el backend local y la rama de pruebas de Neon (no con el APK ni en producción)**, con `JWT_EXPIRES_IN=2m`. Tras vencer la sesión y abrir otro apartado, la app vuelve a Login. **Limitaciones:** la app no muestra un mensaje de sesión caducada (no hay texto visible; Angel anota que no sabe si debe aparecer), y el texto exacto de la respuesta 403 no quedó registrado (se perdió al cambiar de apartado), por lo que no se confirmó que la app cierre sesión por coincidir con «Token inválido o expirado». |
+| **Nombre de 3 a 40 letras** (hallazgo B, #174 y PR #6 del backend) | 1. Confirmar que el backend desplegado (fork de Railway) ya incluye el PR #6 del backend: sincronizar el fork con el original y comprobar el despliegue. 2. En **Registro**: nombre de 3 letras (por ejemplo «Ana»): se acepta. 3. Nombre de 40 letras: se acepta. 4. Nombre de 2 letras: muestra «El nombre debe tener al menos 3 caracteres». 5. Nombre de 41 letras: lo rechaza. 6. En **Perfil → datos personales**: repetir 3 y 40 letras y guardar; recargar el perfil y ver que persiste. 7. Si el registro de la **web** (que sigue pidiendo 4 a 25) se usa con el mismo nombre, anotar la diferencia. | **Pasa (según Angel, sin captura)** — guía A2, con el APK final contra producción. Angel anota: el registro acepta un nombre de 3 letras; en Perfil permite cambiarlo a otro de 3 letras y la app limita el máximo al escribir; el mínimo es 3 y el máximo 40, y 2 y 41 letras no se permiten. **No quedó registrado:** que el backend desplegado tuviera el PR #6 (commit `cc1177c`), si se probó el nombre de exactamente 40 letras y la comparación con el registro de la web. |
 
 **Total manual:** 51 filas con criterio.
 
 | Estado | Filas |
 |---|---|
-| Ya cubiertas en #43/e43 o #40 (con las reservas anotadas en cada fila) | 9 |
-| Parciales (una parte cubierta en #43, otra parte pendiente) | 4 |
-| PENDIENTES DE VALIDACIÓN MANUAL (completas) | 38 |
+| Ya cubiertas en #43/e43 o #40 (no se repitieron) | 9 |
+| **Pasa (según Angel, sin captura)** | 37 |
+| **No verificable** | 5 |
+| **Falla** | 0 |
+| Pendientes de validación | 0 |
 
-Además hay una fila agrupada de «Cambios del Sprint 5» (10 pasos de #43, ya cubiertos) que no se cuenta arriba. De las filas pendientes, dos (HU #16) tienen un resultado contradictorio entre #40 y #43, y dos son los hallazgos de #44 (sesión caducada y nombre de 3 a 40 letras). Ninguna fila se ejecutó en esta pasada.
+Además hay una fila agrupada de «Cambios del Sprint 5» (10 pasos de #43, ya cubiertos) que no se cuenta arriba, y la prueba A3 de la guía (nombre e ícono de la app, #168; «Pasa» según Angel: «Se muestra bien en todo momento, hasta en las notis»), que corresponde a esa fila agrupada y no se cuenta aparte.
+
+**Filas no verificables (5):** «Muestra nombre, correo y datos de contacto» y «Edita y guarda contra la API» (HU #4, por el resultado de B08 que parece un error de la guía); «Botón Ver en AR» y «Funciona en al menos un producto de prueba» (HU #16, el A16 no es compatible con ARCore) y «Build de APK compartido con los docentes» (HU #20, el enlace no se ha compartido).
+
+### Incoherencias de la guía (no corregidas)
+- **B08:** su resultado dice «No verificable: el Samsung A16 no es compatible con ARCore», texto que no corresponde a un Perfil. Se copió tal cual.
+- **Tabla de cierre de la guía:** cuenta 20/20 de la Parte B y 11/11 de la Parte C como «Pasan» con 0 no probados, pero las filas B08 y C09 dicen «No verificable». Este reporte usa lo que dicen las filas, no esa tabla.
+- **Conteo:** la guía tiene 34 puntos (3 + 20 + 11) y este reporte 51 filas, porque varias filas se cubren con el mismo punto de la guía (por ejemplo B09 cubre dos y B14 otras dos).
+
+### Limitaciones de la regresión manual
+- **Sesión caducada (A1):** se verificó la redirección a Login, pero la app **no muestra un mensaje de sesión caducada** (no hay texto visible). No se registró el texto exacto del 403, así que no se confirmó que el cierre de sesión dependa de «Token inválido o expirado». Se probó en Expo Go con un backend local, no con el APK ni contra producción.
+- **AR (C09):** **no verificable** en el Samsung A16, que no es compatible con ARCore. No hay otro teléfono compatible. Queda sin resolver la contradicción entre #40 y #43.
+- **Enlace del APK (C11):** **no se ha compartido con los docentes.** Lo verán desde el dispositivo de Angel y después en Google Play. El segundo criterio de #20 no está completo.
+- **Sin capturas:** todos los «Pasa» de esta pasada son según Angel, sin captura.
+- **Solo Android:** no hay build de iOS.
+- **Validación de respuesta incompleta en login, 2FA y verificación de registro (#68, PR #180):** solo se cubre con pruebas automáticas; no se probó en el dispositivo, porque exigiría alterar el backend.
+- **A2:** no quedó registrado si el despliegue de Railway incluía el PR #6 del backend, ni si se probó exactamente 40 letras, ni la comparación con el registro de la web (que pide 4 a 25).
+- **README (C02):** pasa, pero Angel anota que falta actualizarlo con apartados nuevos (promociones, servicios) y con los cambios de issues como el de E2E.
 
 ## 6. Fallas encontradas y correcciones
 
@@ -393,16 +423,18 @@ No se encontraron fallas de aserción en las pruebas, salvo la de `perfilYMiCuen
 - No se corrigió nada, según lo pedido. [advertencias-y-vulnerabilidades.md](advertencias-y-vulnerabilidades.md) quedó desactualizado respecto a las cifras de hoy (45 contra 3); no lo edité.
 
 ## 8. Pendientes
-- **Regresión manual** de la sección 5: la hace una persona en el APK final (Angel/Luis Ángel). Este reporte la deja sin resultados a propósito.
+- **Regresión manual:** ejecutada (sección 5). Quedan **5 filas no verificables**: Perfil (HU #4, 2 filas, por la anotación dudosa de B08), AR (HU #16, 2 filas, sin teléfono compatible con ARCore) y el enlace del APK a los docentes (HU #20). Falta confirmar B08 con Angel.
 - **Investigar los timeouts** del paralelismo por defecto (sección 2.4) y decidir si se sube el tiempo límite de las pruebas de integración o se reduce el trabajo de su primera prueba. Sin issue todavía.
 - **Alinear los 12 paquetes de Expo** (`npx expo install --check`) y revisar las 42 moderadas de `npm audit`.
-- **Cerrar #45** (Angel), después de la parte manual.
-- Heredados de #44 y #43: validar la sesión caducada con un token vencido real, el nombre de 3 a 40 letras, la AR en otro dispositivo, iOS (no hay build) y una reseña aprobada.
+- **#45:** el PR de esta actualización lo cierra; si Angel prefiere cerrarlo a mano, conviene hacerlo tras revisar las 5 filas no verificables.
+- Heredados de #44 y #43: la sesión caducada y el nombre de 3 a 40 letras ya se probaron (según Angel, sin captura; ver las limitaciones de la sección 5) y la reseña aprobada visible pasó (B20). Siguen pendientes la AR en otro dispositivo, iOS (no hay build) y compartir el APK con los docentes.
 - Las 15 vistas sin ninguna prueba (sección 4) quedan solo con regresión manual.
 
 ## 9. Evidencia
 Archivos en `docs/pruebas/evidencia/regresion-final/`:
 `npm-ci.txt`, `lint.txt`, `tsc.txt`, `jest-defecto.txt` y `.json`, `jest-defecto-repeticion1.txt` y `.json`, `jest-defecto-repeticion2.txt` y `.json`, `jest-workers2.txt` y `.json`, `jest-workers2-repeticion1.txt` y `.json`, `jest-integracion-workers2.txt`, `audit.txt` y `.json`, `expo-doctor.txt`, `pruebas-por-archivo-hoy.tsv`, `produccion-cambiada.txt` y `produccion-cambiada-cobertura.tsv`.
+
+Resultados de la regresión manual: [regresion-manual-sprint-5.md](regresion-manual-sprint-5.md), la guía que llenó Angel el 2026-11-01, copiada sin cambios. No incluye capturas.
 
 Se conservan todos los intentos, incluidos los que fallaron. Cambios hechos a las copias: se sustituyó la ruta local del clon por `<clon>` y se retiró un correo de contacto de npm y un correo ficticio de una prueba. Lo demás es la salida tal cual. Revisión de privacidad de los archivos nuevos: sin correos, sin nombres completos ni identificadores de pago; los textos `pk_test_` y `sk_test_abc` que aparecen en los `.json` son títulos de pruebas de validación de la configuración de Stripe (`rechaza "pk_test_"`), no claves.
 

@@ -1,0 +1,112 @@
+{
+  "fecha": "2026-11-03T05:30:33.992Z",
+  "modo": "escritura",
+  "aviso": "Tiempos medidos contra el backend local con la base en una rama de Neon. No representan producción (Railway).",
+  "api": "http://localhost:4000/api",
+  "repeticiones": 20,
+  "umbralesMs": {
+    "lectura": 1000,
+    "carrito": 1500,
+    "checkout": 3000,
+    "webhook": 10000
+  },
+  "mediciones": [
+    {
+      "nombre": "GET /cart",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 558.5908,
+      "p50": 566.5745999999999,
+      "p95": 598.0391,
+      "max": 1009.8318999999999,
+      "media": 591.6,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /profile/addresses",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 140.9398000000001,
+      "p50": 144.97460000000137,
+      "p95": 149.85310000000027,
+      "max": 150.38590000000113,
+      "media": 145.48,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /orders",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 341.44910000000164,
+      "p50": 350.3042999999998,
+      "p95": 371.0474000000013,
+      "max": 598.3329999999987,
+      "media": 362.96,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /orders/:id",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 352.3156999999992,
+      "p50": 357.47889999999825,
+      "p95": 372.78859999999986,
+      "max": 654.6322,
+      "media": 373.15,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "POST /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 20,
+      "min": 648.020800000002,
+      "p50": 654.8747999999978,
+      "p95": 673.623599999999,
+      "max": 1782.8160000000025,
+      "media": 713.44,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "PATCH /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 20,
+      "min": 289.68100000000413,
+      "p50": 295.434500000003,
+      "p95": 310.3425000000061,
+      "max": 315.70070000000123,
+      "media": 298.5,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "DELETE /cart/items/:id",
+      "umbralMs": 1500,
+      "n": 20,
+      "min": 290.1255999999994,
+      "p50": 294.5393999999942,
+      "p95": 304.2218999999968,
+      "max": 306.873599999999,
+      "media": 296.14,
+      "errores": 0,
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "POST /payments/checkout",
+      "umbralMs": 3000,
+      "n": 20,
+      "min": 1079.2986999999994,
+      "p50": 1096.3933999999863,
+      "p95": 1159.1298000000097,
+      "max": 1339.1575000000012,
+      "media": 1114.55,
+      "errores": 0,
+      "veredicto": "cumple"
+    }
+  ],
+  "omitidas": []
+}

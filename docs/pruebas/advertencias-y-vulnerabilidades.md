@@ -5,7 +5,8 @@
 - **Actualizado:** 2026-10-26 (issue #134): `npm audit` pasó de 66 a 13; ver la sección 1 ("Situación actual") y las filas marcadas en la sección 2. `develop` en `b824bd5`
 - **Actualizado:** 2026-10-26 (issue #137): `follow-redirects` actualizado a 1.16.2 (PR #138); `npm audit` en **12**, con 0 críticas; `zod` aceptado. `develop` en `5be3bb8`
 - **Actualizado:** 2026-10-27 (issue #150): migración a SDK 58 (#148). `npm audit` real en **3**, con 0 críticas; avisos de `npm ci` y `expo-doctor` vueltos a medir. `develop` en `dbb922e`. Las secciones anteriores son el estado con SDK 57 y se conservan como historial
-- **Sobre:** `package-lock.json` de `develop` en `4580272` (sin cambios de dependencias en esta rama)
+- **Actualizado:** 2026-11-03 (issue #187): `npm audit` real en **45** (0 críticas, 2 altas, 42 moderadas, 1 baja), contra 3 el 2026-10-27. `develop` en `14ad14a`. Salida guardada en [`evidencia/dependencias-2026-11-03/`](evidencia/dependencias-2026-11-03/). Ver la sección 1 ("Situación actual con SDK 58 (2026-11-03)")
+- **Sobre:** `package-lock.json` de `develop` en `4580272` (sin cambios de dependencias en esta rama) en la primera redacción (2026-10-15); el estado vigente es el de la línea anterior
 - **Herramientas:** `npm audit`, `npm ci` y `npm ls`, ejecutados en local (npm con Node 22). Nada de esto se obtuvo con `npm audit fix --force`.
 
 Este documento registra qué avisos aparecen y qué decisión se tomó para cada uno: **corregir**, **justificar** o **aceptar**. No hay vulnerabilidades críticas; el CI sigue bloqueando por nivel crítico y muestra las altas como advertencia.
@@ -81,7 +82,28 @@ Las 13 entradas son: **altas** `follow-redirects`, `node-forge`, `@expo/cli`, `@
 
 Las 12 entradas son: **altas** `@expo/cli`, `@expo/code-signing-certificates`, `@stripe/stripe-react-native`, `expo`, `node-forge` y `zod`; **moderadas** `@expo/config-plugins`, `decode-uri-component`, `expo-router`, `query-string`, `uuid` y `xcode`. Las **causas raíz** son 4: `decode-uri-component`, `node-forge`, `uuid` y `zod`. `follow-redirects` ya no aparece.
 
-### Situación actual con SDK 58 (2026-10-27)
+### Situación actual con SDK 58 (2026-11-03)
+
+`npm audit` real sobre `develop` (`14ad14a`, sin cambios locales en `package.json` ni en `package-lock.json`; Node 22.13.0, npm 11.12.1; una corrida de `npm audit` y otra de `npm audit --json`, que coinciden). No se hizo `npm ci` antes: `npm audit` lee el lockfile. Evidencia en [`evidencia/dependencias-2026-11-03/`](evidencia/dependencias-2026-11-03/): `npm-audit.txt`, `npm-audit.json` y `npm-audit-omit-dev.txt`.
+
+| Severidad | 2026-10-27 (`dbb922e`) | 2026-11-03 (`14ad14a`) |
+|---|---|---|
+| Crítica | 0 | **0** |
+| Alta | 3 | **2** |
+| Moderada | 0 | **42** |
+| Baja / info | 0 | **1** (baja) / 0 (info) |
+| **Total** | **3** | **45** |
+
+- **Altas (2):** `zod` y `@expo/cli`. `zod` 3.25.76 llega por `expo` → `@expo/cli` → `zod` (aviso [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5), afecta a `< 4.6.6`, corregido en 4.6.6). `expo` ya no figura como alta: ahora aparece como moderada. `npm audit` indica `fixAvailable: true` para `zod` y `@expo/cli`; **no se aplicó ni se probó**.
+- **Baja (1):** `deepmerge` 4.3.1 ([GHSA-gcqx-w48m-w2h4](https://github.com/advisories/GHSA-gcqx-w48m-w2h4), `>= 4.2.0, <= 4.3.1`). El aviso no tiene versión corregida (según la API de GitHub Advisories); `npm audit` solo propone `expo@51.0.39`, un downgrade.
+- **Moderadas (42):** las dos causas raíz son `glob` ([GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4), `>= 9.0.0, <= 14.0.1`, corregido en 14.0.2) y `minimatch` ([GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249), `< 11.0.1`, corregido en 11.0.1). El resto son paquetes que dependen de ellas (de `@expo/*`, `jest*`, `eslint*` y `@typescript-eslint/*`; lista completa en `npm-audit.txt`).
+- **Causas raíz de hoy: 4** (los paquetes con aviso propio en el campo `via` del JSON): `zod`, `glob`, `minimatch` y `deepmerge`. Los otros 41 paquetes (45 − 4) son efecto en cadena.
+- **Por qué subió de 3 a 45:** los avisos de `glob` y `minimatch` se publicaron el **2026-10-30** (API de GitHub Advisories), tres días después de la corrida del 2026-10-27, y el lockfile instalado (`glob` 10.5.0 y 13.0.6; `minimatch` 3.1.5, 9.0.9 y 10.2.6) cae en sus rangos afectados. Es consistente con la subida, **pero no se contó entrada por entrada** cuánto de los 42 se debe a cada uno. Cuándo apareció `deepmerge` en el reporte: **No consta** (su aviso es del 2026-09-18, anterior a la corrida del 2026-10-27, y no figuraba en ella; no se investigó por qué).
+- **Corrección que sugiere `npm audit` para `glob`, `minimatch` y las moderadas de `expo`, `jest` y `eslint`:** `npm audit fix --force`, que instalaría `expo@51.0.39`, `jest@29.7.0`, `jest-expo@32.0.1` o `eslint@4.0.0`, es decir, **saltos mayores o versiones anteriores**. Es inválido para el SDK 58. No se ejecutó.
+- **`npm audit --audit-level=critical`:** exit 0 (no hay críticas). Es el comando que bloquea el CI.
+- **Producción frente a desarrollo:** `npm audit --omit=dev` da **32** (1 baja, 29 moderadas, 2 altas), con las mismas dos altas (`zod`, `@expo/cli`). Eso se debe a que `expo`, `jest` y `jest-expo` están declarados en `dependencies` de `package.json`, no en `devDependencies`. Por eso **este reporte no puede afirmar que las altas sean solo de dependencias de desarrollo**; lo único que muestra `npm audit` es que llegan por `expo` → `@expo/cli`, la CLI de Expo. Si esa copia de `zod` entra en el bundle de la app: **No consta** (no se verificó el bundle).
+
+### Corrida con SDK 58 (2026-10-27)
 
 `npm audit` real sobre `develop` (`dbb922e`, tras `npm ci`; Node 22.13.0, npm 11.12.1; `expo` 58.0.19, `jest` 30.5.2, `react-native` 0.88.0, `react` 19.3.0). Las tablas de arriba son del SDK 57.
 
@@ -120,6 +142,19 @@ Las correcciones que sugiere `npm audit` para los paquetes directos (`expo`, `re
 |---|---|---|---|---|---|---|
 | 7 | `follow-redirects` 1.16.0 → **1.16.2** | Alta | [GHSA-q3jh-wrc6-jgq8](https://github.com/advisories/GHSA-q3jh-wrc6-jgq8) y [GHSA-8r9p-f939-6h3c](https://github.com/advisories/GHSA-8r9p-f939-6h3c): cabeceras que evitan quitar credenciales entre orígenes y expresión regular de `sensitiveHeaders`; ambos publicados el 2026-10-20, versión corregida 1.16.1 | `axios` 1.20.0 → `follow-redirects` | `npm audit` indica que se corrige sin salto mayor (`fixAvailable: true`; la versión corregida es 1.16.1). No se aplicó ni se probó | **Resuelto el 2026-10-26 (#137, PR #138): actualizado a 1.16.2.** Actualización dirigida solo del lockfile (`npm update follow-redirects --package-lock-only`): cambia únicamente `follow-redirects`, `package.json` intacto y sin `npm audit fix`. Se eligió la 1.16.2 porque es la última versión que permite el rango de `axios` (`^1.16.0`) y se publicó el 2026-10-25; fijar la 1.16.1 no se pudo hacer limpiamente. Verificado: `npm audit` baja de 13 a 12 y `follow-redirects` ya no aparece. **Lo verificado sobre la 1.16.2** (diff 1.16.1 → 1.16.2 en GitHub: 3 commits): el único cambio de código es en `_sanitizeOptions` de `index.js`, donde se normaliza `sensitiveHeaders`: reemplaza una función propia `isArray` (`value instanceof Array`) por `Array.isArray`; no cambia la lógica que corrigió la 1.16.1, pero no se probó. El `README.md` y el `SECURITY.md` nuevos del paquete dicen que el mantenimiento está pausado hasta conseguir financiamiento y que no hay garantía de correcciones. Las pruebas del proyecto usan el adapter simulado de Axios, así que no ejercitan `follow-redirects`. *Decisión original (propuesta del 2026-10-26):* **Pendiente de decisión.** Propuesta: corregir con una actualización dirigida del lockfile en un PR aparte, como se hizo con `source-map-js`. No se aplicó en este PR. Aparece desde el 2026-10-20, después del reporte del 19 de octubre |
 | 8 | `zod` 3.25.76 | Alta | [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5): consumo de memoria al validar colecciones muy grandes con restricciones; afecta a `< 4.6.6` | Dos caminos (`npm ls zod --all`): `expo` → `@expo/cli` → `zod`, y `eslint-config-expo` → `eslint-plugin-react-hooks` → `zod` (este último también pasa por `zod-validation-error`) | `zod` 4.6.6 o superior (salto de versión mayor); `npm audit` propone `expo@44.0.6` (downgrade): inválido | **Aceptar** (decidido el 2026-10-26). Llega por la CLI de desarrollo de Expo y por la configuración de ESLint (`eslint-config-expo` está en `devDependencies`), no por el código de la app: `zod` no es dependencia directa y no se importa en `src`. No se verificó que la CLI ni el plugin de ESLint usen la parte afectada. No se explicó por qué no aparecía el 19 de octubre (ver arriba) |
+
+### Causas vigentes en SDK 58 (2026-11-03)
+
+Las 4 causas raíz de la corrida del 2026-11-03 (sección 1). Las decisiones de `glob`, `minimatch` y `deepmerge` **no se tomaron en este PR**: están sin decidir.
+
+| # | Paquete (versión en el lockfile) | Severidad | Aviso (publicación) | Paquetes afectados según `npm audit` | `fixAvailable` | Decisión |
+|---|---|---|---|---|---|---|
+| 8 | `zod` 3.25.76 (la copia 4.6.7, por `eslint-config-expo`, no está afectada) | Alta | [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5) (2026-10-01) | `@expo/cli` | `true` (no aplicado ni probado) | **Aceptar** (decisión del 2026-10-26, sin cambios) |
+| 9 | `glob` 10.5.0 y 13.0.6 (el lockfile tiene además 7.2.3; si `npm audit` la cuenta: No consta) | Moderada | [GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4) (2026-10-30) | `@expo/cli`, `@expo/config`, `@expo/config-plugins`, `@expo/fingerprint`, `@expo/metro-config`, `@jest/reporters`, `jest-config`, `jest-runtime`, `test-exclude` | Solo `expo@51.0.39` (downgrade): inválido | **Sin decidir (No consta)** |
+| 10 | `minimatch` 3.1.5, 9.0.9 y 10.2.6 | Moderada | [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249) (2026-10-30) | `@eslint/*`, `@expo/fingerprint`, `@typescript-eslint/typescript-estree`, `eslint`, `eslint-plugin-import`, `eslint-plugin-react`, `glob`, `test-exclude` | Solo `eslint@4.0.0` (downgrade): inválido | **Sin decidir (No consta)** |
+| 11 | `deepmerge` 4.3.1 | Baja | [GHSA-gcqx-w48m-w2h4](https://github.com/advisories/GHSA-gcqx-w48m-w2h4) (2026-09-18) | `@expo/config`, `jest-config` | Solo `expo@51.0.39` (downgrade): inválido; el aviso no tiene versión corregida | **Sin decidir (No consta)** |
+
+Las rutas completas de `glob`, `minimatch` y `deepmerge` (`npm ls`) **no se midieron**; la columna de afectados sale del campo `effects` del JSON de `npm audit`. La tabla de "Causas vigentes en SDK 58 (2026-10-27)" sigue abajo como historial de esa fecha.
 
 ### Causas vigentes en SDK 58 (2026-10-27)
 
@@ -213,6 +248,10 @@ Para un paquete que **ya está** en `package.json` y solo se quiere subir dentro
 - **Error de ejecución:** si `npm audit` no puede ejecutarse (red, registro, salida no interpretable), ese paso **falla** con una anotación de error. No es lo mismo que "hay vulnerabilidades".
 - Este documento se enlaza desde esa advertencia.
 
+**Con el resultado del 2026-11-03** (sección 1): `npm audit --audit-level=critical` termina con exit 0 (0 críticas), así que el paso bloqueante pasa. El paso informativo cuenta 2 altas (`zod` y `@expo/cli`) y emite la advertencia. Las moderadas (42) y la baja (1) no bloquean ni avisan: solo aparecen en la tabla del resumen del job. Estos exit codes y conteos son los del `npm audit` local; **no se revisó una ejecución del CI de esa fecha**.
+
+**Origen de las altas:** `npm audit` las muestra llegando por `expo` → `@expo/cli`. **No se puede afirmar que sean solo de dependencias de desarrollo**: con `npm audit --omit=dev` siguen apareciendo (sección 1), porque `expo`, `jest` y `jest-expo` están en `dependencies`.
+
 ## 6. Los dos jobs corren en paralelo
 
 Los jobs **"Análisis estático"** y **"Pruebas unitarias"** de `.github/workflows/ci.yml` no declaran `needs`, así que GitHub Actions los ejecuta **en paralelo**, cada uno en su propio runner (`ubuntu-24.04`) y con su propia instalación de dependencias (`npm ci`).
@@ -229,4 +268,6 @@ Los jobs **"Análisis estático"** y **"Pruebas unitarias"** de `.github/workflo
 | ~~Probar `test-renderer@1.3.1`~~ | **Resuelto por documentación el 2026-10-19 (#114):** el aviso queda aceptado; no desaparece con 1.3.1 y se espera que se resuelva cuando el SDK suba React a 19.3 |
 | Revisar las causas aceptadas (1, 2, 4, 5, 6 y los deprecados) al actualizar el SDK de Expo | El SDK se actualizó el 2026-10-27 (#148). Estado en la sección 2 ("Causas vigentes en SDK 58") y en la sección 3; las decisiones sobre `zod` y los deprecados no se reevaluaron |
 | `npx expo-doctor` reporta paquetes con versión de parche anterior a la que espera el SDK. Con SDK 57: 5 el 2026-10-19 y 4 el 2026-10-26. **Con SDK 58, el 2026-10-27: 19/20 verificaciones; 4 paquetes** (`expo` 58.0.19 en vez de ~58.0.20, `expo-dev-client` 58.0.15 en vez de ~58.0.16, `expo-router` 58.0.26 en vez de ~58.0.27 y `expo-web-browser` 58.0.6 en vez de ~58.0.7) | Aparte, con `npx expo install --check` (issue #121) |
+| Decidir qué hacer con `glob`, `minimatch` y `deepmerge` (causas 9, 10 y 11, 2026-11-03) y con las 2 altas (`zod`, `@expo/cli`), cuyo `fixAvailable` es `true` pero no se probó | Sección 2 ("Causas vigentes en SDK 58 (2026-11-03)"). Sin decisión en este PR |
+| Los conteos de `npx expo-doctor` y de avisos de `npm ci` de esta página son del 2026-10-27. [regresion-final.md](regresion-final.md) reporta **12 paquetes** con parche anterior en `expo-doctor` (19/20) en su pasada del 2026-10-31. Ni `expo-doctor` ni `npm ci` se volvieron a correr para este PR | No consta el valor de hoy |
 | ~~Decidir qué hacer con `follow-redirects` y con `zod` (causas nuevas del 2026-10-26)~~ | **Resuelto el 2026-10-26:** `follow-redirects` actualizado a 1.16.2 (#137, PR #138) y `zod` aceptado |

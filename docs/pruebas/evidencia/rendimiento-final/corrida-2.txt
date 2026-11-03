@@ -1,0 +1,12 @@
+﻿Medici├│n en modo escritura contra http://localhost:4000/api (20 repeticiones)
+Tiempos medidos contra el backend local con la base en una rama de Neon. No representan producci├│n (Railway).
+GET /cart                  n=20 err=0 p50=567ms p95=598ms max=1010ms (umbral p95 < 1000ms) ΓåÆ cumple
+GET /profile/addresses     n=20 err=0 p50=145ms p95=150ms max=150ms (umbral p95 < 1000ms) ΓåÆ cumple
+GET /orders                n=20 err=0 p50=350ms p95=371ms max=598ms (umbral p95 < 1000ms) ΓåÆ cumple
+GET /orders/:id            n=20 err=0 p50=357ms p95=373ms max=655ms (umbral p95 < 1000ms) ΓåÆ cumple
+POST /cart/items/:id       n=20 err=0 p50=655ms p95=674ms max=1783ms (umbral p95 < 1500ms) ΓåÆ cumple
+PATCH /cart/items/:id      n=20 err=0 p50=295ms p95=310ms max=316ms (umbral p95 < 1500ms) ΓåÆ cumple
+DELETE /cart/items/:id     n=20 err=0 p50=295ms p95=304ms max=307ms (umbral p95 < 1500ms) ΓåÆ cumple
+POST /payments/checkout    n=20 err=0 p50=1096ms p95=1159ms max=1339ms (umbral p95 < 3000ms) ΓåÆ cumple
+
+Resultado guardado en C:\Users\angel\syscom-mobile\docs\pruebas\evidencia\rendimiento-final\corrida-2.json

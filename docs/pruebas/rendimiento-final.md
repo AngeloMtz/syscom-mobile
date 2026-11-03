@@ -125,7 +125,7 @@ Hoy salió más lento que en Sprint 3 en todos los endpoints, sobre todo `GET /c
 - **Solo 5 repeticiones** (arranque y carrito): la mediana y el máximo con tan pocas muestras son poco robustos.
 - **Catálogo, detalle de producto, servicios y mis pedidos: una sola muestra** cada uno; sin mediana, máximo ni veredicto.
 - **Sin evidencia revisable de la parte del dispositivo:** los videos no se guardan por contener datos personales; los valores son los reportados por Angel.
-- **La red del dispositivo y la fecha de la medición no constan.** Sin la red no se puede interpretar el tiempo de las pantallas.
+- **La red es una referencia indirecta:** se midió desde la PC, no desde el teléfono, así que no garantiza la velocidad que tuvo el teléfono. La fecha y hora salen del reloj del teléfono en los videos, sin verificar por otro medio.
 - **Arranques tras pausa (4,6–5,3 s):** de grabaciones anteriores, solo se conoce el rango; uno supera 5 s y no está incluido en el veredicto.
 - **Carrito ≈ 3,4 s en una medición previa:** aislada, no repetida, causa no confirmada.
 - **Dispositivo contra producción y API en local:** no son comparables entre sí.
@@ -138,8 +138,8 @@ Medido por Angel; los datos fueron entregados a Claude, que los transcribió sin
 |---|---|
 | Build / APK | `5df5c1be` |
 | Dispositivo y versión de Android | Samsung A16, Android 16 |
-| Fecha y hora | No consta (no se registró en los datos entregados) |
-| Red (Wi-Fi / datos) | **No consta** (el dato llegó sin rellenar) |
+| Fecha y hora | Videos iniciales: 02/11/2026 ~23:54. Videos «-p2»: 03/11/2026 ~00:52. Según el reloj del teléfono visible en los videos (hora del teléfono, no verificada por otro medio). Las corridas de la API fueron la noche del 02/11/2026 |
+| Red | Wi-Fi doméstico. Referencia medida **desde la PC en la misma red, no desde el teléfono**: ≈ 50 Mbps de bajada, ≈ 50 Mbps de subida, ping ≈ 8 ms |
 | Backend usado | Producción |
 
 ### 4.0 Método
@@ -199,7 +199,6 @@ Solo se registra; no hay umbral ni veredicto.
 
 ## 6. Pendientes
 - **Repeticiones faltantes** (5 cada una) del catálogo, detalle de producto, servicios y mis pedidos para poder dar mediana, máximo y veredicto.
-- **Red y fecha de la medición del dispositivo:** completar si Angel los tiene.
 - **Causa del carrito ≈ 3,4 s tras inactividad** y de los arranques de 4,6–5,3 s tras pausa: sin investigar.
 - **Webhook → pedido:** no medido; requeriría `stripe listen` y confirmar cada PaymentIntent a mano.
 - **Posición de la muestra máxima** en `GET /cart` y `POST /cart/items/:id`: no consta; confirmarla exigiría que el script guarde las muestras en orden (no se cambió el script en este trabajo).

@@ -14,8 +14,8 @@ Este reporte es de rendimiento, no de funciones nuevas. Lo que se mide y con qu�
 |---|---|---|---|
 | Tiempo de respuesta de la API (lectura, carrito, checkout) | `scripts/medir-rendimiento.mjs`, contra el backend **local** con la base en una rama de Neon | Angel ejecutó el script; Claude guardó y analizó la salida | Medido (sección 3) |
 | Webhook → pedido | El mismo script con `--webhook=N` (exige `stripe listen` y confirmar cada PaymentIntent a mano) | — | **No medido** en esta pasada |
-| Arranque en frío y carga de pantallas con datos de red (incluye el catálogo, `/catalog/*`), en el teléfono | Cronómetro en el dispositivo | Angel | PENDIENTE DE VALIDACIÓN MANUAL |
-| Tamaño del APK | Tamaño del archivo del build | Angel | Solo se registra |
+| Arranque en frío y carga de pantallas con datos de red (incluye el catálogo, `/catalog/*`), en el teléfono | Grabación de pantalla analizada por fotogramas (3 fps) en el dispositivo | Angel | Medido (sección 4); solo arranque y carrito tienen 5 repeticiones |
+| Tamaño del APK | Tamaño del archivo del build | Angel | Registrado: 105 MB (sección 4.3) |
 
 ## 1. Resumen
 
@@ -25,8 +25,8 @@ Este reporte es de rendimiento, no de funciones nuevas. Lo que se mide y con qu�
 | Unitarias | No aplica en este reporte | — |
 | Integración | No aplica | — |
 | Rendimiento, API (local) | 3 corridas × 8 endpoints, todos «cumple» por p95 (20/20 válidas, 0 errores). El máximo superó el umbral en `POST /cart/items/:id` y `GET /cart` en las 3 corridas (sección 3). **Webhook y `/catalog/*` no medidos** | #46 |
-| Rendimiento, en dispositivo | **PENDIENTE DE VALIDACIÓN MANUAL** | #46 |
-| Tamaño del APK | **PENDIENTE DE VALIDACIÓN MANUAL** (solo se registra) | #46 |
+| Rendimiento, en dispositivo (Samsung A16, Android 16, APK `5df5c1be`, contra producción) | Arranque en frío: 5 repeticiones, mediana 3,0 s y máximo 4,3 s, **cumple**. Carrito: 5 repeticiones, mediana 1,3 s y máximo 1,3 s, **cumple**. Catálogo, detalle de producto, servicios y mis pedidos: **una sola muestra** (≈ 0,4 / 0,9 / 0,8 / 1,4 s), indicativas y **sin veredicto**. Resolución de ±0,33 s; sin videos como evidencia (sección 4) | #46 |
+| Tamaño del APK | 105 MB (solo se registra) | #46 |
 
 ## 2. Umbrales fijados antes de medir
 
@@ -43,14 +43,14 @@ Son los de `UMBRALES_MS` en `scripts/lib/perfGuard.js`. No se modifican en este 
 Reglas del script que también quedan fijadas: con cualquier error en una medición el veredicto es «con errores» (no «cumple»); si no hay datos, «sin datos». El script también guarda mín., p50, p95, máx. y media, y el máximo se anota aunque no decida el veredicto.
 
 ### 2.2 App en dispositivo
-Estas métricas se miden con cronómetro en el teléfono; el estadístico es la **mediana** y se anota el **máximo**. Se exigen las dos condiciones.
+Estas métricas se miden en el teléfono (finalmente por fotogramas de grabación, ver 4.0); el estadístico es la **mediana** y se anota el **máximo**. Se exigen las dos condiciones.
 
 | Métrica | Mediana | Máximo |
 |---|---|---|
 | Arranque en frío (de tocar el ícono a ver la primera pantalla utilizable) | ≤ 5 s | ≤ 8 s |
 | Pantalla con datos de red (de abrirla a ver los datos) | ≤ 3 s | ≤ 5 s |
 
-El procedimiento (cuántas repeticiones, qué pantallas, cómo se cronometra) se define junto con la tabla de la sección «En dispositivo» al completar el reporte; no cambia los umbrales de arriba.
+El procedimiento (repeticiones, pantallas, cómo se midió) está en la sección 4.0; no cambia los umbrales de arriba.
 
 ### 2.3 Tamaño del APK
 **Solo se registra.** No tiene umbral ni veredicto.
@@ -112,56 +112,81 @@ Hoy salió más lento que en Sprint 3 en todos los endpoints, sobre todo `GET /c
 
 ### 3.5 Lo que no se midió
 - **Webhook → pedido:** no se midió (no se usó `--webhook`). En Sprint 3 tampoco se pudo medir. No hay valor contra el umbral de 10000 ms, y no se declara ni «cumple» ni «no cumple».
-- **Catálogo (`/catalog/*`):** el script no lo mide. Se cubre en la parte del dispositivo (sección 4), como pantalla con datos de red.
-- **Producción (Railway):** nada de esto se midió allí; el script lo impide.
-- **Rendimiento de la app** (arranque, pantallas, memoria): solo en dispositivo.
+- **Catálogo (`/catalog/*`):** el script no lo mide. En el dispositivo (sección 4.2) tiene **una sola muestra** (≈ 0,4 s), sin veredicto.
+- **Producción (Railway):** la API no se midió allí con el script; el script lo impide. La parte del dispositivo sí usó el backend de producción, pero solo mide lo que ve el usuario, no cada endpoint.
+- **Memoria y consumo de batería de la app:** no se midieron.
 
 ### 3.6 Limitaciones
 - **Backend local:** sin la latencia de red ni la carga de Railway, y con el cliente (Node) en la misma máquina que el servidor.
 - **Una cuenta de prueba, una máquina, una rama de Neon**, 20 repeticiones secuenciales por endpoint; no hay carga concurrente. No se controló qué más usaba el equipo.
 - **Solo 3 corridas seguidas**, en un intervalo de unos 3 minutos; no muestran variación entre días.
-- **Un solo dispositivo** para la parte del teléfono (sección 4).
+- **Un solo dispositivo** (Samsung A16, Android 16) y un solo build (`5df5c1be`) para la parte del teléfono (sección 4).
+- **Resolución de ±0,33 s** (fotogramas a 3 fps) y arranque con inicio **estimado** a partir del toque; con tiempos de 1 s el error relativo es de hasta un tercio.
+- **Solo 5 repeticiones** (arranque y carrito): la mediana y el máximo con tan pocas muestras son poco robustos.
+- **Catálogo, detalle de producto, servicios y mis pedidos: una sola muestra** cada uno; sin mediana, máximo ni veredicto.
+- **Sin evidencia revisable de la parte del dispositivo:** los videos no se guardan por contener datos personales; los valores son los reportados por Angel.
+- **La red del dispositivo y la fecha de la medición no constan.** Sin la red no se puede interpretar el tiempo de las pantallas.
+- **Arranques tras pausa (4,6–5,3 s):** de grabaciones anteriores, solo se conoce el rango; uno supera 5 s y no está incluido en el veredicto.
+- **Carrito ≈ 3,4 s en una medición previa:** aislada, no repetida, causa no confirmada.
+- **Dispositivo contra producción y API en local:** no son comparables entre sí.
 
 ## 4. En dispositivo
 
-**PENDIENTE DE VALIDACIÓN MANUAL** (Angel). Los umbrales están en la sección 2.2. Las tablas están vacías a propósito; el APK, el dispositivo y el procedimiento los llena quien mide.
+Medido por Angel; los datos fueron entregados a Claude, que los transcribió sin cambios y verificó solo las cuentas (mediana y máximo). Los umbrales están en la sección 2.2.
 
 | Dato | Valor |
 |---|---|
-| Build / APK | |
-| Dispositivo y versión de Android | |
-| Fecha y hora | |
-| Red (Wi-Fi / datos) y backend usado | |
+| Build / APK | `5df5c1be` |
+| Dispositivo y versión de Android | Samsung A16, Android 16 |
+| Fecha y hora | No consta (no se registró en los datos entregados) |
+| Red (Wi-Fi / datos) | **No consta** (el dato llegó sin rellenar) |
+| Backend usado | Producción |
+
+### 4.0 Método
+- Se **grabó la pantalla** del teléfono y los tiempos se obtuvieron **analizando los fotogramas a 3 fps**, con una resolución de **±0,33 s**. No se usó un cronómetro, como preveía la sección 2.2: es una desviación del procedimiento, y los umbrales no cambian.
+- El inicio del arranque es **el toque estimado** sobre el ícono en la grabación, no un instante exacto. El fin es el primer fotograma con datos visibles.
+- **Los videos no se guardan en el repositorio** porque muestran datos personales. Por eso esta parte **no tiene evidencia revisable**: los valores son los que Angel reportó a partir de las grabaciones.
+- Contra **producción**: la API de la sección 3 se midió en local y esta parte no, así que no son comparables.
 
 ### 4.1 Arranque en frío (umbral: mediana ≤ 5 s, máximo ≤ 8 s)
 
 | # | Tiempo (s) |
 |---|---|
-| 1 | |
-| 2 | |
-| 3 | |
-| 4 | |
-| 5 | |
+| 1 | 4,3 |
+| 2 | 3,0 |
+| 3 | 2,3 |
+| 4 | 2,8 |
+| 5 | 3,0 |
 
 | Mediana | Máximo | Veredicto |
 |---|---|---|
-| | | |
+| 3,0 s | 4,3 s | **Cumple** (mediana ≤ 5 s y máximo ≤ 8 s) |
+
+Observaciones (no entran en la mediana ni en el máximo):
+- La primera repetición fue la más lenta (4,3 s).
+- Hubo **4 arranques adicionales de grabaciones anteriores** (primer arranque tras una pausa) que dieron **entre 4,6 y 5,3 s**. **Uno supera 5 s.** Se reportan como observación y **no se promedian** con las 5 repeticiones. No se tienen sus valores individuales, solo el rango, por lo que no se calcula con ellos una mediana.
 
 ### 4.2 Pantallas con datos de red (umbral: mediana ≤ 3 s, máximo ≤ 5 s)
-Incluye el catálogo (`/catalog/*`), que la medición de la API no cubre.
+El umbral exige 5 repeticiones. **Solo el carrito las tiene.** Las demás pantallas tienen **una sola muestra**: es un dato **indicativo**, y **no se pudo calcular mediana ni máximo ni dar veredicto**.
 
 | Pantalla | Tiempos (s) | Mediana | Máximo | Veredicto |
 |---|---|---|---|---|
-| Catálogo | | | | |
-| | | | | |
-| | | | | |
+| Carrito | 1,3 / 1,0 / 1,2 / 1,3 / 1,3 | 1,3 s | 1,3 s | **Cumple** (mediana ≤ 3 s y máximo ≤ 5 s) |
+| Catálogo (`/catalog/*`) | ≈ 0,4 (1 muestra) | No calculable | No calculable | Sin veredicto (indicativo) |
+| Detalle de producto | ≈ 0,9 (1 muestra) | No calculable | No calculable | Sin veredicto (indicativo) |
+| Servicios | ≈ 0,8 (1 muestra) | No calculable | No calculable | Sin veredicto (indicativo) |
+| Mis pedidos | ≈ 1,4 (1 muestra) | No calculable | No calculable | Sin veredicto (indicativo) |
+
+Las cuatro muestras únicas están muy por debajo de 3 s, pero sin repeticiones no se pueden contrastar con el umbral de mediana y máximo.
+
+Observación sobre el carrito: una **medición previa aislada dio ≈ 3,4 s** (primera visita tras inactividad). **No se repitió** y su causa **no está confirmada**; la hipótesis es una petición lenta tras inactividad. No entra en la tabla; de contarla, el máximo (3,4 s) seguiría ≤ 5 s.
 
 ### 4.3 Tamaño del APK
-**PENDIENTE DE VALIDACIÓN MANUAL.** Solo se registra; no hay umbral ni veredicto.
+Solo se registra; no hay umbral ni veredicto.
 
 | Build | Tamaño (MB) |
 |---|---|
-| | |
+| `5df5c1be` | 105 |
 
 ## 5. Fallas encontradas y correcciones
 
@@ -173,7 +198,9 @@ Incluye el catálogo (`/catalog/*`), que la medición de la API no cubre.
 **Análisis estático:** `npx expo lint` exit 0 (0 errores, 0 advertencias) y `npx tsc --noEmit` exit 0, ejecutados sobre la rama `test/46-rendimiento`.
 
 ## 6. Pendientes
-- **Medición en dispositivo (arranque en frío y pantallas con datos de red) y tamaño del APK:** PENDIENTE DE VALIDACIÓN MANUAL (Angel). Con esas medidas se abre el PR.
+- **Repeticiones faltantes** (5 cada una) del catálogo, detalle de producto, servicios y mis pedidos para poder dar mediana, máximo y veredicto.
+- **Red y fecha de la medición del dispositivo:** completar si Angel los tiene.
+- **Causa del carrito ≈ 3,4 s tras inactividad** y de los arranques de 4,6–5,3 s tras pausa: sin investigar.
 - **Webhook → pedido:** no medido; requeriría `stripe listen` y confirmar cada PaymentIntent a mano.
 - **Posición de la muestra máxima** en `GET /cart` y `POST /cart/items/:id`: no consta; confirmarla exigiría que el script guarde las muestras en orden (no se cambió el script en este trabajo).
 - Mediciones contra producción: fuera de alcance por la guarda del script.
@@ -182,5 +209,7 @@ Incluye el catálogo (`/catalog/*`), que la medición de la API no cubre.
 Archivos en `docs/pruebas/evidencia/rendimiento-final/`:
 - `corrida-1.json`, `corrida-2.json`, `corrida-3.json`: evidencia principal (estadísticas por endpoint).
 - `corrida-1.txt`, `corrida-2.txt`, `corrida-3.txt`: salida de consola, **con la codificación rota** descrita en la falla 2 y sin editar. Su última línea repite la ruta local de la carpeta de Angel.
+
+La parte del dispositivo (sección 4) **no tiene archivos de evidencia**: las grabaciones de pantalla muestran datos personales y no se guardaron.
 
 Revisión de privacidad hecha antes de commitear: sin correos, tokens, direcciones ni identificadores de pago en los `.json` ni en los `.txt`.

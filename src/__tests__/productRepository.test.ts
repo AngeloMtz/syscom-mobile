@@ -148,3 +148,75 @@ describe("productRepository.getFeatured", () => {
     await expect(productRepository.getFeatured()).rejects.toBe(error);
   });
 });
+
+describe("productRepository.getOnSale", () => {
+  /** Página de `n` productos; los ids de `ofertas` van en promoción. */
+  const pagina = (desde: number, n: number, ofertas: number[] = []) =>
+    Array.from({ length: n }, (_, i) => {
+      const id = desde + i;
+      return ofertas.includes(id)
+        ? makeProduct({ id, precio_base: 1000, precio_final: 900, descuento: 100, porcentaje_descuento: 10, en_promocion: true })
+        : makeProduct({ id });
+    });
+
+  it("pide /catalog/products con páginas de 100 y devuelve solo las promociones", async () => {
+    responde({ data: pagina(1, 3, [2]), pagination: makePagination({ limit: 100, total: 3 }) });
+
+    const resultado = await productRepository.getOnSale();
+
+    const { metodo, ruta, params } = ultimaPeticion();
+    expect({ metodo, ruta }).toEqual({ metodo: "get", ruta: "/catalog/products" });
+    expect(params).toMatchObject({ page: 1, limit: 100 });
+    expect(resultado.map((p) => p.id)).toEqual([2]);
+    expect(adapter).toHaveBeenCalledTimes(1);
+  });
+
+  it("sigue con la página siguiente mientras la actual venga llena", async () => {
+    responde({ data: pagina(1, 100, [5]), pagination: makePagination({ limit: 100, total: 130, pages: 2 }) });
+    responde({ data: pagina(101, 30, [120]), pagination: makePagination({ page: 2, limit: 100, total: 130, pages: 2 }) });
+
+    const resultado = await productRepository.getOnSale();
+
+    expect(adapter).toHaveBeenCalledTimes(2);
+    expect(ultimaPeticion().params).toMatchObject({ page: 2 });
+    expect(resultado.map((p) => p.id).sort((a, b) => a - b)).toEqual([5, 120]);
+  });
+
+  it("se detiene en la primera página corta o vacía", async () => {
+    responde({ data: [], pagination: makePagination({ limit: 100, total: 0, pages: 0 }) });
+
+    await expect(productRepository.getOnSale()).resolves.toEqual([]);
+    expect(adapter).toHaveBeenCalledTimes(1);
+  });
+
+  it("no pasa de 10 páginas aunque todas vengan llenas", async () => {
+    for (let n = 0; n < 12; n++) {
+      responde({ data: pagina(n * 100 + 1, 100), pagination: makePagination({ limit: 100, total: 1200, pages: 12 }) });
+    }
+
+    await productRepository.getOnSale();
+
+    expect(adapter).toHaveBeenCalledTimes(10);
+  });
+
+  it("devuelve las ofertas ordenadas por mayor descuento", async () => {
+    responde({
+      data: [
+        makeProduct({ id: 1, precio_base: 1000, precio_final: 900, porcentaje_descuento: 10, en_promocion: true }),
+        makeProduct({ id: 2, precio_base: 1000, precio_final: 700, porcentaje_descuento: 30, en_promocion: true }),
+      ],
+      pagination: makePagination({ limit: 100 }),
+    });
+
+    const resultado = await productRepository.getOnSale();
+
+    expect(resultado.map((p) => p.id)).toEqual([2, 1]);
+  });
+
+  it("rechaza con el error de la API", async () => {
+    const error = makeApiError({ status: 500, message: "Error del servidor" });
+    adapter.mockRejectedValueOnce(error);
+
+    await expect(productRepository.getOnSale()).rejects.toBe(error);
+  });
+});

@@ -4,7 +4,7 @@
 // sesión nace aquí; en el tercero se pasa a elegir la contraseña nueva.
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View, type TextInputInstance } from "react-native";
 
 import AuthScaffold, { FormError, SubmitButton } from "@/features/auth/components/AuthScaffold";
 import { useConfirm2FA } from "@/features/auth/hooks/useConfirm2FA";
@@ -54,7 +54,7 @@ export default function VerifyCodeScreen() {
   const [codigo, setCodigo] = useState("");
   const [aviso, setAviso] = useState<string | null>(null);
   const [segundos, setSegundos] = useState(ESPERA_REENVIO);
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<TextInputInstance>(null);
 
   // Cuenta atrás para habilitar el reenvío.
   useEffect(() => {

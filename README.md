@@ -15,15 +15,21 @@ Proyecto de la materia *Gestión del Proceso de Desarrollo de Software* (UTHH).
 - Notificaciones push
 - Chatbot de soporte
 - Reseñas y calificaciones de productos
+- Servicios: pestaña con el listado de servicios técnicos (búsqueda por nombre, scroll infinito y actualización con pull-to-refresh) y detalle con precio, duración, garantía, qué incluye, cómo se trabaja, videos y galería con zoom. Es de solo consulta: no hay carrito ni reserva de servicios
+- Ofertas y descuentos: sección «Ofertas» en Inicio (con «Ver todas» hacia las promociones vigentes) y descuento visible en el carrito (precio original, precio final y porcentaje)
+- Mi cuenta: datos personales, direcciones, pedidos, favoritos, reseñas, notificaciones e información institucional
+- Notificaciones push (con canal de Android)
+- Sesión caducada: cuando el servidor indica que la sesión venció, la app cierra la sesión y vuelve a Login, sin mostrar ningún mensaje
 
-**Fuera del alcance de esta versión:** panel administrativo, gestión de servicios técnicos y asistente de voz Alexa (permanecen en la plataforma web).
+**Fuera del alcance de esta versión:** panel administrativo y asistente de voz Alexa (permanecen en la plataforma web). La app solo consulta los servicios técnicos; su gestión sigue en la web.
 
 ## Tecnologías
 
-- React Native con Expo (TypeScript)
+- React Native 0.88 con Expo SDK 58 (`expo` ~58.0.19) y TypeScript
+- Navegación con Expo Router (`expo-router` ~58.0.26)
 - Backend reutilizado de SYSCOM (Express + PostgreSQL)
 - Git y GitHub (repositorio, GitHub Projects y Pull Requests)
-- Pipeline previsto: GitHub Actions (CI) y EAS Build (builds y distribución beta)
+- GitHub Actions (CI en cada Pull Request) y EAS Build (el perfil `preview` genera un APK de distribución interna)
 
 ## Equipo
 
@@ -56,6 +62,8 @@ Tablero de planeación: https://github.com/users/AngeloMtz/projects/3
 | `develop` | Integración de las funcionalidades terminadas |
 | `feature/*` | Una rama por historia de usuario, por ejemplo `feature/12-checkout-direccion` |
 | `release/*` | Preparación de la versión al cerrar un sprint |
+| `test/*` | Pruebas y su documentación, por ejemplo `test/46-rendimiento` (convención `test/<n°-issue>-nombre`) |
+| `fix/*` | Correcciones, por ejemplo `fix/78-url-api-obligatoria` (convención `fix/<n°-issue>-nombre`) |
 
 ## Reglas para integrar código
 
@@ -77,7 +85,20 @@ npm install
 npx expo start
 ```
 
-Las variables de entorno van en un archivo `.env` local, que no se versiona.
+Las variables de entorno van en un archivo `.env` local, que no se versiona. Copia [`.env.example`](.env.example) como punto de partida:
+
+- `EXPO_PUBLIC_API_URL` (**obligatoria**): URL base de la API de SYSCOM. En desarrollo, si falta, la app usa `http://localhost:4000/api` y muestra una advertencia; en una compilación de producción, si falta (o está vacía), la app lanza un error al iniciar (`src/shared/api/client.ts`, issue #78). En un dispositivo físico, `localhost` no apunta a tu PC: usa la IP de tu red local.
+- `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY`: clave **publicable** de Stripe en modo prueba (`pk_test_...`). Nunca pongas la clave secreta en la app.
+
+`npm run verificar-entorno` comprueba la versión mínima de Node, que exista `package-lock.json` y, fuera de CI, que exista `.env` o `EXPO_PUBLIC_API_URL` (`scripts/verificar-entorno.mjs`).
+
+### Generar el APK
+
+```bash
+npx eas-cli@latest build --platform android --profile preview
+```
+
+El perfil `preview` (`eas.json`) genera un APK de distribución interna. Las variables de entorno de un build en EAS se definen en EAS, no en el `.env`: el detalle y el despliegue a Google Play están en [`docs/despliegue-google-play.md`](docs/despliegue-google-play.md).
 
 ## Estructura del proyecto
 
@@ -113,7 +134,27 @@ El CI (`.github/workflows/ci.yml`) corre en cada Pull Request hacia `develop` y 
 - **Análisis estático:** `npx expo lint`, `npx tsc --noEmit` y `npm audit` (bloquea con vulnerabilidades críticas).
 - **Pruebas unitarias:** `npx jest --ci --coverage` y sube el reporte de cobertura como artefacto.
 
-Los reportes de pruebas de cada sprint están en [`docs/pruebas/`](docs/pruebas/) (`sprint-1.md`, `sprint-2.md`, `sprint-3.md`), junto con la plantilla, la evidencia y los datos de prueba.
+Herramientas: Jest con `jest-expo` y React Native Testing Library. El umbral de cobertura global es 80 % en líneas, sentencias y funciones, y 70 % en ramas (`coverageThreshold` en `package.json`; ver [umbral-de-cobertura.md](docs/pruebas/umbral-de-cobertura.md)). Si baja, el job «Pruebas unitarias» del CI falla.
+
+Scripts de apoyo (`scripts/`):
+- `npm run verificar-entorno`: comprueba el entorno local.
+- `scripts/medir-rendimiento.mjs`: mide tiempos de respuesta de la API; solo corre contra el backend **local** (`scripts/lib/perfGuard.js` lo impide contra otros servidores). Su uso está en el encabezado del propio archivo.
+
+Los reportes de pruebas están en [`docs/pruebas/`](docs/pruebas/), junto con la plantilla, la evidencia y los datos de prueba:
+
+- Por sprint: [sprint-1](docs/pruebas/sprint-1.md), [sprint-2](docs/pruebas/sprint-2.md), [sprint-3](docs/pruebas/sprint-3.md), [sprint-4](docs/pruebas/sprint-4.md), [sprint-5](docs/pruebas/sprint-5.md) y [sprint-5-aceptacion](docs/pruebas/sprint-5-aceptacion.md).
+- De cierre: [integracion-completa](docs/pruebas/integracion-completa.md), [regresion-final](docs/pruebas/regresion-final.md), [regresion-manual-sprint-5](docs/pruebas/regresion-manual-sprint-5.md) y [rendimiento-final](docs/pruebas/rendimiento-final.md).
+- Otros: [plan-de-pruebas](docs/pruebas/plan-de-pruebas.md) y [estabilidad-pruebas-129](docs/pruebas/estabilidad-pruebas-129.md).
+
+## Limitaciones conocidas
+
+- **Realidad Aumentada:** requiere un dispositivo compatible con ARCore. No se pudo verificar en el Samsung A16 usado en las pruebas, que no es compatible: [regresion-final](docs/pruebas/regresion-final.md).
+- **Solo Android:** no hay build para iOS: [regresion-final](docs/pruebas/regresion-final.md).
+- **Accesibilidad:** TalkBack no se probó: [sprint-5-aceptacion](docs/pruebas/sprint-5-aceptacion.md).
+- **Dependencias:** `npx expo-doctor` reporta 12 paquetes con una versión de parche anterior a la que pide el SDK 58: [regresion-final](docs/pruebas/regresion-final.md).
+- **Pruebas de integración:** usan un servidor simulado, no el backend real: [integracion-completa](docs/pruebas/integracion-completa.md).
+- **Webhook de Stripe:** no se midió su tiempo de respuesta: [rendimiento-final](docs/pruebas/rendimiento-final.md).
+- **Regresión manual:** sus resultados «Pasa» son según Angel, sin capturas: [regresion-manual-sprint-5](docs/pruebas/regresion-manual-sprint-5.md) y [regresion-final](docs/pruebas/regresion-final.md).
 
 ## Documentación generada (DeepWiki)
 

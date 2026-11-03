@@ -1,6 +1,6 @@
 import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
-import { makeApiError } from "../fixtures";
+import { makeApiError, makeProduct, makeProductImage, makeProductVariant } from "../fixtures";
 
 /**
  * Servidor falso CON ESTADO de la tienda (carrito, direcciones, pagos y pedidos)
@@ -20,12 +20,16 @@ export interface ProductoFalso {
   precio: number;
   stock: number;
   estado?: string;
+  /** Precio con promoción vigente. Sin este campo el producto no tiene promoción. */
+  precioPromocion?: number;
 }
 
 interface LineaCarrito {
   id_producto: number;
   cantidad: number;
   precio_unitario: number;
+  /** Código de cupón aplicado a la línea (lo fija `aplicarCupon`). */
+  cupon?: string;
 }
 
 interface DireccionFalsa {
@@ -53,6 +57,8 @@ interface PedidoFalso {
 interface IntentFalso {
   id: string;
   id_direccion: number;
+  /** Lo que Stripe cobraría: el total del carrito (con descuentos) al crear el PaymentIntent. */
+  monto: number;
   pagado: boolean;
   consultas: number;
 }
@@ -163,8 +169,8 @@ export function crearServidorTienda(adapter: Adapter, productos: ProductoFalso[]
           cantidad: l.cantidad,
           precio_unitario: dinero(l.precio_unitario),
           created_at: "2026-10-12T14:00:00.000Z",
-          id_promocion_aplicada: null,
-          codigo_promo_aplicado: null,
+          id_promocion_aplicada: l.cupon ? 1 : null,
+          codigo_promo_aplicado: l.cupon ?? null,
           productos: productoDe(l.id_producto),
         }))
         .reverse();
@@ -183,7 +189,7 @@ export function crearServidorTienda(adapter: Adapter, productos: ProductoFalso[]
         if (!p) throw makeApiError({ status: 404, message: "Producto no encontrado" });
         if (p.estado !== "activo") throw makeApiError({ status: 404, message: "El producto no está disponible" });
         if (linea) linea.cantidad += 1;
-        else carrito.push({ id_producto: id, cantidad: 1, precio_unitario: p.precio });
+        else carrito.push({ id_producto: id, cantidad: 1, precio_unitario: p.precioPromocion ?? p.precio });
         return ok(config, { data: { id_carrito_detalle: 100 } }, 201);
       }
       if (metodo === "patch") {
@@ -242,7 +248,7 @@ export function crearServidorTienda(adapter: Adapter, productos: ProductoFalso[]
         }
       }
       const id = `pi_${siguienteIntent++}`;
-      intents.set(id, { id, id_direccion: cuerpo.id_direccion, pagado: false, consultas: 0 });
+      intents.set(id, { id, id_direccion: cuerpo.id_direccion, monto: total(), pagado: false, consultas: 0 });
       return ok(config, { data: { clientSecret: `${id}_secret_abc`, paymentIntentId: id } });
     }
 
@@ -282,6 +288,34 @@ export function crearServidorTienda(adapter: Adapter, productos: ProductoFalso[]
       return ok(config, { data: detalle(p) });
     }
 
+    // ── Catálogo paginado (solo page y limit; no filtra por búsqueda ni categoría) ──
+    if (metodo === "get" && ruta === "/catalog/products") {
+      const page = Number(config.params?.page ?? 1);
+      const limit = Number(config.params?.limit ?? 20);
+      const activos = [...catalogo.values()].filter((p) => p.estado === "activo");
+      const data = activos.slice((page - 1) * limit, page * limit).map((p) => {
+        const enPromocion = p.precioPromocion !== undefined && p.precioPromocion < p.precio;
+        const final = enPromocion ? (p.precioPromocion as number) : p.precio;
+        return makeProduct({
+          id: p.id,
+          sku: `SKU-${p.id}`,
+          nombre: p.nombre,
+          slug: `producto-${p.id}`,
+          precio_base: p.precio,
+          precio_final: final,
+          descuento: p.precio - final,
+          porcentaje_descuento: enPromocion ? Math.round(((p.precio - final) * 100) / p.precio) : 0,
+          en_promocion: enPromocion,
+          imagenes: [makeProductImage({ url: `https://example.com/p${p.id}.jpg` })],
+          variantes: [makeProductVariant({ stock: p.stock })],
+        });
+      });
+      return ok(config, {
+        data,
+        pagination: { page, limit, total: activos.length, pages: Math.ceil(activos.length / limit) },
+      });
+    }
+
     throw new Error(`Ruta no simulada: ${clave}`);
   });
 
@@ -306,6 +340,70 @@ export function crearServidorTienda(adapter: Adapter, productos: ProductoFalso[]
     },
     /** Producto de la tienda (para ajustar stock en una prueba). */
     producto: (id: number) => catalogo.get(id),
+    /**
+     * Activa (precio) o desactiva (null) la promoción de un producto. Como el backend, el
+     * carrito se vuelve a resolver al consultarlo: las líneas sin cupón toman el precio nuevo.
+     */
+    fijarPromocion: (id: number, precio: number | null) => {
+      const p = catalogo.get(id);
+      if (!p) return;
+      p.precioPromocion = precio ?? undefined;
+      for (const l of carrito) {
+        if (l.id_producto === id && !l.cupon) l.precio_unitario = p.precioPromocion ?? p.precio;
+      }
+    },
+    /** Aplica un cupón a la línea: el precio unitario es el del cupón y la línea lo declara. */
+    aplicarCupon: (id: number, codigo: string, precioUnitario: number) => {
+      const l = carrito.find((x) => x.id_producto === id);
+      if (l) {
+        l.cupon = codigo;
+        l.precio_unitario = precioUnitario;
+      }
+    },
+    /**
+     * Crea de golpe un pedido de una compra anterior (sin recorrer el pago) con esos productos a su precio
+     * vigente. Por defecto ya entregado. No toca el carrito ni el stock.
+     */
+    sembrarPedido: (ids: number[], estadoPedido = "entregado") => {
+      const idPedido = siguientePedido++;
+      const items = ids.map((id, i) => {
+        const p = catalogo.get(id);
+        const unitario = p?.precioPromocion ?? p?.precio ?? 0;
+        return {
+          id_pedido_detalle: idPedido * 10 + i,
+          id_producto: id,
+          cantidad: 1,
+          precio_unitario: dinero(unitario),
+          subtotal: dinero(unitario),
+        };
+      });
+      const pedido: PedidoFalso = {
+        id_pedido: idPedido,
+        estado: estadoPedido,
+        total: dinero(items.reduce((s, i) => s + Number(i.subtotal), 0)),
+        fecha_pedido: "2026-10-05T15:00:00.000Z",
+        direccion: {
+          id_direccion: 0,
+          calle: "Av. Juárez 123",
+          colonia: "Centro",
+          ciudad: "Huejutla",
+          estado: "Hidalgo",
+          codigo_postal: "43000",
+          referencias: null,
+          created_at: "2026-10-01T10:00:00.000Z",
+        },
+        items,
+        pago: { id_pago: idPedido, metodo_pago: "stripe", estado_pago: "completado", stripe_payment_intent_id: `pi_previo_${idPedido}` },
+        paymentIntent: `pi_previo_${idPedido}`,
+      };
+      pedidos.unshift(pedido);
+      return pedido;
+    },
+    /** El administrador marca el pedido como entregado. */
+    marcarEntregado: (idPedido: number) => {
+      const pedido = pedidos.find((x) => x.id_pedido === idPedido);
+      if (pedido) pedido.estado = "entregado";
+    },
   };
 }
 

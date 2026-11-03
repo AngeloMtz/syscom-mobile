@@ -20,9 +20,11 @@ import {
 import { useBrands } from "@/features/catalog/hooks/useBrands";
 import { useRootCategories } from "@/features/catalog/hooks/useCategories";
 import { useFeaturedProducts } from "@/features/catalog/hooks/useFeaturedProducts";
+import { useOnSaleProducts } from "@/features/catalog/hooks/useOnSaleProducts";
 import { useProductsPreview } from "@/features/catalog/hooks/useProductsPreview";
 import { useServicesPreview } from "@/features/services/hooks/useServicesPreview";
 import { getServiceImageUrl } from "@/features/services/selectors";
+import OnSaleSection from "@/features/catalog/components/OnSaleSection";
 import ProductCard from "@/features/catalog/components/ProductCard";
 import type { Brand, Category, ProductListItem } from "@/features/catalog/types";
 import { useProfile } from "@/features/profile/hooks/useProfile";
@@ -49,6 +51,7 @@ export default function HomeScreen() {
   const sliders = useSliders();
   const categories = useRootCategories();
   const featured = useFeaturedProducts(8);
+  const ofertas = useOnSaleProducts();
   const brands = useBrands();
   const productos = useProductsPreview(6);
   const servicios = useServicesPreview(6);
@@ -73,6 +76,7 @@ export default function HomeScreen() {
     sliders.isRefetching ||
     categories.isRefetching ||
     featured.isRefetching ||
+    ofertas.isRefetching ||
     brands.isRefetching ||
     productos.isRefetching ||
     servicios.isRefetching ||
@@ -82,6 +86,7 @@ export default function HomeScreen() {
     sliders.refetch();
     categories.refetch();
     featured.refetch();
+    ofertas.refetch();
     brands.refetch();
     productos.refetch();
     servicios.refetch();
@@ -230,6 +235,13 @@ export default function HomeScreen() {
               </ScrollView>
             </View>
           ) : null}
+
+          {/* Ofertas: se oculta si no hay promociones vigentes (o si la consulta falla) */}
+          <OnSaleSection
+            products={(ofertas.data ?? []).slice(0, 8)}
+            onSeeAll={() => router.push("/promociones")}
+            onOpenProduct={openProduct}
+          />
 
           {/* Destacados */}
           {(featured.data?.length ?? 0) > 0 ? (

@@ -17,7 +17,8 @@ export const useAddresses = () => {
     queryKey: ADDRESSES_KEY,
     queryFn: () => addressRepository.getAll(),
     select: sortByRecent,
-    // Sin sesión el backend responde 401: ni siquiera se hace la petición.
+    // Sin sesión el backend responde 401 (con un token vencido, 403): ni siquiera se hace la petición.
+    // Si el token vence con la sesión abierta, el cliente HTTP la cierra solo (shared/api/client.ts).
     enabled: isAuthenticated,
   });
 };

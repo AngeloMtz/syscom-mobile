@@ -3,6 +3,7 @@
 // las llamadas HTTP viven en features/auth/repositories.
 import { create } from "zustand";
 
+import { setSessionExpiredHandler } from "@/shared/api/client";
 import { queryClient } from "@/shared/api/queryClient";
 import { clearToken, getTokenSync, restoreToken, saveToken } from "@/shared/api/secureToken";
 import type { User } from "@/features/auth/types";
@@ -47,3 +48,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isAuthenticated: !!getTokenSync(), isHydrating: false });
   },
 }));
+
+// Cuando el servidor dice que la sesión caducó (401, o 403 «Token inválido o expirado»), el cliente
+// HTTP llama a esto: se cierra la sesión y RequireAuth saca al usuario al login. Se registra aquí
+// (y no al revés) para que client.ts no importe el store.
+setSessionExpiredHandler(() => useAuthStore.getState().logout());

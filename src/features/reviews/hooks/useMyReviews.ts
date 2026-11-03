@@ -9,7 +9,7 @@ import { useAuthStore } from "@/shared/store/authStore";
 
 /**
  * Reseñas del usuario ("Mis reseñas"): solo las de producto (el alcance de la app), con su estado y su
- * total. Solo con sesión: sin ella el backend responde 401, así que ni se hace la petición.
+ * total. Solo con sesión: sin ella el backend responde 401 (con un token vencido, 403), así que ni se hace la petición.
  * useCreateReview invalida esta clave al terminar.
  */
 export const useMyReviews = () => {

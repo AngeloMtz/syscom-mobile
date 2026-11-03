@@ -1,0 +1,47 @@
+INTEGRACION: archivo | 1ª prueba ms | prueba más lenta ms | suite ms | fallan
+integration/chatbotYChatEnVivo.test.tsx | 9989 | 9989 | 27312 | 1
+integration/recorridoCompleto.test.tsx | 8903 | 8903 | 32394 | 0
+integration/autenticacion.test.tsx | 8309 | 8309 | 27168 | 1
+integration/ofertasYDescuentoCarrito.test.tsx | 7314 | 7314 | 29221 | 1
+integration/arranqueDeLaApp.test.tsx | 4924 | 4924 | 14963 | 0
+integration/realidadAumentada.test.tsx | 1398 | 1398 | 16826 | 0
+integration/resenas.test.tsx | 707 | 6578 | 28350 | 1
+integration/sesionCompra.test.tsx | 106 | 144 | 1896 | 0
+integration/compraDeExtremoAExtremo.test.tsx | 105 | 105 | 15500 | 0
+integration/sesionCache.test.tsx | 97 | 151 | 1952 | 0
+integration/favoritosApi.test.tsx | 95 | 95 | 2591 | 0
+integration/notificacionesPush.test.tsx | 38 | 8708 | 26189 | 1
+integration/perfilYMiCuenta.test.tsx | 32 | 7007 | 15195 | 2
+integration/catalogoApi.test.tsx | 28 | 28 | 4136 | 0
+integration/sesionCaducada.test.tsx | 17 | 17 | 1964 | 0
+integration/extensionesServidorTienda.test.tsx | 8 | 15 | 1674 | 0
+
+TOP 12 pruebas más lentas (todas):
+9989 | integration/chatbotYChatEnVivo.test.tsx | muestra el saludo y las sugerencias; al tocar una se envía y | failed
+8903 | integration/recorridoCompleto.test.tsx | login con 2FA → Ofertas → carrito con descuento → pago → ped | passed
+8708 | integration/notificacionesPush.test.tsx | carga la bandeja y las preferencias del servidor, con la ses | failed
+8309 | integration/autenticacion.test.tsx | login sin 2FA: la sesión nace, el token se guarda y el Beare | failed
+7314 | integration/ofertasYDescuentoCarrito.test.tsx | el Inicio muestra la sección Ofertas cuando hay productos co | failed
+7007 | integration/perfilYMiCuenta.test.tsx | con sesión, saluda con el nombre que devuelve el servidor y  | failed
+6578 | integration/resenas.test.tsx | sin compra, la pantalla de escribir reseña dice «No puedes r | failed
+4924 | integration/arranqueDeLaApp.test.tsx | primer arranque: sin bandera ni token muestra la bienvenida, | passed
+4556 | components/MyReviewsComponents.test.tsx | sin reseñas muestra el estado vacío | passed
+4549 | components/CartItemRow.test.tsx | muestra nombre, marca, precio unitario, cantidad y subtotal  | passed
+3512 | components/BannerCarousel.test.tsx | sin imágenes no dibuja nada | passed
+3388 | components/OrderComponents.test.tsx | muestra folio, fecha de México, estado, productos y total | passed
+
+FALLADAS: 7
+9989 | integration/chatbotYChatEnVivo.test.tsx | muestra el saludo y las sugerencias; al tocar una se envía y | failed
+8708 | integration/notificacionesPush.test.tsx | carga la bandeja y las preferencias del servidor, con la ses | failed
+8309 | integration/autenticacion.test.tsx | login sin 2FA: la sesión nace, el token se guarda y el Beare | failed
+7314 | integration/ofertasYDescuentoCarrito.test.tsx | el Inicio muestra la sección Ofertas cuando hay productos co | failed
+7007 | integration/perfilYMiCuenta.test.tsx | con sesión, saluda con el nombre que devuelve el servidor y  | failed
+6578 | integration/resenas.test.tsx | sin compra, la pantalla de escribir reseña dice «No puedes r | failed
+1092 | integration/perfilYMiCuenta.test.tsx | cerrar sesión: desregistra el token del dispositivo con la s | failed
+
+components 1ª prueba top5:
+components/CartItemRow.test.tsx 4549
+components/BannerCarousel.test.tsx 3512
+components/AddressForm.test.tsx 503
+components/OnSaleComponents.test.tsx 423
+components/ReviewWriteComponents.test.tsx 298

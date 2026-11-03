@@ -1,6 +1,6 @@
 // src/app/profile/index.tsx — Panel del cliente: pantalla de entrada del área
-// de cuenta. Las opciones replican el menú del área cliente de la web; solo
-// "Datos personales" está implementada, el resto llega en sus propios issues.
+// de cuenta. Muestra solo las opciones del menú del área cliente de la web que
+// ya funcionan en la app.
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -75,8 +75,6 @@ function ClientDashboard() {
         description="Consulta y actualiza tu información"
         onPress={() => router.push("/profile/personal-data")}
       />
-      <DashboardOption icon="lock-closed-outline" label="Cambiar contraseña" disabled />
-      <DashboardOption icon="shield-checkmark-outline" label="Autenticación 2FA" disabled />
       <DashboardOption
         icon="location-outline"
         label="Mis direcciones"
@@ -106,8 +104,6 @@ function ClientDashboard() {
         description="Tus calificaciones y su estado"
         onPress={() => router.push("/reviews")}
       />
-      <DashboardOption icon="card-outline" label="Métodos de pago" disabled />
-      <DashboardOption icon="document-text-outline" label="Facturación" disabled />
 
       <Text style={[styles.seccion, { color: c.textMuted }]} accessibilityRole="header">
         MÁS
@@ -125,8 +121,6 @@ function ClientDashboard() {
         description="Avisos de pedidos y promociones"
         onPress={() => router.push("/notifications")}
       />
-      <DashboardOption icon="gift-outline" label="Aportaciones" disabled />
-      <DashboardOption icon="help-circle-outline" label="Ayuda" disabled />
 
       <Pressable
         onPress={salir}

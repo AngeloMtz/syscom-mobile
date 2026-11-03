@@ -10,8 +10,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
+  type TextInputInstance,
 } from "react-native";
 
 import { SubmitButton } from "@/features/auth/components/AuthScaffold";
@@ -74,9 +74,9 @@ function PersonalDataForm({ perfil }: { perfil: Profile }) {
   const [errores, setErrores] = useState<ProfileErrors>({});
   const [guardado, setGuardado] = useState(false);
 
-  const refPaterno = useRef<TextInput>(null);
-  const refMaterno = useRef<TextInput>(null);
-  const refTelefono = useRef<TextInput>(null);
+  const refPaterno = useRef<TextInputInstance>(null);
+  const refMaterno = useRef<TextInputInstance>(null);
+  const refTelefono = useRef<TextInputInstance>(null);
 
   const set = (campo: keyof UpdateProfileDTO) => (valor: string) => {
     setDatos((d) => ({ ...d, [campo]: valor }));
@@ -175,12 +175,12 @@ function PersonalDataForm({ perfil }: { perfil: Profile }) {
           value={datos.nombre}
           onChangeText={set("nombre")}
           error={errores.nombre}
-          hint="Entre 4 y 25 caracteres"
+          hint="Entre 3 y 40 caracteres"
           autoCapitalize="words"
           returnKeyType="next"
           onSubmitEditing={() => refPaterno.current?.focus()}
           editable={!guardar.isPending}
-          maxLength={25}
+          maxLength={40}
         />
 
         <FormField

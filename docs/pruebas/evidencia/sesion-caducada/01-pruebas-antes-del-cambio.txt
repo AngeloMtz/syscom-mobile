@@ -1,0 +1,476 @@
+FAIL src/__tests__/integration/sesionCaducada.test.tsx (11.666 s)
+  ● Console
+
+    console.warn
+      EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. En un dispositivo físico define la variable en .env.
+
+      15 |   if (url) return url;
+      16 |   if (__DEV__) {
+    > 17 |     console.warn(
+         |             ^
+      18 |       "EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. " +
+      19 |         "En un dispositivo físico define la variable en .env.",
+      20 |     );
+
+      at warn (src/shared/api/client.ts:17:13)
+      at Object.resolveApiUrl (src/shared/api/client.ts:29:24)
+      at Object.require (src/features/addresses/repositories/addressRepository.ts:5:1)
+      at Object.require (src/features/addresses/hooks/useAddresses.ts:5:1)
+      at Object.require (src/__tests__/integration/sesionCaducada.test.tsx:13:1)
+
+  ● integración: sesión caducada › la primera petición con el token vencido cierra la sesión, borra el token y el guard redirige al login
+
+    Unable to find an element with text: redirige a /(auth)/login
+
+    <Text>
+      contenido privado
+    </Text>
+
+      76 |     await montar();
+      77 |
+    > 78 |     expect(await screen.findByText("redirige a /(auth)/login")).toBeTruthy();
+         |                         ^
+      79 |     expect(screen.queryByText("contenido privado")).toBeNull();
+      80 |     expect(useAuthStore.getState().isAuthenticated).toBe(false);
+      81 |     expect(useAuthStore.getState().user).toBeNull();
+
+      at Object.findByText (src/__tests__/integration/sesionCaducada.test.tsx:78:25)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● integración: sesión caducada › las tres consultas en paralelo cierran la sesión una sola vez y ninguna se reintenta con el token vencido
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      89 |     await montar();
+      90 |
+    > 91 |     await waitFor(() => expect(useAuthStore.getState().isAuthenticated).toBe(false));
+         |                  ^
+      92 |     expect(SecureStore.deleteItemAsync).toHaveBeenCalledTimes(1);
+      93 |     expect(adapter).toHaveBeenCalledTimes(3);
+      94 |   });
+
+      at Object.<anonymous> (src/__tests__/integration/sesionCaducada.test.tsx:91:18)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● integración: sesión caducada › una cuenta suspendida (401 con la sesión abierta) también la cierra
+
+    Unable to find an element with text: redirige a /(auth)/login
+
+    <Text>
+      contenido privado
+    </Text>
+
+       99 |     await montar();
+      100 |
+    > 101 |     expect(await screen.findByText("redirige a /(auth)/login")).toBeTruthy();
+          |                         ^
+      102 |     expect(getTokenSync()).toBeNull();
+      103 |   });
+      104 |
+
+      at Object.findByText (src/__tests__/integration/sesionCaducada.test.tsx:101:25)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+FAIL src/__tests__/apiClient.test.ts
+  ● cliente HTTP: sesión caducada › el texto del backend para un token caducado vive en una constante
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Token inválido o expirado"
+    Received: undefined
+
+      213 |   it("el texto del backend para un token caducado vive en una constante", () => {
+      214 |     const { SESSION_EXPIRED_MESSAGE } = cargarCliente(URL_API);
+    > 215 |     expect(SESSION_EXPIRED_MESSAGE).toBe("Token inválido o expirado");
+          |                                     ^
+      216 |   });
+      217 |
+      218 |   it("un 401 de una petición con el token actual cierra la sesión y el error sigue llegando a quien llamó", async () => {
+
+      at Object.toBe (src/__tests__/apiClient.test.ts:215:37)
+
+  ● cliente HTTP: sesión caducada › un 401 de una petición con el token actual cierra la sesión y el error sigue llegando a quien llamó
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 403 con «Token inválido o expirado» cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 403 de otro tipo (por ejemplo, un rol sin permiso) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 401 en /auth/login (credenciales o código incorrectos) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 401 en /auth/verify-2fa-login (credenciales o código incorrectos) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 401 en /auth/register (credenciales o código incorrectos) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 401 en /auth/verify-registration (credenciales o código incorrectos) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 401 en /auth/resend-code (credenciales o código incorrectos) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 401 en /auth/forgot-password (credenciales o código incorrectos) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 401 en /auth/verify-recovery (credenciales o código incorrectos) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 401 en /auth/reset-password (credenciales o código incorrectos) no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un 403 en una ruta pública (acceso móvil denegado) no cierra la sesión aunque lleve el mensaje de token
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › sin token (la petición no llevaba Authorization) no hay sesión que cerrar
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      264 |     const cliente = cargarCliente(URL_API);
+      265 |     const caducada = jest.fn();
+    > 266 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      267 |     rechazar(cliente.adapter, 401, "No autenticado");
+      268 |
+      269 |     await expect(cliente.api.get("/cart")).rejects.toMatchObject({ response: { status: 401 } });
+
+      at Object.setSessionExpiredHandler (src/__tests__/apiClient.test.ts:266:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at Object.<anonymous> (node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12)
+
+  ● cliente HTTP: sesión caducada › si mientras tanto se inició otra sesión (token distinto al enviado) no la cierra
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › tres peticiones en paralelo con el mismo token vencido cierran la sesión una sola vez
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › terminado el cierre, una sesión posterior que también caduca vuelve a cerrarse
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › un error sin `config` (no es de una petición) se propaga y no cierra la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › sin manejador registrado el error se propaga igual
+
+    TypeError: setSessionExpiredHandler is not a function
+
+      318 |     const { api, adapter, setSessionExpiredHandler, saveToken } = cargarCliente(URL_API);
+      319 |     await saveToken("jwt-actual");
+    > 320 |     setSessionExpiredHandler(null);
+          |     ^
+      321 |     rechazar(adapter, 401, "No autenticado");
+      322 |
+      323 |     await expect(api.get("/cart")).rejects.toMatchObject({ response: { status: 401 } });
+
+      at Object.setSessionExpiredHandler (src/__tests__/apiClient.test.ts:320:5)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › si el manejador falla, quien llamó recibe el error original de la petición
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● cliente HTTP: sesión caducada › una respuesta correcta no toca la sesión
+
+    TypeError: cliente.setSessionExpiredHandler is not a function
+
+      207 |     await cliente.saveToken("jwt-actual");
+      208 |     const caducada = jest.fn();
+    > 209 |     cliente.setSessionExpiredHandler(caducada);
+          |             ^
+      210 |     return { ...cliente, caducada };
+      211 |   }
+      212 |
+
+      at setSessionExpiredHandler (src/__tests__/apiClient.test.ts:209:13)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+FAIL src/__tests__/errorMessage.test.ts
+  ● apiErrorMessage › tiempo de espera agotado › explica el timeout de Axios («timeout of 15000ms exceeded»)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "El servidor tardó demasiado en responder. Intenta de nuevo."
+    Received: "Ocurrió un error. Intenta de nuevo."
+
+      48 |
+      49 |     it("explica el timeout de Axios («timeout of 15000ms exceeded»)", () => {
+    > 50 |       expect(apiErrorMessage({ code: "ECONNABORTED", message: "timeout of 15000ms exceeded" })).toBe(MENSAJE);
+         |                                                                                                 ^
+      51 |     });
+      52 |     it("lo reconoce por el texto aunque no venga el código", () => {
+      53 |       expect(apiErrorMessage({ message: "timeout of 15000ms exceeded" }, "Verifica tus datos")).toBe(MENSAJE);
+
+      at Object.toBe (src/__tests__/errorMessage.test.ts:50:97)
+
+  ● apiErrorMessage › tiempo de espera agotado › lo reconoce por el texto aunque no venga el código
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "El servidor tardó demasiado en responder. Intenta de nuevo."
+    Received: "Verifica tus datos"
+
+      51 |     });
+      52 |     it("lo reconoce por el texto aunque no venga el código", () => {
+    > 53 |       expect(apiErrorMessage({ message: "timeout of 15000ms exceeded" }, "Verifica tus datos")).toBe(MENSAJE);
+         |                                                                                                 ^
+      54 |     });
+      55 |     it("lo reconoce por el código aunque el texto cambie", () => {
+      56 |       expect(apiErrorMessage({ code: "ECONNABORTED", message: "otro texto" })).toBe(MENSAJE);
+
+      at Object.toBe (src/__tests__/errorMessage.test.ts:53:97)
+
+  ● apiErrorMessage › tiempo de espera agotado › lo reconoce por el código aunque el texto cambie
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "El servidor tardó demasiado en responder. Intenta de nuevo."
+    Received: "Ocurrió un error. Intenta de nuevo."
+
+      54 |     });
+      55 |     it("lo reconoce por el código aunque el texto cambie", () => {
+    > 56 |       expect(apiErrorMessage({ code: "ECONNABORTED", message: "otro texto" })).toBe(MENSAJE);
+         |                                                                                ^
+      57 |     });
+      58 |     it("no cambia los demás mensajes: sin red, con respuesta del backend y fallback", () => {
+      59 |       expect(apiErrorMessage(makeNetworkError())).toBe(
+
+      at Object.toBe (src/__tests__/errorMessage.test.ts:56:80)
+
+Test Suites: 3 failed, 3 total
+Tests:       27 failed, 26 passed, 53 total
+Snapshots:   0 total
+Time:        16.741 s
+Ran all test suites matching src/__tests__/apiClient|src/__tests__/errorMessage|src/__tests__/integration/sesionCaducada.

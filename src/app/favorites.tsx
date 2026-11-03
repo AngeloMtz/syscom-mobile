@@ -84,7 +84,7 @@ function FavoritesList() {
                 </View>
               ) : null}
             </View>
-          ) : null
+          ) : undefined
         }
         ListEmptyComponent={
           <View style={styles.center}>

@@ -24,6 +24,10 @@ export default function CartItemRow({ line, onIncrease, onDecrease, onRemove, on
   const [imageFailed, setImageFailed] = useState(false);
   const price = line.precioUnitario !== null ? formatPrice(line.precioUnitario) : "Precio no disponible";
   const subtotal = line.subtotal !== null ? formatPrice(line.subtotal) : "—";
+  const discountLabel =
+    line.precioOriginal !== null && line.descuentoPorcentaje !== null && line.precioUnitario !== null
+      ? `${line.descuentoPorcentaje} por ciento de descuento, antes ${formatPrice(line.precioOriginal)}, ahora ${formatPrice(line.precioUnitario)}`
+      : null;
   const unavailable = line.status === "agotado" || line.status === "no_disponible";
 
   const message =
@@ -69,7 +73,19 @@ export default function CartItemRow({ line, onIncrease, onDecrease, onRemove, on
           <Text style={[styles.name, { color: c.text }, unavailable && styles.dim]} numberOfLines={2}>
             {line.nombre}
           </Text>
-          <Text style={[styles.unit, { color: c.textMuted }]}>{price} c/u</Text>
+          {discountLabel ? (
+            <View accessible accessibilityLabel={discountLabel} style={styles.discountRow}>
+              <Text style={[styles.unit, styles.original, { color: c.textMuted }]}>
+                {formatPrice(line.precioOriginal!)}
+              </Text>
+              <Text style={[styles.unit, { color: c.textMuted }]}>{price} c/u</Text>
+              <View style={[styles.badge, { backgroundColor: c.danger }]}>
+                <Text style={styles.badgeText}>-{line.descuentoPorcentaje} %</Text>
+              </View>
+            </View>
+          ) : (
+            <Text style={[styles.unit, { color: c.textMuted }]}>{price} c/u</Text>
+          )}
         </View>
 
         <Pressable
@@ -153,6 +169,10 @@ const styles = StyleSheet.create({
   brand: { fontSize: 11, fontWeight: "600", textTransform: "uppercase" },
   name: { fontSize: 14, fontWeight: "600" },
   unit: { fontSize: 12 },
+  discountRow: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", columnGap: spacing.sm, rowGap: 2 },
+  original: { textDecorationLine: "line-through" },
+  badge: { paddingHorizontal: spacing.sm, paddingVertical: 2, borderRadius: radius.sm },
+  badgeText: { color: "#fff", fontSize: 11, fontWeight: "800" },
   remove: { padding: spacing.xs },
   message: { fontSize: 12, fontWeight: "600" },
   bottom: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },

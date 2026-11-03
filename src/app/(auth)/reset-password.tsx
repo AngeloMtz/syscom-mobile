@@ -3,7 +3,7 @@
 // se vuelve al login, igual que en la web.
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { Text, View, type TextInputInstance } from "react-native";
 
 import AuthScaffold, { FormError, SubmitButton } from "@/features/auth/components/AuthScaffold";
 import PasswordRules from "@/features/auth/components/PasswordRules";
@@ -18,7 +18,7 @@ export default function ResetPasswordScreen() {
   const router = useRouter();
   const { correo = "", code = "" } = useLocalSearchParams<{ correo?: string; code?: string }>();
   const reset = useResetPassword();
-  const refConfirm = useRef<TextInput>(null);
+  const refConfirm = useRef<TextInputInstance>(null);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

@@ -6,11 +6,11 @@
 // En tu máquina local, sin esa variable, sigue usando el archivo físico.
 module.exports = {
   expo: {
-    name: "syscom-mobile",
+    name: "SYSCOM",
     slug: "syscom-mobile",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/images/icon.png",
     scheme: "syscommobile",
     userInterfaceStyle: "light",
     ios: {
@@ -20,10 +20,9 @@ module.exports = {
       package: "com.syscom.mobile",
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
       adaptiveIcon: {
-        backgroundColor: "#E6F4FE",
-        foregroundImage: "./assets/android-icon-foreground.png",
-        backgroundImage: "./assets/android-icon-background.png",
-        monochromeImage: "./assets/android-icon-monochrome.png",
+        backgroundColor: "#0A4780",
+        foregroundImage: "./assets/images/adaptive-icon-foreground.png",
+        monochromeImage: "./assets/images/adaptive-icon-monochrome.png",
       },
       predictiveBackGestureEnabled: false,
     },
@@ -39,8 +38,17 @@ module.exports = {
       [
         "expo-notifications",
         {
-          icon: "./assets/android-icon-monochrome.png",
-          color: "#05afe8",
+          icon: "./assets/images/notification-icon.png",
+          color: "#0A4780",
+        },
+      ],
+      [
+        "expo-build-properties",
+        {
+          android: {
+            // R8 no halla las clases de push provisioning de Stripe (compileOnly, no usadas).
+            extraProguardRules: "-dontwarn com.stripe.android.pushProvisioning.**",
+          },
         },
       ],
     ],
@@ -50,9 +58,9 @@ module.exports = {
     extra: {
       router: {},
       eas: {
-        projectId: "927a2213-b3b3-42f6-98c8-662ef2e27b30",
+        projectId: "d59c39b8-b07c-4b4d-9fe4-e79def2ecb6c",
       },
     },
-    owner: "elea20",
+    owner: "imangeloos-team",
   },
 };

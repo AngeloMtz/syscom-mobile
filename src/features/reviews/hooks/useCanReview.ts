@@ -6,7 +6,7 @@ import { canReviewKey } from "@/features/reviews/reviewKeys";
 import { useAuthStore } from "@/shared/store/authStore";
 
 /**
- * ¿Puede el usuario reseñar este producto? Solo con sesión (el backend responde 401 sin ella,
+ * ¿Puede el usuario reseñar este producto? Solo con sesión (sin ella el backend responde 401; con un token vencido, 403,
  * así que ni se hace la petición) y con un id válido. Si puede, trae el pedido que da derecho.
  */
 export const useCanReview = (productId: number | null) => {

@@ -11,6 +11,8 @@ jest.mock("expo-secure-store", () => ({
   deleteItemAsync: jest.fn(),
 }));
 
+const MENSAJE_INCOMPLETA = "Respuesta incompleta del servidor. Intenta de nuevo.";
+
 /** Adapter falso: ninguna petición sale a la red. */
 const adapter = jest.fn<ReturnType<AxiosAdapter>, Parameters<AxiosAdapter>>();
 
@@ -71,6 +73,19 @@ describe("authRepository.login", () => {
     expect(resultado).toEqual({ requires2FA: true, correo: "yo@example.com" });
   });
 
+  it.each([
+    ["sin data", undefined],
+    ["sin user", { token: "jwt" }],
+    ["sin token", { user: makeUser() }],
+  ])("lanza un error legible si la respuesta viene %s", async (_caso, data) => {
+    responde(data);
+
+    const error = await authRepository.login(makeLoginPayload()).catch((e) => e);
+
+    expect(error).toBeInstanceOf(Error);
+    expect(authErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
+  });
+
   it("rechaza con el error de la API cuando las credenciales son inválidas", async () => {
     const error = makeApiError({ status: 401, message: "Credenciales inválidas" });
     adapter.mockRejectedValueOnce(error);
@@ -93,6 +108,19 @@ describe("authRepository.confirm2FA", () => {
       cuerpo: { correo: "ana@example.com", code: "123456" },
     });
     expect(resultado).toEqual({ user, token: "jwt-2fa" });
+  });
+
+  it.each([
+    ["sin data", undefined],
+    ["sin user", { token: "jwt" }],
+    ["sin token", { user: makeUser() }],
+  ])("lanza un error legible si la respuesta viene %s", async (_caso, data) => {
+    responde(data);
+
+    const error = await authRepository.confirm2FA("ana@example.com", "123456").catch((e) => e);
+
+    expect(error).toBeInstanceOf(Error);
+    expect(authErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
   });
 });
 
@@ -137,6 +165,19 @@ describe("authRepository.verifyRegistration", () => {
       cuerpo: { correo: "ana@example.com", code: "654321" },
     });
     expect(resultado).toEqual({ user, token: "jwt-registro" });
+  });
+
+  it.each([
+    ["sin data", undefined],
+    ["sin user", { token: "jwt" }],
+    ["sin token", { user: makeUser() }],
+  ])("lanza un error legible si la respuesta viene %s", async (_caso, data) => {
+    responde(data);
+
+    const error = await authRepository.verifyRegistration("ana@example.com", "654321").catch((e) => e);
+
+    expect(error).toBeInstanceOf(Error);
+    expect(authErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
   });
 });
 

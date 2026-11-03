@@ -1,0 +1,718 @@
+FAIL src/__tests__/integration/notificacionesPush.test.tsx (19.258 s)
+  ● Console
+
+    console.warn
+      EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. En un dispositivo físico define la variable en .env.
+
+    [0m [90m 15 |[39m   [36mif[39m (url) [36mreturn[39m url[33m;[39m
+     [90m 16 |[39m   [36mif[39m (__DEV__) {
+    [31m[1m>[22m[39m[90m 17 |[39m     console[33m.[39mwarn(
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 18 |[39m       [32m"EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. "[39m [33m+[39m
+     [90m 19 |[39m         [32m"En un dispositivo físico define la variable en .env."[39m[33m,[39m
+     [90m 20 |[39m     )[33m;[39m[0m
+
+      at warn (src/shared/api/client.ts:17:13)
+      at Object.resolveApiUrl (src/shared/api/client.ts:29:24)
+      at Object.require (src/shared/store/authStore.ts:6:1)
+      at Object.require (src/features/auth/components/RequireAuth.tsx:8:1)
+      at Object.require (src/app/notifications/index.tsx:8:1)
+      at Object.require (src/__tests__/integration/notificacionesPush.test.tsx:13:1)
+
+  ● integración push: bandeja y preferencias (pantalla Notificaciones) › carga la bandeja y las preferencias del servidor, con la sesión
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 359 |[39m   })[33m;[39m
+         [90m 360 |[39m
+        [31m[1m>[22m[39m[90m 361 |[39m   it([32m"carga la bandeja y las preferencias del servidor, con la sesión"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 362 |[39m     [36mawait[39m abrirBandeja()[33m;[39m
+         [90m 363 |[39m
+         [90m 364 |[39m     expect([36mawait[39m screen[33m.[39mfindByText([32m"Tu pedido está en camino"[39m))[33m.[39mtoBeTruthy()[33m;[39m[0m
+
+          at it (src/__tests__/integration/notificacionesPush.test.tsx:361:3)
+          at Object.describe (src/__tests__/integration/notificacionesPush.test.tsx:338:1)
+
+FAIL src/__tests__/integration/perfilYMiCuenta.test.tsx (19.608 s)
+  ● Console
+
+    console.warn
+      EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. En un dispositivo físico define la variable en .env.
+
+    [0m [90m 15 |[39m   [36mif[39m (url) [36mreturn[39m url[33m;[39m
+     [90m 16 |[39m   [36mif[39m (__DEV__) {
+    [31m[1m>[22m[39m[90m 17 |[39m     console[33m.[39mwarn(
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 18 |[39m       [32m"EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. "[39m [33m+[39m
+     [90m 19 |[39m         [32m"En un dispositivo físico define la variable en .env."[39m[33m,[39m
+     [90m 20 |[39m     )[33m;[39m[0m
+
+      at warn (src/shared/api/client.ts:17:13)
+      at Object.resolveApiUrl (src/shared/api/client.ts:29:24)
+      at Object.require (src/shared/store/authStore.ts:6:1)
+      at Object.require (src/features/auth/components/RequireAuth.tsx:8:1)
+      at Object.require (src/app/profile/personal-data.tsx:18:1)
+      at Object.require (src/__tests__/integration/perfilYMiCuenta.test.tsx:11:1)
+
+  ● integración: guarda de sesión y Mi cuenta › con sesión, saluda con el nombre que devuelve el servidor y la petición lleva el Bearer
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m  98 |[39m   })[33m;[39m
+         [90m  99 |[39m
+        [31m[1m>[22m[39m[90m 100 |[39m   it([32m"con sesión, saluda con el nombre que devuelve el servidor y la petición lleva el Bearer"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 101 |[39m     [36mconst[39m { token } [33m=[39m [36mawait[39m conSesion([32m"Ana"[39m)[33m;[39m
+         [90m 102 |[39m
+         [90m 103 |[39m     [36mawait[39m render([33m<[39m[33mProfileTab[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m[0m
+
+          at it (src/__tests__/integration/perfilYMiCuenta.test.tsx:100:3)
+          at Object.describe (src/__tests__/integration/perfilYMiCuenta.test.tsx:92:1)
+
+  ● integración: guarda de sesión y Mi cuenta › cerrar sesión: desregistra el token del dispositivo con la sesión aún vigente y luego la borra
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+    [0m [90m 113 |[39m     [36mawait[39m fireEvent[33m.[39mpress([36mawait[39m screen[33m.[39mfindByLabelText([32m"Cerrar sesión"[39m))[33m;[39m
+     [90m 114 |[39m
+    [31m[1m>[22m[39m[90m 115 |[39m     [36mawait[39m waitFor(() [33m=>[39m expect(useAuthStore[33m.[39mgetState()[33m.[39misAuthenticated)[33m.[39mtoBe([36mfalse[39m))[33m;[39m
+     [90m     |[39m                  [31m[1m^[22m[39m
+     [90m 116 |[39m     [90m// Primero el desregistro (necesita el Bearer), después se borra la sesión.[39m
+     [90m 117 |[39m     expect(desregistros)[33m.[39mtoEqual([
+     [90m 118 |[39m       { token[33m:[39m [32m"ExponentPushToken[dispositivo-de-prueba]"[39m[33m,[39m autorizacion[33m:[39m [32m`Bearer ${token}`[39m }[33m,[39m[0m
+
+      at Object.<anonymous> (src/__tests__/integration/perfilYMiCuenta.test.tsx:115:18)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+FAIL src/__tests__/integration/resenas.test.tsx (20.964 s)
+  ● Console
+
+    console.warn
+      EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. En un dispositivo físico define la variable en .env.
+
+    [0m [90m 15 |[39m   [36mif[39m (url) [36mreturn[39m url[33m;[39m
+     [90m 16 |[39m   [36mif[39m (__DEV__) {
+    [31m[1m>[22m[39m[90m 17 |[39m     console[33m.[39mwarn(
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 18 |[39m       [32m"EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. "[39m [33m+[39m
+     [90m 19 |[39m         [32m"En un dispositivo físico define la variable en .env."[39m[33m,[39m
+     [90m 20 |[39m     )[33m;[39m[0m
+
+      at warn (src/shared/api/client.ts:17:13)
+      at Object.resolveApiUrl (src/shared/api/client.ts:29:24)
+      at Object.require (src/shared/store/authStore.ts:6:1)
+      at Object.require (src/features/auth/components/RequireAuth.tsx:8:1)
+      at Object.require (src/app/reviews/index.tsx:6:1)
+      at Object.require (src/__tests__/integration/resenas.test.tsx:12:1)
+
+  ● integración: quién puede reseñar › sin compra, la pantalla de escribir reseña dice «No puedes reseñar este producto» y no muestra el formulario
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 108 |[39m   })[33m;[39m
+         [90m 109 |[39m
+        [31m[1m>[22m[39m[90m 110 |[39m   it([32m"sin compra, la pantalla de escribir reseña dice «No puedes reseñar este producto» y no muestra el formulario"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 111 |[39m     [36mawait[39m conSesion()[33m;[39m
+         [90m 112 |[39m
+         [90m 113 |[39m     [36mawait[39m render([33m<[39m[33mNewReviewRoute[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m[0m
+
+          at it (src/__tests__/integration/resenas.test.tsx:110:3)
+          at Object.describe (src/__tests__/integration/resenas.test.tsx:99:1)
+
+FAIL src/__tests__/integration/arranqueDeLaApp.test.tsx (21.139 s)
+  ● Console
+
+    console.warn
+      EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. En un dispositivo físico define la variable en .env.
+
+    [0m [90m 15 |[39m   [36mif[39m (url) [36mreturn[39m url[33m;[39m
+     [90m 16 |[39m   [36mif[39m (__DEV__) {
+    [31m[1m>[22m[39m[90m 17 |[39m     console[33m.[39mwarn(
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 18 |[39m       [32m"EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. "[39m [33m+[39m
+     [90m 19 |[39m         [32m"En un dispositivo físico define la variable en .env."[39m[33m,[39m
+     [90m 20 |[39m     )[33m;[39m[0m
+
+      at warn (src/shared/api/client.ts:17:13)
+      at Object.resolveApiUrl (src/shared/api/client.ts:29:24)
+      at Object.require (src/features/notifications/repositories/notificationRepository.ts:5:1)
+      at Object.require (src/features/notifications/hooks/useRegisterPushToken.ts:9:1)
+      at Object.require (src/app/_layout.tsx:16:1)
+      at Object.require (src/__tests__/integration/arranqueDeLaApp.test.tsx:11:1)
+
+  ● integración: arranque de la app › primer arranque: sin bandera ni token muestra la bienvenida, sin sesión y sin peticiones
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 109 |[39m
+         [90m 110 |[39m describe([32m"integración: arranque de la app"[39m[33m,[39m () [33m=>[39m {
+        [31m[1m>[22m[39m[90m 111 |[39m   it([32m"primer arranque: sin bandera ni token muestra la bienvenida, sin sesión y sin peticiones"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 112 |[39m     [36mawait[39m render([33m<[39m[33mRootLayout[39m [33m/[39m[33m>[39m)[33m;[39m
+         [90m 113 |[39m
+         [90m 114 |[39m     expect([36mawait[39m screen[33m.[39mfindByText([32m"Bienvenido a SYSCOM"[39m))[33m.[39mtoBeTruthy()[33m;[39m[0m
+
+          at it (src/__tests__/integration/arranqueDeLaApp.test.tsx:111:3)
+          at Object.describe (src/__tests__/integration/arranqueDeLaApp.test.tsx:110:1)
+
+FAIL src/__tests__/integration/chatbotYChatEnVivo.test.tsx (21.072 s)
+  ● Console
+
+    console.warn
+      EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. En un dispositivo físico define la variable en .env.
+
+    [0m [90m 15 |[39m   [36mif[39m (url) [36mreturn[39m url[33m;[39m
+     [90m 16 |[39m   [36mif[39m (__DEV__) {
+    [31m[1m>[22m[39m[90m 17 |[39m     console[33m.[39mwarn(
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 18 |[39m       [32m"EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. "[39m [33m+[39m
+     [90m 19 |[39m         [32m"En un dispositivo físico define la variable en .env."[39m[33m,[39m
+     [90m 20 |[39m     )[33m;[39m[0m
+
+      at warn (src/shared/api/client.ts:17:13)
+      at Object.resolveApiUrl (src/shared/api/client.ts:29:24)
+      at Object.require (src/features/chatbot/repositories/chatbotRepository.ts:4:1)
+      at Object.require (src/features/chatbot/hooks/useChatbot.ts:8:1)
+      at Object.require (src/app/chatbot.tsx:23:1)
+      at Object.require (src/__tests__/integration/chatbotYChatEnVivo.test.tsx:13:1)
+
+  ● integración chatbot: asistente virtual (HTTP) › muestra el saludo y las sugerencias; al tocar una se envía y llega la respuesta del bot
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 103 |[39m   beforeEach(prepararAsistente)[33m;[39m
+         [90m 104 |[39m
+        [31m[1m>[22m[39m[90m 105 |[39m   it([32m"muestra el saludo y las sugerencias; al tocar una se envía y llega la respuesta del bot"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 106 |[39m     [36mawait[39m render([33m<[39m[33mChatbotScreen[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m
+         [90m 107 |[39m
+         [90m 108 |[39m     expect(screen[33m.[39mgetByLabelText([32m`Asistente: ${CHAT_GREETING}`[39m))[33m.[39mtoBeTruthy()[33m;[39m[0m
+
+          at it (src/__tests__/integration/chatbotYChatEnVivo.test.tsx:105:3)
+          at Object.describe (src/__tests__/integration/chatbotYChatEnVivo.test.tsx:102:1)
+
+FAIL src/__tests__/integration/ofertasYDescuentoCarrito.test.tsx (24.014 s)
+  ● Console
+
+    console.warn
+      EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. En un dispositivo físico define la variable en .env.
+
+    [0m [90m 15 |[39m   [36mif[39m (url) [36mreturn[39m url[33m;[39m
+     [90m 16 |[39m   [36mif[39m (__DEV__) {
+    [31m[1m>[22m[39m[90m 17 |[39m     console[33m.[39mwarn(
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 18 |[39m       [32m"EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. "[39m [33m+[39m
+     [90m 19 |[39m         [32m"En un dispositivo físico define la variable en .env."[39m[33m,[39m
+     [90m 20 |[39m     )[33m;[39m[0m
+
+      at warn (src/shared/api/client.ts:17:13)
+      at Object.resolveApiUrl (src/shared/api/client.ts:29:24)
+      at Object.require (src/features/addresses/repositories/addressRepository.ts:5:1)
+      at Object.require (src/features/addresses/hooks/useAddresses.ts:5:1)
+      at Object.require (<clon>\src\app\(tabs)../../../../../../../../../../cart.tsx:15:1)
+      at Object.require (src/__tests__/integration/ofertasYDescuentoCarrito.test.tsx:12:1)
+
+  ● integración: ofertas en el Inicio y en «Ver todas» › el Inicio muestra la sección Ofertas cuando hay productos con promoción
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 119 |[39m
+         [90m 120 |[39m describe([32m"integración: ofertas en el Inicio y en «Ver todas»"[39m[33m,[39m () [33m=>[39m {
+        [31m[1m>[22m[39m[90m 121 |[39m   it([32m"el Inicio muestra la sección Ofertas cuando hay productos con promoción"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 122 |[39m     [36mawait[39m conSesion()[33m;[39m
+         [90m 123 |[39m
+         [90m 124 |[39m     [36mawait[39m render([33m<[39m[33mHomeScreen[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m[0m
+
+          at it (src/__tests__/integration/ofertasYDescuentoCarrito.test.tsx:121:3)
+          at Object.describe (src/__tests__/integration/ofertasYDescuentoCarrito.test.tsx:120:1)
+
+FAIL src/__tests__/integration/autenticacion.test.tsx (25.782 s)
+  ● Console
+
+    console.warn
+      EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. En un dispositivo físico define la variable en .env.
+
+    [0m [90m 15 |[39m   [36mif[39m (url) [36mreturn[39m url[33m;[39m
+     [90m 16 |[39m   [36mif[39m (__DEV__) {
+    [31m[1m>[22m[39m[90m 17 |[39m     console[33m.[39mwarn(
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 18 |[39m       [32m"EXPO_PUBLIC_API_URL no está definida: se usa http://localhost:4000/api. "[39m [33m+[39m
+     [90m 19 |[39m         [32m"En un dispositivo físico define la variable en .env."[39m[33m,[39m
+     [90m 20 |[39m     )[33m;[39m[0m
+
+      at warn (src/shared/api/client.ts:17:13)
+      at Object.resolveApiUrl (src/shared/api/client.ts:29:24)
+      at Object.require (src/shared/store/authStore.ts:6:1)
+      at Object.require (<clon>\src\app\(auth)../../../../../../../../../../_layout.tsx:5:1)
+      at Object.require (src/__tests__/integration/autenticacion.test.tsx:10:1)
+
+  ● integración: inicio de sesión › login sin 2FA: la sesión nace, el token se guarda y el Bearer viaja a perfil y carrito
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 87 |[39m
+         [90m 88 |[39m describe([32m"integración: inicio de sesión"[39m[33m,[39m () [33m=>[39m {
+        [31m[1m>[22m[39m[90m 89 |[39m   it([32m"login sin 2FA: la sesión nace, el token se guarda y el Bearer viaja a perfil y carrito"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m    |[39m   [31m[1m^[22m[39m
+         [90m 90 |[39m     auth[33m.[39magregarCuenta([33mCORREO[39m[33m,[39m [33mPASSWORD[39m)[33m;[39m
+         [90m 91 |[39m     [36mconst[39m layout [33m=[39m [36mawait[39m render([33m<[39m[33mAuthLayout[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m
+         [90m 92 |[39m     expect(screen[33m.[39mgetByText([32m"navegación de sesión"[39m))[33m.[39mtoBeTruthy()[33m;[39m[0m
+
+          at it (src/__tests__/integration/autenticacion.test.tsx:89:3)
+          at Object.describe (src/__tests__/integration/autenticacion.test.tsx:88:1)
+
+-------------------------------------|---------|----------|---------|---------|-------------------
+File                                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------------------------|---------|----------|---------|---------|-------------------
+All files                            |   99.11 |    97.46 |   98.56 |   99.36 |                   
+ features/addresses                  |     100 |      100 |     100 |     100 |                   
+  addressErrors.ts                   |     100 |      100 |     100 |     100 |                   
+  addressSelectors.ts                |     100 |      100 |     100 |     100 |                   
+  addressValidation.ts               |     100 |      100 |     100 |     100 |                   
+  checkoutStore.ts                   |     100 |      100 |     100 |     100 |                   
+ features/addresses/components       |   86.84 |      100 |   64.28 |   84.37 |                   
+  AddressCard.tsx                    |     100 |      100 |     100 |     100 |                   
+  AddressForm.tsx                    |   85.71 |      100 |   61.53 |   82.75 | 71-120            
+ features/addresses/hooks            |     100 |      100 |     100 |     100 |                   
+  useAddresses.ts                    |     100 |      100 |     100 |     100 |                   
+  useCreateAddress.ts                |     100 |      100 |     100 |     100 |                   
+  useDeleteAddress.ts                |     100 |      100 |     100 |     100 |                   
+  useUpdateAddress.ts                |     100 |      100 |     100 |     100 |                   
+ features/addresses/repositories     |     100 |      100 |     100 |     100 |                   
+  addressRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/ar                         |     100 |    96.29 |     100 |     100 |                   
+  modelViewerHtml.ts                 |     100 |      100 |     100 |     100 |                   
+  selectors.ts                       |     100 |    95.23 |     100 |     100 | 16                
+ features/ar/components              |     100 |    91.66 |     100 |     100 |                   
+  ARButton.tsx                       |     100 |    91.66 |     100 |     100 | 43                
+ features/ar/hooks                   |     100 |      100 |     100 |     100 |                   
+  useProductModels.ts                |     100 |      100 |     100 |     100 |                   
+ features/ar/repositories            |     100 |      100 |     100 |     100 |                   
+  modelsRepository.ts                |     100 |      100 |     100 |     100 |                   
+ features/auth                       |     100 |      100 |     100 |     100 |                   
+  validation.ts                      |     100 |      100 |     100 |     100 |                   
+ features/auth/hooks                 |     100 |      100 |     100 |     100 |                   
+  useConfirm2FA.ts                   |     100 |      100 |     100 |     100 |                   
+  useLogin.ts                        |     100 |      100 |     100 |     100 |                   
+  useLogout.ts                       |     100 |      100 |     100 |     100 |                   
+  useMe.ts                           |     100 |      100 |     100 |     100 |                   
+  usePasswordRecovery.ts             |     100 |      100 |     100 |     100 |                   
+  useRegister.ts                     |     100 |      100 |     100 |     100 |                   
+  useResendCode.ts                   |     100 |      100 |     100 |     100 |                   
+  useVerifyRegistration.ts           |     100 |      100 |     100 |     100 |                   
+ features/auth/repositories          |     100 |    85.71 |     100 |     100 |                   
+  authRepository.ts                  |     100 |    85.71 |     100 |     100 | 21                
+ features/cart                       |     100 |      100 |     100 |     100 |                   
+  cartSelectors.ts                   |     100 |      100 |     100 |     100 |                   
+ features/cart/components            |   94.73 |    98.01 |   66.66 |   94.73 |                   
+  CartItemRow.tsx                    |      90 |    96.49 |      50 |      90 | 59                
+  CartSummary.tsx                    |     100 |      100 |     100 |     100 |                   
+ features/cart/hooks                 |     100 |      100 |     100 |     100 |                   
+  useAddToCart.ts                    |     100 |      100 |     100 |     100 |                   
+  useCart.ts                         |     100 |      100 |     100 |     100 |                   
+  useRemoveCartItem.ts               |     100 |      100 |     100 |     100 |                   
+  useUpdateCartItem.ts               |     100 |      100 |     100 |     100 |                   
+ features/cart/repositories          |     100 |      100 |     100 |     100 |                   
+  cartRepository.ts                  |     100 |      100 |     100 |     100 |                   
+ features/catalog                    |     100 |    98.79 |     100 |     100 |                   
+  productDetail.ts                   |     100 |    97.61 |     100 |     100 | 34                
+  searchFilters.ts                   |     100 |      100 |     100 |     100 |                   
+  validation.ts                      |     100 |      100 |     100 |     100 |                   
+ features/catalog/hooks              |     100 |     92.3 |     100 |     100 |                   
+  useBrands.ts                       |     100 |      100 |     100 |     100 |                   
+  useCategories.ts                   |     100 |      100 |     100 |     100 |                   
+  useFeaturedProducts.ts             |     100 |      100 |     100 |     100 |                   
+  useOnSaleProducts.ts               |     100 |      100 |     100 |     100 |                   
+  useProduct.ts                      |     100 |      100 |     100 |     100 |                   
+  useProducts.ts                     |     100 |     87.5 |     100 |     100 | 22                
+  useProductsPreview.ts              |     100 |      100 |     100 |     100 |                   
+ features/catalog/repositories       |     100 |      100 |     100 |     100 |                   
+  brandRepository.ts                 |     100 |      100 |     100 |     100 |                   
+  categoryRepository.ts              |     100 |      100 |     100 |     100 |                   
+  productRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/chatbot                    |     100 |      100 |     100 |     100 |                   
+  chatSelectors.ts                   |     100 |      100 |     100 |     100 |                   
+  chatStore.ts                       |     100 |      100 |     100 |     100 |                   
+  validation.ts                      |     100 |      100 |     100 |     100 |                   
+ features/chatbot/components         |   98.03 |    97.77 |     100 |     100 |                   
+  ChatBubble.tsx                     |     100 |      100 |     100 |     100 |                   
+  ChatComposer.tsx                   |   93.75 |    92.85 |     100 |     100 | 35                
+  ChatFab.tsx                        |     100 |      100 |     100 |     100 |                   
+  LiveGuestForm.tsx                  |     100 |      100 |     100 |     100 |                   
+  LiveMessageBubble.tsx              |     100 |      100 |     100 |     100 |                   
+ features/chatbot/hooks              |     100 |      100 |     100 |     100 |                   
+  useChatbot.ts                      |     100 |      100 |     100 |     100 |                   
+  useLiveChat.ts                     |     100 |      100 |     100 |     100 |                   
+ features/chatbot/liveChat           |     100 |      100 |     100 |     100 |                   
+  liveChatGateway.ts                 |     100 |      100 |     100 |     100 |                   
+  liveChatReducer.ts                 |     100 |      100 |     100 |     100 |                   
+  liveChatSelectors.ts               |     100 |      100 |     100 |     100 |                   
+  validation.ts                      |     100 |      100 |     100 |     100 |                   
+ features/chatbot/repositories       |     100 |      100 |     100 |     100 |                   
+  chatbotRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/favorites                  |     100 |      100 |     100 |     100 |                   
+  favoriteSelectors.ts               |     100 |      100 |     100 |     100 |                   
+ features/favorites/hooks            |     100 |      100 |     100 |     100 |                   
+  useFavorites.ts                    |     100 |      100 |     100 |     100 |                   
+  useToggleFavorite.ts               |     100 |      100 |     100 |     100 |                   
+ features/favorites/repositories     |     100 |      100 |     100 |     100 |                   
+  favoriteRepository.ts              |     100 |      100 |     100 |     100 |                   
+ features/institutional/hooks        |     100 |      100 |     100 |     100 |                   
+  useInstitutional.ts                |     100 |      100 |     100 |     100 |                   
+ features/institutional/repositories |     100 |    88.23 |     100 |     100 |                   
+  institutionalRepository.ts         |     100 |    88.23 |     100 |     100 | 38,40             
+ features/notifications              |   98.38 |      100 |   93.33 |   97.91 |                   
+  notificationSelectors.ts           |     100 |      100 |     100 |     100 |                   
+  pushNotifications.ts               |      96 |      100 |      75 |      95 | 23                
+ features/notifications/components   |     100 |    96.15 |     100 |     100 |                   
+  NotificationCard.tsx               |     100 |       90 |     100 |     100 | 32                
+  PreferencesCard.tsx                |     100 |      100 |     100 |     100 |                   
+ features/notifications/hooks        |     100 |    88.88 |     100 |     100 |                   
+  useMarkNotificationsRead.ts        |     100 |      100 |     100 |     100 |                   
+  useNotificationDetail.ts           |     100 |      100 |     100 |     100 |                   
+  useNotificationPreferences.ts      |     100 |       50 |     100 |     100 | 38                
+  useNotifications.ts                |     100 |       50 |     100 |     100 | 25                
+  useRegisterPushToken.ts            |     100 |      100 |     100 |     100 |                   
+ features/notifications/repositories |     100 |      100 |     100 |     100 |                   
+  notificationRepository.ts          |     100 |      100 |     100 |     100 |                   
+ features/orders                     |     100 |      100 |     100 |     100 |                   
+  orderFormat.ts                     |     100 |      100 |     100 |     100 |                   
+  orderList.ts                       |     100 |      100 |     100 |     100 |                   
+ features/orders/components          |   96.77 |    92.85 |      90 |   96.77 |                   
+  OrderCard.tsx                      |   91.66 |       90 |      75 |   91.66 | 52                
+  OrderDetailView.tsx                |     100 |    94.44 |     100 |     100 | 74                
+  OrderStatusBadge.tsx               |     100 |      100 |     100 |     100 |                   
+ features/orders/hooks               |     100 |    85.71 |     100 |     100 |                   
+  useOrder.ts                        |     100 |      100 |     100 |     100 |                   
+  useOrders.ts                       |     100 |       50 |     100 |     100 | 25                
+ features/orders/repositories        |     100 |      100 |     100 |     100 |                   
+  orderRepository.ts                 |     100 |      100 |     100 |     100 |                   
+ features/payments                   |     100 |      100 |     100 |     100 |                   
+  paymentConfig.ts                   |     100 |      100 |     100 |     100 |                   
+  paymentErrors.ts                   |     100 |      100 |     100 |     100 |                   
+  paymentPolling.ts                  |     100 |      100 |     100 |     100 |                   
+  paymentReducer.ts                  |     100 |      100 |     100 |     100 |                   
+  paymentSelectors.ts                |     100 |      100 |     100 |     100 |                   
+  paymentStore.ts                    |     100 |      100 |     100 |     100 |                   
+ features/payments/hooks             |     100 |     92.1 |     100 |     100 |                   
+  usePayment.ts                      |     100 |     92.1 |     100 |     100 | 118,122-123       
+ features/payments/repositories      |     100 |      100 |     100 |     100 |                   
+  paymentRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/profile                    |   89.47 |    85.71 |     100 |     100 |                   
+  validation.ts                      |   89.47 |    85.71 |     100 |     100 | 19-21             
+ features/profile/hooks              |     100 |      100 |     100 |     100 |                   
+  useProfile.ts                      |     100 |      100 |     100 |     100 |                   
+  useUpdateProfile.ts                |     100 |      100 |     100 |     100 |                   
+ features/profile/repositories       |     100 |      100 |     100 |     100 |                   
+  profileRepository.ts               |     100 |      100 |     100 |     100 |                   
+ features/reviews                    |     100 |      100 |     100 |     100 |                   
+  reviewKeys.ts                      |     100 |      100 |     100 |     100 |                   
+  reviewSelectors.ts                 |     100 |      100 |     100 |     100 |                   
+  reviewValidation.ts                |     100 |      100 |     100 |     100 |                   
+ features/reviews/components         |   97.03 |    95.91 |   97.22 |   99.18 |                   
+  MyReviewCard.tsx                   |    87.5 |      100 |      50 |    87.5 | 33                
+  MyReviewsList.tsx                  |     100 |       90 |     100 |     100 | 45                
+  ProductReviewsSection.tsx          |   94.11 |    93.75 |     100 |     100 | 44                
+  RatingInput.tsx                    |     100 |      100 |     100 |     100 |                   
+  ReviewCard.tsx                     |     100 |      100 |     100 |     100 |                   
+  ReviewForm.tsx                     |     100 |      100 |     100 |     100 |                   
+  ReviewStatusBadge.tsx              |     100 |      100 |     100 |     100 |                   
+  ReviewSummary.tsx                  |     100 |      100 |     100 |     100 |                   
+  StarRating.tsx                     |     100 |      100 |     100 |     100 |                   
+  WriteReview.tsx                    |    93.1 |       90 |     100 |     100 | 35,78             
+  WriteReviewAction.tsx              |     100 |      100 |     100 |     100 |                   
+ features/reviews/hooks              |     100 |    86.36 |     100 |     100 |                   
+  useCanReview.ts                    |     100 |      100 |     100 |     100 |                   
+  useCreateReview.ts                 |     100 |      100 |     100 |     100 |                   
+  useMyReviews.ts                    |     100 |      100 |     100 |     100 |                   
+  useProductReviews.ts               |     100 |       80 |     100 |     100 | 29-31             
+ features/reviews/repositories       |     100 |      100 |     100 |     100 |                   
+  reviewRepository.ts                |     100 |      100 |     100 |     100 |                   
+ features/services                   |     100 |      100 |     100 |     100 |                   
+  gallery.ts                         |     100 |      100 |     100 |     100 |                   
+  selectors.ts                       |     100 |      100 |     100 |     100 |                   
+ features/services/hooks             |     100 |    82.35 |     100 |     100 |                   
+  useService.ts                      |     100 |    88.88 |     100 |     100 | 8                 
+  useServices.ts                     |     100 |    71.42 |     100 |     100 | 22-24             
+  useServicesPreview.ts              |     100 |      100 |     100 |     100 |                   
+ features/services/repositories      |     100 |    92.85 |     100 |     100 |                   
+  serviceRepository.ts               |     100 |    92.85 |     100 |     100 | 28                
+ shared/api                          |     100 |    94.11 |     100 |     100 |                   
+  client.ts                          |     100 |    92.85 |     100 |     100 | 96-98             
+  errorMessage.ts                    |     100 |    95.65 |     100 |     100 | 19                
+  queryClient.ts                     |     100 |      100 |     100 |     100 |                   
+  secureToken.ts                     |     100 |      100 |     100 |     100 |                   
+ shared/hooks                        |     100 |      100 |     100 |     100 |                   
+  useDebouncedValue.ts               |     100 |      100 |     100 |     100 |                   
+ shared/storage                      |      75 |      100 |   66.66 |      75 |                   
+  onboarding.ts                      |      75 |      100 |   66.66 |      75 | 31-32             
+ shared/store                        |     100 |      100 |     100 |     100 |                   
+  authStore.ts                       |     100 |      100 |     100 |     100 |                   
+  onboardingStore.ts                 |     100 |      100 |     100 |     100 |                   
+ shared/ui                           |     100 |    91.66 |     100 |     100 |                   
+  BannerCarousel.tsx                 |     100 |    91.66 |     100 |     100 | 36                
+ shared/utils                        |   97.77 |    95.65 |     100 |     100 |                   
+  format.ts                          |     100 |      100 |     100 |     100 |                   
+  html.ts                            |   97.14 |    94.11 |     100 |     100 | 79                
+  url.ts                             |     100 |      100 |     100 |     100 |                   
+-------------------------------------|---------|----------|---------|---------|-------------------
+
+Summary of all failing tests
+FAIL src/__tests__/integration/notificacionesPush.test.tsx (19.258 s)
+  ● integración push: bandeja y preferencias (pantalla Notificaciones) › carga la bandeja y las preferencias del servidor, con la sesión
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 359 |[39m   })[33m;[39m
+         [90m 360 |[39m
+        [31m[1m>[22m[39m[90m 361 |[39m   it([32m"carga la bandeja y las preferencias del servidor, con la sesión"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 362 |[39m     [36mawait[39m abrirBandeja()[33m;[39m
+         [90m 363 |[39m
+         [90m 364 |[39m     expect([36mawait[39m screen[33m.[39mfindByText([32m"Tu pedido está en camino"[39m))[33m.[39mtoBeTruthy()[33m;[39m[0m
+
+          at it (src/__tests__/integration/notificacionesPush.test.tsx:361:3)
+          at Object.describe (src/__tests__/integration/notificacionesPush.test.tsx:338:1)
+
+FAIL src/__tests__/integration/perfilYMiCuenta.test.tsx (19.608 s)
+  ● integración: guarda de sesión y Mi cuenta › con sesión, saluda con el nombre que devuelve el servidor y la petición lleva el Bearer
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m  98 |[39m   })[33m;[39m
+         [90m  99 |[39m
+        [31m[1m>[22m[39m[90m 100 |[39m   it([32m"con sesión, saluda con el nombre que devuelve el servidor y la petición lleva el Bearer"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 101 |[39m     [36mconst[39m { token } [33m=[39m [36mawait[39m conSesion([32m"Ana"[39m)[33m;[39m
+         [90m 102 |[39m
+         [90m 103 |[39m     [36mawait[39m render([33m<[39m[33mProfileTab[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m[0m
+
+          at it (src/__tests__/integration/perfilYMiCuenta.test.tsx:100:3)
+          at Object.describe (src/__tests__/integration/perfilYMiCuenta.test.tsx:92:1)
+
+  ● integración: guarda de sesión y Mi cuenta › cerrar sesión: desregistra el token del dispositivo con la sesión aún vigente y luego la borra
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+    [0m [90m 113 |[39m     [36mawait[39m fireEvent[33m.[39mpress([36mawait[39m screen[33m.[39mfindByLabelText([32m"Cerrar sesión"[39m))[33m;[39m
+     [90m 114 |[39m
+    [31m[1m>[22m[39m[90m 115 |[39m     [36mawait[39m waitFor(() [33m=>[39m expect(useAuthStore[33m.[39mgetState()[33m.[39misAuthenticated)[33m.[39mtoBe([36mfalse[39m))[33m;[39m
+     [90m     |[39m                  [31m[1m^[22m[39m
+     [90m 116 |[39m     [90m// Primero el desregistro (necesita el Bearer), después se borra la sesión.[39m
+     [90m 117 |[39m     expect(desregistros)[33m.[39mtoEqual([
+     [90m 118 |[39m       { token[33m:[39m [32m"ExponentPushToken[dispositivo-de-prueba]"[39m[33m,[39m autorizacion[33m:[39m [32m`Bearer ${token}`[39m }[33m,[39m[0m
+
+      at Object.<anonymous> (src/__tests__/integration/perfilYMiCuenta.test.tsx:115:18)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+FAIL src/__tests__/integration/resenas.test.tsx (20.964 s)
+  ● integración: quién puede reseñar › sin compra, la pantalla de escribir reseña dice «No puedes reseñar este producto» y no muestra el formulario
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 108 |[39m   })[33m;[39m
+         [90m 109 |[39m
+        [31m[1m>[22m[39m[90m 110 |[39m   it([32m"sin compra, la pantalla de escribir reseña dice «No puedes reseñar este producto» y no muestra el formulario"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 111 |[39m     [36mawait[39m conSesion()[33m;[39m
+         [90m 112 |[39m
+         [90m 113 |[39m     [36mawait[39m render([33m<[39m[33mNewReviewRoute[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m[0m
+
+          at it (src/__tests__/integration/resenas.test.tsx:110:3)
+          at Object.describe (src/__tests__/integration/resenas.test.tsx:99:1)
+
+FAIL src/__tests__/integration/arranqueDeLaApp.test.tsx (21.139 s)
+  ● integración: arranque de la app › primer arranque: sin bandera ni token muestra la bienvenida, sin sesión y sin peticiones
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 109 |[39m
+         [90m 110 |[39m describe([32m"integración: arranque de la app"[39m[33m,[39m () [33m=>[39m {
+        [31m[1m>[22m[39m[90m 111 |[39m   it([32m"primer arranque: sin bandera ni token muestra la bienvenida, sin sesión y sin peticiones"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 112 |[39m     [36mawait[39m render([33m<[39m[33mRootLayout[39m [33m/[39m[33m>[39m)[33m;[39m
+         [90m 113 |[39m
+         [90m 114 |[39m     expect([36mawait[39m screen[33m.[39mfindByText([32m"Bienvenido a SYSCOM"[39m))[33m.[39mtoBeTruthy()[33m;[39m[0m
+
+          at it (src/__tests__/integration/arranqueDeLaApp.test.tsx:111:3)
+          at Object.describe (src/__tests__/integration/arranqueDeLaApp.test.tsx:110:1)
+
+FAIL src/__tests__/integration/chatbotYChatEnVivo.test.tsx (21.072 s)
+  ● integración chatbot: asistente virtual (HTTP) › muestra el saludo y las sugerencias; al tocar una se envía y llega la respuesta del bot
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 103 |[39m   beforeEach(prepararAsistente)[33m;[39m
+         [90m 104 |[39m
+        [31m[1m>[22m[39m[90m 105 |[39m   it([32m"muestra el saludo y las sugerencias; al tocar una se envía y llega la respuesta del bot"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 106 |[39m     [36mawait[39m render([33m<[39m[33mChatbotScreen[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m
+         [90m 107 |[39m
+         [90m 108 |[39m     expect(screen[33m.[39mgetByLabelText([32m`Asistente: ${CHAT_GREETING}`[39m))[33m.[39mtoBeTruthy()[33m;[39m[0m
+
+          at it (src/__tests__/integration/chatbotYChatEnVivo.test.tsx:105:3)
+          at Object.describe (src/__tests__/integration/chatbotYChatEnVivo.test.tsx:102:1)
+
+FAIL src/__tests__/integration/ofertasYDescuentoCarrito.test.tsx (24.014 s)
+  ● integración: ofertas en el Inicio y en «Ver todas» › el Inicio muestra la sección Ofertas cuando hay productos con promoción
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 119 |[39m
+         [90m 120 |[39m describe([32m"integración: ofertas en el Inicio y en «Ver todas»"[39m[33m,[39m () [33m=>[39m {
+        [31m[1m>[22m[39m[90m 121 |[39m   it([32m"el Inicio muestra la sección Ofertas cuando hay productos con promoción"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m     |[39m   [31m[1m^[22m[39m
+         [90m 122 |[39m     [36mawait[39m conSesion()[33m;[39m
+         [90m 123 |[39m
+         [90m 124 |[39m     [36mawait[39m render([33m<[39m[33mHomeScreen[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m[0m
+
+          at it (src/__tests__/integration/ofertasYDescuentoCarrito.test.tsx:121:3)
+          at Object.describe (src/__tests__/integration/ofertasYDescuentoCarrito.test.tsx:120:1)
+
+FAIL src/__tests__/integration/autenticacion.test.tsx (25.782 s)
+  ● integración: inicio de sesión › login sin 2FA: la sesión nace, el token se guarda y el Bearer viaja a perfil y carrito
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+        [0m [90m 87 |[39m
+         [90m 88 |[39m describe([32m"integración: inicio de sesión"[39m[33m,[39m () [33m=>[39m {
+        [31m[1m>[22m[39m[90m 89 |[39m   it([32m"login sin 2FA: la sesión nace, el token se guarda y el Bearer viaja a perfil y carrito"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+         [90m    |[39m   [31m[1m^[22m[39m
+         [90m 90 |[39m     auth[33m.[39magregarCuenta([33mCORREO[39m[33m,[39m [33mPASSWORD[39m)[33m;[39m
+         [90m 91 |[39m     [36mconst[39m layout [33m=[39m [36mawait[39m render([33m<[39m[33mAuthLayout[39m [33m/[39m[33m>[39m[33m,[39m { wrapper })[33m;[39m
+         [90m 92 |[39m     expect(screen[33m.[39mgetByText([32m"navegación de sesión"[39m))[33m.[39mtoBeTruthy()[33m;[39m[0m
+
+          at it (src/__tests__/integration/autenticacion.test.tsx:89:3)
+          at Object.describe (src/__tests__/integration/autenticacion.test.tsx:88:1)
+
+
+Test Suites: 7 failed, 125 passed, 132 total
+Tests:       8 failed, 1657 passed, 1665 total
+Snapshots:   0 total
+Time:        56.616 s
+Ran all test suites.
+Test results written to: ..\evid\jest-defecto-repeticion1.json
+exit=1

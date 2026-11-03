@@ -4,6 +4,7 @@ import {
   Dimensions,
   Image,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   View,
   type NativeScrollEvent,
@@ -17,7 +18,7 @@ const INTERVALO_MS = 4000;
 
 export default function BannerCarousel({ images }: { images: string[] }) {
   const c = useColors();
-  const ref = useRef<ScrollView>(null);
+  const ref = useRef<ScrollViewInstance>(null);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {

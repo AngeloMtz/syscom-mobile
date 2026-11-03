@@ -8,6 +8,7 @@ import type {
   ProductFilters,
   ProductListItem,
 } from "@/features/catalog/types";
+import { ON_SALE_MAX_PAGES, ON_SALE_PAGE_SIZE, selectOnSale } from "@/features/catalog/selectors";
 
 export const PRODUCTS_PAGE_SIZE = 20;
 
@@ -41,6 +42,21 @@ export const productRepository = {
       const data = r.data?.data;
       return Array.isArray(data) ? data : [];
     }),
+
+  /**
+   * Productos con promoción vigente. El backend no filtra por `en_promocion`, así que se
+   * recorre el catálogo en páginas de 100 (como la web) hasta una página corta, con tope
+   * de ON_SALE_MAX_PAGES. Los precios ya vienen calculados por el servidor.
+   */
+  getOnSale: async (): Promise<ProductListItem[]> => {
+    const todos: ProductListItem[] = [];
+    for (let page = 1; page <= ON_SALE_MAX_PAGES; page++) {
+      const { data } = await productRepository.getPage({ limit: ON_SALE_PAGE_SIZE }, page);
+      todos.push(...data);
+      if (data.length < ON_SALE_PAGE_SIZE) break;
+    }
+    return selectOnSale(todos);
+  },
 
   /**
    * Detalle de un producto. El backend responde 404 si no existe o no está

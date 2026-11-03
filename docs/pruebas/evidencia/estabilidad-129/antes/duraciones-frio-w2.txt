@@ -1,0 +1,40 @@
+INTEGRACION: archivo | 1ª prueba ms | prueba más lenta ms | suite ms | fallan
+integration/chatbotYChatEnVivo.test.tsx | 3529 | 3529 | 8915 | 0
+integration/recorridoCompleto.test.tsx | 630 | 630 | 3383 | 0
+integration/autenticacion.test.tsx | 363 | 363 | 1726 | 0
+integration/arranqueDeLaApp.test.tsx | 220 | 220 | 1613 | 0
+integration/ofertasYDescuentoCarrito.test.tsx | 133 | 133 | 868 | 0
+integration/sesionCompra.test.tsx | 68 | 121 | 558 | 0
+integration/sesionCache.test.tsx | 59 | 123 | 654 | 0
+integration/realidadAumentada.test.tsx | 49 | 49 | 690 | 0
+integration/notificacionesPush.test.tsx | 27 | 3160 | 8791 | 0
+integration/compraDeExtremoAExtremo.test.tsx | 23 | 23 | 572 | 0
+integration/resenas.test.tsx | 14 | 115 | 1334 | 0
+integration/favoritosApi.test.tsx | 14 | 96 | 529 | 0
+integration/sesionCaducada.test.tsx | 12 | 12 | 455 | 0
+integration/catalogoApi.test.tsx | 10 | 10 | 537 | 0
+integration/perfilYMiCuenta.test.tsx | 3 | 113 | 891 | 0
+integration/extensionesServidorTienda.test.tsx | 2 | 6 | 325 | 0
+
+TOP 12 pruebas más lentas (todas):
+3529 | integration/chatbotYChatEnVivo.test.tsx | muestra el saludo y las sugerencias; al tocar una se envía y | passed
+3160 | integration/notificacionesPush.test.tsx | carga la bandeja y las preferencias del servidor, con la ses | passed
+634 | medirRendimiento.test.ts | --webhook=2: espera Enter, imprime el comando de Stripe y mi | passed
+630 | integration/recorridoCompleto.test.tsx | login con 2FA → Ofertas → carrito con descuento → pago → ped | passed
+363 | integration/autenticacion.test.tsx | login sin 2FA: la sesión nace, el token se guarda y el Beare | passed
+220 | integration/arranqueDeLaApp.test.tsx | primer arranque: sin bandera ni token muestra la bienvenida, | passed
+133 | integration/ofertasYDescuentoCarrito.test.tsx | el Inicio muestra la sección Ofertas cuando hay productos co | passed
+130 | medirRendimiento.test.ts | modo escritura: mide carrito y checkout contra el servidor l | passed
+128 | medirRendimiento.test.ts | modo lectura: solo GET, con token como Bearer, sin imprimirl | passed
+126 | medirRendimiento.test.ts | si un endpoint responde 500 lo cuenta como error y termina c | passed
+123 | medirRendimiento.test.ts | deja registrado en el JSON lo que se omitió y por qué (cuent | passed
+123 | integration/sesionCache.test.tsx | otra cuenta en el mismo dispositivo nunca ve los favoritos d | passed
+
+FALLADAS: 0
+
+components 1ª prueba top5:
+components/BannerCarousel.test.tsx 106
+components/ProfileScreen.test.tsx 98
+components/AddressForm.test.tsx 69
+components/CartItemRow.test.tsx 67
+components/OrderComponents.test.tsx 38

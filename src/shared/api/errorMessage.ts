@@ -25,5 +25,10 @@ export function apiErrorMessage(
   if (error?.message === "Network Error") {
     return "Sin conexión con el servidor. Revisa tu internet e intenta de nuevo.";
   }
+  // Tiempo de espera agotado: el cliente corta a los 15 s y Axios lo reporta sin respuesta del servidor.
+  const message = typeof error?.message === "string" ? error.message : "";
+  if (error?.code === "ECONNABORTED" || /^timeout of \d+ms exceeded$/.test(message)) {
+    return "El servidor tardó demasiado en responder. Intenta de nuevo.";
+  }
   return fallback;
 }

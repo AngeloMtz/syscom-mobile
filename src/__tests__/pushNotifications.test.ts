@@ -110,3 +110,23 @@ describe("getExpoPushToken", () => {
     }
   });
 });
+
+describe("sin el módulo nativo de expo-notifications (p. ej. Expo Go sin ExpoTopicSubscriptionModule)", () => {
+  function cargarSinModulo() {
+    jest.resetModules();
+    jest.doMock("expo-notifications", () => {
+      throw new Error("Cannot find native module 'ExpoTopicSubscriptionModule'");
+    });
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require("@/features/notifications/pushNotifications") as typeof import("@/features/notifications/pushNotifications");
+  }
+
+  it("cargar el archivo no lanza y el push queda como no disponible", async () => {
+    Platform.OS = "android";
+    const push = cargarSinModulo();
+
+    await expect(push.configureAndroidChannel()).resolves.toBeUndefined();
+    await expect(push.ensurePushPermission()).resolves.toBe(false);
+    await expect(push.getExpoPushToken()).resolves.toBeNull();
+  });
+});

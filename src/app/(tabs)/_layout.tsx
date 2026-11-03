@@ -30,35 +30,35 @@ export default function TabsLayout() {
           name="index"
           options={{
             title: "Inicio",
-            tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color as string} />,
           }}
         />
         <Tabs.Screen
           name="catalog"
           options={{
             title: "Catálogo",
-            tabBarIcon: ({ color, size }) => <Ionicons name="grid" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="grid" size={size} color={color as string} />,
           }}
         />
         <Tabs.Screen
           name="cart"
           options={{
             title: "Carrito",
-            tabBarIcon: ({ color, size }) => <Ionicons name="cart" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="cart" size={size} color={color as string} />,
           }}
         />
         <Tabs.Screen
           name="services"
           options={{
             title: "Servicios",
-            tabBarIcon: ({ color, size }) => <Ionicons name="construct" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="construct" size={size} color={color as string} />,
           }}
         />
         <Tabs.Screen
           name="more"
           options={{
             title: "Más",
-            tabBarIcon: ({ color, size }) => <Ionicons name="menu" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="menu" size={size} color={color as string} />,
           }}
         />
       </Tabs>

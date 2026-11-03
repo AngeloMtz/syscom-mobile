@@ -3,11 +3,23 @@
 // de Expo). Se prueba con el módulo "expo-notifications" simulado (jest.mock).
 // Las pantallas y hooks no llaman a expo-notifications directo, solo a este módulo.
 import Constants from "expo-constants";
-import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 
+/**
+ * expo-notifications se carga con tolerancia a fallos: en un Expo Go que no
+ * trae su módulo nativo (ExpoTopicSubscriptionModule), importarlo lanza al
+ * cargar y tumba toda la app. Sin el módulo, el push queda como "no disponible".
+ */
+let Notifications: typeof import("expo-notifications") | null = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Notifications = require("expo-notifications");
+} catch {
+  Notifications = null;
+}
+
 /** Cómo se comporta una notificación recibida con la app abierta: sí se muestra. */
-Notifications.setNotificationHandler({
+Notifications?.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
     shouldShowList: true,
@@ -21,7 +33,7 @@ Notifications.setNotificationHandler({
  * notificación se muestre). Sin plataforma Android, no hace nada.
  */
 export async function configureAndroidChannel(): Promise<void> {
-  if (Platform.OS !== "android") return;
+  if (Platform.OS !== "android" || !Notifications) return;
   await Notifications.setNotificationChannelAsync("default", {
     name: "General",
     importance: Notifications.AndroidImportance.DEFAULT,
@@ -34,6 +46,7 @@ export async function configureAndroidChannel(): Promise<void> {
  * Devuelve false también si el usuario ya lo había rechazado antes.
  */
 export async function ensurePushPermission(): Promise<boolean> {
+  if (!Notifications) return false;
   const actual = await Notifications.getPermissionsAsync();
   if (actual.granted) return true;
   if (!actual.canAskAgain) return false;
@@ -49,7 +62,7 @@ export async function ensurePushPermission(): Promise<boolean> {
  */
 export async function getExpoPushToken(): Promise<string | null> {
   const projectId = Constants.expoConfig?.extra?.eas?.projectId;
-  if (!projectId) return null;
+  if (!projectId || !Notifications) return null;
 
   try {
     const { data } = await Notifications.getExpoPushTokenAsync({ projectId });

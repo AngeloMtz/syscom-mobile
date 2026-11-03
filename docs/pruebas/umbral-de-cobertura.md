@@ -12,7 +12,7 @@ El umbral está en `package.json`, dentro de la configuración de Jest (`coverag
 | Funciones | 80 % |
 | Ramas | 70 % |
 
-Es un mínimo de seguridad, no una meta: hoy la cobertura real es mucho más alta (cerca de 98 % en líneas y 93 % en ramas).
+Es un mínimo de seguridad, no una meta: la cobertura real es mucho más alta. Medición local del 2026-10-27 sobre `develop` en `dbb922e` (SDK 58, Jest 30): 99.34 % en líneas, 99.08 % en sentencias, 98.53 % en funciones y 97.5 % en ramas, con 119 suites y 1501 pruebas que pasan (`npx jest --ci --coverage`, exit 0). No es una ejecución de CI. El umbral (80/80/80/70) no cambió con la migración a SDK 58.
 
 ## A qué archivos se aplica
 Solo a los archivos de `collectCoverageFrom` (también en `package.json`). Un archivo que no está en esa lista **no cuenta**: ni sube ni baja el porcentaje.

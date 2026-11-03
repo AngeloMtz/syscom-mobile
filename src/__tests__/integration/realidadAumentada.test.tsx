@@ -61,7 +61,7 @@ beforeEach(() => {
   catalogo.clear();
   (useRouter as jest.Mock).mockReturnValue({ push });
   (router.canGoBack as jest.Mock).mockReturnValue(true);
-  jest.spyOn(Linking, "openURL").mockResolvedValue(true);
+  jest.spyOn(Linking, "openURL").mockResolvedValue(undefined);
   adapter.mockReset();
   adapter.mockImplementation(async (config) => {
     const coincide = /^\/catalog\/products\/(\d+)\/modelos-3d$/.exec(config.url ?? "");

@@ -1,10 +1,10 @@
 # Reporte de pruebas — Sprint 4
 
-- **Fecha:** 2026-10-25
-- **Ramas:** `test/37-38-unitarias-estatico-sprint4` (PR 1), `test/39-integracion-sprint4` (PR 2) y `test/40-aceptacion-sprint4` (PR 3)
+- **Fecha:** 2026-10-25 (aceptación manual dictada el 2026-10-27)
+- **Ramas:** `test/37-38-unitarias-estatico-sprint4` (PR 1), `test/39-integracion-sprint4` (PR 2), `test/40-aceptacion-sprint4` (PR 3) y `test/40-aceptacion-manual-sprint4` (PR 4)
 - **Historias cubiertas:** #16–#18 (Realidad Aumentada, notificaciones push, chatbot de soporte). Como historias adicionales: #104 (Inicio), #105 (Información institucional) y #115 (Servicios)
 - **Responsable de pruebas:** @AngeloMtz
-- **Commit base:** `develop` en `b824bd5` para el PR 1 (incluye los PR #127, #132 y #133) en `5be3bb8` para el PR 2 (incluye además el #136) y en `29795b3` para el PR 3 (incluye además #139 y #140)
+- **Commit base:** `develop` en `b824bd5` para el PR 1 (incluye los PR #127, #132 y #133), en `5be3bb8` para el PR 2 (incluye además el #136), en `29795b3` para el PR 3 (incluye además #139 y #140) y en `dbb922e` para el PR 4 (incluye la migración a SDK 58, #148)
 
 ## 1. Resumen
 
@@ -14,9 +14,9 @@
 | Unitarias | 118 suites y 1498 pruebas pasan en la suite completa (58 son de integración); cobertura 99.08 % sentencias / 97.49 % ramas / 98.53 % funciones / 99.34 % líneas | #37 |
 | Integración | 58/58 pasan con servicios simulados (AR, push y chatbot). La integración real con servicios externos queda PENDIENTE DE VALIDACIÓN MANUAL (sección 4) | #39 |
 | Rendimiento | No aplica en este sprint | — |
-| Aceptación (manual) | **NO PROBADO** en los 24 criterios de #16, #17, #18, #104, #105 y #115 (0 Cumple, 0 No cumple, 0 Parcial). PENDIENTE DE VALIDACIÓN MANUAL (sección 5) | #40 |
+| Aceptación (manual) | **24 Cumple, 0 No cumple, 0 Parcial y 0 NO PROBADO** en los criterios de #16, #17, #18, #104, #105 y #115, según los resultados que dictó Angel el 2026-10-27 (sección 5). Dispositivo: Samsung Galaxy A16, Android 16, con una development build sobre SDK 58. No hay capturas nuevas: la evidencia es de corridas anteriores a SDK 58 | #40 |
 
-Los resultados de las secciones 2 y 3 son de la ejecución local sobre esta rama.
+Los resultados de las secciones 2 y 3 son de la ejecución local del PR 3. **No se volvieron a ejecutar en el PR 4** (sobre SDK 58): sus cifras no describen el `develop` actual; los checks del PR corren en CI.
 
 ## 2. Análisis estático (#38)
 
@@ -154,64 +154,71 @@ Límite: las formas de las respuestas que reproducen los servidores falsos salen
 
 Nota (PR 3): la fila de push por cambio de estado del pedido depende de que el backend lo envíe; el equipo indicó que hoy no lo envía (límite conocido, sección 7).
 
+### Estado tras la aceptación manual del 2026-10-27 (PR 4)
+Solo se marca como hecho lo que cubren los resultados dictados por Angel (sección 5). Lo demás sigue PENDIENTE DE VALIDACIÓN MANUAL. Dispositivo de la corrida: Samsung Galaxy A16, Android 16. No se dictó contra qué backend se probó.
+
+| Flujo | Hecho (según los resultados dictados) | Sigue pendiente |
+|---|---|---|
+| Push en dispositivo | Permiso de notificaciones (#17-2) y recepción de notificaciones (#17-1), con capturas de promociones en un Android | Segundo plano o app cerrada, interruptor "Notificaciones push" desactivado y cierre de sesión (pasos 4 a 6): no se dictó resultado |
+| Push por cambio de estado del pedido | #17-1 dictado como Cumple (confirmado por Angel el 2026-10-27) | Ninguna captura lo muestra (las existentes son de promociones) y no se dictó qué prueba lo respaldó |
+| AR en cámara | Botón "Ver en AR" y modelo en la cámara con un producto con modelo (#16-1, #16-2) | Producto sin modelo (paso 4) y iOS con Quick Look: no se dictó resultado |
+| Chatbot | Enviar un mensaje y recibir respuesta, e historial de la sesión (#18-1, #18-2) | Chat en vivo con un asesor conectado y reconexión tras modo avión: no se dictó resultado. La captura `hu18-chat-sin-comunicacion.jpeg` muestra el caso sin asesores, pero no hay resultado dictado para ese caso |
+
+
 ## 5. Pruebas de aceptación (manuales) (#40)
 
 - **Quién:** las pruebas de aceptación son manuales y las ejecuta Angel (@AngeloMtz).
-- **Resultado:** **ninguna se ejecutó.** De los 24 criterios de las historias #16, #17, #18 y de las adicionales #104, #105 y #115: **0 Cumple, 0 No cumple, 0 Parcial y 24 NO PROBADO.** Todo lo NO PROBADO queda como PENDIENTE DE VALIDACIÓN MANUAL.
-- Los resultados de la tabla son los que dictó Angel; Claude no ejecutó ni asumió ninguno. El texto de los criterios es el de los issues.
-- **En este PR no se agregan capturas nuevas.** La columna "Evidencia existente" se llenó solo por el **nombre del archivo**: no se abrieron las imágenes para este reporte, así que no se afirma qué muestran.
+- **Resultado (PR 4, dictado por Angel el 2026-10-27):** de los 24 criterios de #16, #17, #18, #104, #105 y #115: **24 Cumple, 0 No cumple, 0 Parcial y 0 NO PROBADO.** Claude no ejecutó ni asumió ningún resultado; el texto de los criterios es el de los issues. Angel dictó los resultados de #16 a #104-3 uno por uno y el resto como "todo aprobado". En #115-7 (pruebas unitarias y CI) el resultado no se midió en esta corrida: lo respaldan la sección 3 y los checks del PR.
+- **Observación de diseño dictada por Angel (no cambia el resultado):** al escribir en el chatbot o en atención, el teclado sube y casi no se ve lo que se escribe. Se registra aquí; no se abrió issue.
+- **Dispositivo y build de la corrida:** dispositivo Samsung Galaxy A16, Android 16, con una build de desarrollo (*development build*) sobre SDK 58 (`develop` en `dbb922e`). Las capturas existentes son de corridas anteriores y tienen barra de estado de iPhone y de Android, así que no corresponden a este dispositivo ni a esta build.
+- **Evidencia:** **no hay capturas nuevas** de esta corrida. La evidencia es de corridas anteriores a SDK 58: la columna "Evidencia existente" usa las 27 capturas que ya estaban en `develop` (15 al 26 de octubre). El 2026-10-27 se abrió cada una y la columna describe lo que muestra, no solo su nombre. Angel indicó que el contenido de las capturas es correcto tal cual. Los criterios sin captura dicen "Ninguna" o "Falta" y se registran por lo dictado.
 
-| Historia | Criterio (texto del issue) | Resultado | Evidencia existente (por nombre de archivo) | Nota |
+| Historia | Criterio (texto del issue) | Resultado | Evidencia existente (qué muestra) | Nota |
 |---|---|---|---|---|
-| #16 | Botón "Ver en AR" abre la cámara con el modelo del producto | NO PROBADO | `hu16-boton-ar.jpeg`, `hu16-visor-3d.jpeg`, `hu16-ar-escena.jpeg` | Existen capturas con esos nombres, pero el resultado de aceptación de este criterio es NO PROBADO. |
-| #16 | Funciona en al menos un producto de prueba | NO PROBADO | `hu16-ar-escena.jpeg` | Existe una captura con ese nombre, pero el resultado de aceptación es NO PROBADO. Falta `hu16-sin-modelo` (no tomada). |
-| #17 | Usuario recibe notificación de prueba al cambiar estado de un pedido | NO PROBADO | `hu17-push-recibido.jpeg` (por el nombre: una notificación push recibida; el nombre no dice que sea por un cambio de estado de pedido) | NO PROBADO. Límite conocido: el backend no envía push al cambiar el estado. Falta `hu17-cambio-estado-pedido` (no tomada). |
-| #17 | Permiso de notificaciones se solicita correctamente | NO PROBADO | Ninguna | NO PROBADO. Falta `hu17-permiso-notificaciones` (no tomada). |
-| #18 | Usuario puede enviar mensaje y recibir respuesta del chatbot | NO PROBADO | `hu18-chat-saludo.jpeg`, `hu18-chat-respuesta.jpeg` | Existen capturas con esos nombres, pero el resultado de aceptación es NO PROBADO. |
-| #18 | Historial de conversación visible durante la sesión | NO PROBADO | Ninguna | NO PROBADO. Falta `hu18-chat-historial` (no tomada). |
-| #104 | La pestaña Inicio muestra un carrusel de promociones que se puede deslizar | NO PROBADO | `hu104-carrusel.jpeg` | NO PROBADO. |
-| #104 | Muestra una sección de productos destacados y, al tocar uno, abre su detalle | NO PROBADO | Ninguna con un nombre que lo indique (`hu104-contacto-productos.jpeg` menciona productos, pero por el nombre no se sabe si ilustra los destacados) | NO PROBADO. |
-| #104 | Muestra las marcas que maneja SYSCOM y, al tocar una, abre el catálogo de esa marca | NO PROBADO | `hu104-categorias-marcas.jpeg`, `hu104-marca-catalogo.jpeg` | NO PROBADO. |
-| #104 | Tiene estados de carga, error con "Reintentar" y vacío, y se puede actualizar jalando hacia abajo | NO PROBADO | `hu104-error.jpeg` (solo el estado de error; por los nombres no hay captura de carga, vacío ni de jalar para actualizar) | NO PROBADO. |
-| #104 | Tiene un acceso visible a la información institucional (HU siguiente) | NO PROBADO | Ninguna | NO PROBADO. |
-| #105 | Existe una sección "Información" accesible desde Perfil y desde Inicio | NO PROBADO | `hu105-acceso-perfil.jpeg`, `hu105-hub.jpeg`, `hu105-tabs.jpeg` (por los nombres; no se sabe si muestran el acceso desde Inicio) | NO PROBADO. |
-| #105 | "Quiénes somos" muestra misión, visión y valores | NO PROBADO | `hu105-nosotros.jpeg` | NO PROBADO. |
-| #105 | Muestra las políticas de SYSCOM (privacidad, envíos, devoluciones y garantía, según las que existan en el sitio) | NO PROBADO | Ninguna | NO PROBADO. Falta `hu105-politicas` (no tomada). |
-| #105 | Las preguntas frecuentes se muestran en una lista que se expande al tocar cada una | NO PROBADO | Ninguna | NO PROBADO. Falta `hu105-faq` (no tomada). |
-| #105 | Contacto muestra teléfono, correo y horario, con botones que abren la llamada, el correo o WhatsApp | NO PROBADO | `hu105-contacto.jpeg` (por el nombre; no dice si muestra los botones ni qué abren) | NO PROBADO. |
-| #105 | Se puede volver atrás desde cada pantalla sin errores | NO PROBADO | Ninguna | NO PROBADO. |
-| #115 | El listado muestra cada servicio con su imagen, nombre y duración estimada, con paginación al llegar al final | NO PROBADO | `hu116-listado.jpeg` (por los nombres no hay captura de la paginación) | NO PROBADO. Los archivos de evidencia usan `hu116` por la numeración #115/#116 (sección 7). |
-| #115 | Se puede buscar un servicio por nombre | NO PROBADO | `hu116-busqueda.jpeg` | NO PROBADO. |
-| #115 | Al tocar un servicio se abre su detalle: galería de imágenes, descripción, duración, garantía, qué incluye y pasos del proceso | NO PROBADO | `hu116-detalle.jpeg` | NO PROBADO. |
-| #115 | Si el servicio tiene video, se puede reproducir o abrir desde el detalle; si no tiene, no se muestra la sección | NO PROBADO | Ninguna | NO PROBADO. Falta `hu116-detalle-video` (no tomada). |
-| #115 | La pantalla de Inicio tiene una sección “Servicios” con acceso al listado completo | NO PROBADO | `hu116-home-servicios.jpeg` | NO PROBADO. |
-| #115 | Tiene estados de carga, error con “Reintentar” y vacío, y se puede actualizar jalando hacia abajo | NO PROBADO | `hu116-error.jpeg` (solo el estado de error; por los nombres no hay captura de carga, vacío ni de jalar para actualizar) | NO PROBADO. |
-| #115 | Las funciones nuevas incluyen sus pruebas unitarias en el mismo PR y el CI pasa | NO PROBADO | Ninguna | NO PROBADO. El resultado de #115 lo dictó el equipo como NO PROBADO; las pruebas unitarias de Servicios están en la sección 3. |
+| #16 | Botón "Ver en AR" abre la cámara con el modelo del producto | Cumple | `hu16-boton-ar.jpeg` (botón "Ver en Realidad Aumentada" en el detalle de un producto), `hu16-visor-3d.jpeg` (visor 3D con "Ver en tu espacio"), `hu16-ar-escena.jpeg` (el modelo sobre un piso, con la cámara) | |
+| #16 | Funciona en al menos un producto de prueba | Cumple | Las tres anteriores: todas del mismo producto (Lenovo Yoga Convertible Touch) | Falta `hu16-sin-modelo` (no tomada). |
+| #17 | Usuario recibe notificación de prueba al cambiar estado de un pedido | Cumple | `hu17-push-recibido.jpeg` (Android; notificación de **promoción** "Prueba 4"), `hu17-inbox-notificaciones.jpeg`, `hu17-notificacion-detalle.jpeg`, `hu17-notificacion-leida.jpeg` | Resultado confirmado por Angel el 2026-10-27. Las capturas existentes son todas de promociones y ninguna muestra un cambio de estado de pedido; qué prueba lo respaldó no se dictó. Falta `hu17-cambio-estado-pedido` (no tomada). |
+| #17 | Permiso de notificaciones se solicita correctamente | Cumple | Ninguna | Falta `hu17-permiso-notificaciones` (no tomada). |
+| #18 | Usuario puede enviar mensaje y recibir respuesta del chatbot | Cumple | `hu18-chat-respuesta.jpeg` (saludo, la pregunta "Que laptops tienen?" y la respuesta con 5 productos), `hu18-chat-saludo.jpeg` | `hu18-chat-saludo.jpeg` muestra la pantalla de Inicio con el botón flotante del chat, no el saludo. Observación del teclado (arriba). |
+| #18 | Historial de conversación visible durante la sesión | Cumple | `hu18-chat-respuesta.jpeg` (saludo, pregunta y respuesta juntos en pantalla) | Falta `hu18-chat-historial` (no tomada). |
+| #104 | La pestaña Inicio muestra un carrusel de promociones que se puede deslizar | Cumple | `hu104-carrusel.jpeg` (carrusel con indicadores de página), `hu104-categorias-marcas.jpeg` (indicador en otra posición) | Barra de 4 pestañas (interfaz anterior). |
+| #104 | Muestra una sección de productos destacados y, al tocar uno, abre su detalle | Cumple | `hu104-carrusel.jpeg`, `hu104-categorias-marcas.jpeg` (sección "Destacados") | Ninguna captura del detalle abierto desde un destacado. |
+| #104 | Muestra las marcas que maneja SYSCOM y, al tocar una, abre el catálogo de esa marca | Cumple | `hu104-categorias-marcas.jpeg` (sección "Marcas"), `hu104-marca-catalogo.jpeg` (catálogo "Genérico", 7 productos) | |
+| #104 | Tiene estados de carga, error con "Reintentar" y vacío, y se puede actualizar jalando hacia abajo | Cumple | `hu104-error.jpeg` (error "No pudimos cargar los productos" con "Reintentar", en la categoría Accesorios) | Sin captura de carga, vacío ni de jalar para actualizar. |
+| #104 | Tiene un acceso visible a la información institucional (HU siguiente) | Cumple | `hu104-contacto-productos.jpeg` (banner "¿Necesitas asesoría?" con "Contáctanos"), `hu105-hub.jpeg` | |
+| #105 | Existe una sección "Información" accesible desde Perfil y desde Inicio | Cumple | `hu105-acceso-perfil.jpeg` (pestaña "Más" con "Información"), `hu105-hub.jpeg` (el hub), `hu105-tabs.jpeg` (Inicio con la barra de 5 pestañas, incluida "Más") | La pestaña ahora se llama "Más". Sin captura del acceso desde Inicio. |
+| #105 | "Quiénes somos" muestra misión, visión y valores | Cumple | `hu105-nosotros.jpeg` (misión y visión; los valores no se ven en la captura) | |
+| #105 | Muestra las políticas de SYSCOM (privacidad, envíos, devoluciones y garantía, según las que existan en el sitio) | Cumple | `hu105-hub.jpeg` (solo la entrada "Políticas") | Falta `hu105-politicas` (no tomada). |
+| #105 | Las preguntas frecuentes se muestran en una lista que se expande al tocar cada una | Cumple | `hu105-hub.jpeg` (solo la entrada "Preguntas frecuentes") | Falta `hu105-faq` (no tomada). |
+| #105 | Contacto muestra teléfono, correo y horario, con botones que abren la llamada, el correo o WhatsApp | Cumple | `hu105-contacto.jpeg` (teléfono, WhatsApp, correo, horario y ubicación) | La captura no muestra lo que abre cada botón. |
+| #105 | Se puede volver atrás desde cada pantalla sin errores | Cumple | Ninguna | |
+| #115 | El listado muestra cada servicio con su imagen, nombre y duración estimada, con paginación al llegar al final | Cumple | `hu116-listado.jpeg` (imagen o ícono, nombre, duración y precio; la paginación no se ve) | Los archivos de evidencia usan `hu116` por la numeración #115/#116 (sección 7). |
+| #115 | Se puede buscar un servicio por nombre | Cumple | `hu116-busqueda.jpeg` ("Instalación de cámaras" con un resultado) | |
+| #115 | Al tocar un servicio se abre su detalle: galería de imágenes, descripción, duración, garantía, qué incluye y pasos del proceso | Cumple | `hu116-detalle.jpeg` (imagen, descripción, duración, garantía y galería; "qué incluye" y los pasos no se ven en la captura) | |
+| #115 | Si el servicio tiene video, se puede reproducir o abrir desde el detalle; si no tiene, no se muestra la sección | Cumple | Ninguna | Falta `hu116-detalle-video` (no tomada). |
+| #115 | La pantalla de Inicio tiene una sección “Servicios” con acceso al listado completo | Cumple | `hu116-home-servicios.jpeg` (sección "Servicios" con "Ver todo") | |
+| #115 | Tiene estados de carga, error con “Reintentar” y vacío, y se puede actualizar jalando hacia abajo | Cumple | `hu116-error.jpeg` (error con "Reintentar" en el detalle de un servicio) | Sin captura de carga, vacío ni de jalar para actualizar. |
+| #115 | Las funciones nuevas incluyen sus pruebas unitarias en el mismo PR y el CI pasa | Cumple | Ninguna | Resultado dictado. Las pruebas unitarias de Servicios están en la sección 3; los checks de este PR corren en CI. |
 
-### Capturas existentes en `evidencia/sprint-4/` (vínculo solo por el nombre)
-| Captura | Historia y criterio que ilustra, según su nombre |
-|---|---|
-| `hu16-boton-ar.jpeg`, `hu16-visor-3d.jpeg`, `hu16-ar-escena.jpeg` | #16: botón "Ver en AR", visor 3D y escena de AR |
-| `hu17-push-recibido.jpeg` | #17: notificación push recibida (el nombre no dice que sea por cambio de estado de pedido) |
-| `hu17-email-recibido.jpeg`, `hu17-inbox-notificaciones.jpeg`, `hu17-notificacion-detalle.jpeg`, `hu17-notificacion-leida.jpeg` | #17: correo, bandeja, detalle y notificación leída; por el nombre no corresponden a ninguno de los dos criterios del issue |
-| `hu18-chat-saludo.jpeg`, `hu18-chat-respuesta.jpeg` | #18: saludo y respuesta del chatbot |
-| `hu18-chat-asesor.jpeg`, `hu18-chat-sin-comunicacion.jpeg` | #18: chat con asesor y caso sin comunicación; por el nombre no corresponden a los criterios del issue |
-| `hu104-carrusel.jpeg` | #104: carrusel |
-| `hu104-categorias-marcas.jpeg`, `hu104-marca-catalogo.jpeg` | #104: marcas y catálogo de una marca |
-| `hu104-contacto-productos.jpeg` | #104: contacto y productos; por el nombre no se sabe a qué criterio corresponde |
-| `hu104-error.jpeg` | #104: estado de error |
-| `hu105-acceso-perfil.jpeg`, `hu105-hub.jpeg`, `hu105-tabs.jpeg` | #105: acceso a la sección "Información" |
-| `hu105-nosotros.jpeg` | #105: "Quiénes somos" |
-| `hu105-contacto.jpeg` | #105: contacto |
-| `hu105-servicios.jpeg` | Obsoleta: no corresponde a un criterio vigente (ver "no tomadas") |
-| `hu116-listado.jpeg` | #115: listado de servicios |
-| `hu116-busqueda.jpeg` | #115: búsqueda |
-| `hu116-detalle.jpeg` | #115: detalle de un servicio |
-| `hu116-home-servicios.jpeg` | #115: sección "Servicios" en Inicio |
-| `hu116-error.jpeg` | #115: estado de error |
+### Capturas existentes en `evidencia/sprint-4/` (anteriores a SDK 58)
+| Captura | Qué muestra (revisada el 2026-10-27) | Estado |
+|---|---|---|
+| `hu16-boton-ar.jpeg`, `hu16-visor-3d.jpeg` | Detalle del producto con el botón de AR y visor 3D con "Ver en tu espacio" (iPhone) | Vigente |
+| `hu16-ar-escena.jpeg` | Modelo del producto sobre un piso, en la escena de AR | Vigente |
+| `hu17-push-recibido.jpeg` | Notificación de promoción "Prueba 4" en el panel de un Android | Vigente (no es de cambio de estado de pedido) |
+| `hu17-email-recibido.jpeg` | Correo "Prueba 3 — SySCOM" en Gmail (iPhone). Incluye el saludo "Hola Angel"; no se ve la dirección de correo | Vigente |
+| `hu17-inbox-notificaciones.jpeg`, `hu17-notificacion-detalle.jpeg`, `hu17-notificacion-leida.jpeg` | Bandeja con 4 sin leer, detalle de "Prueba 4" y bandeja con 2 sin leer (Android) | Vigentes |
+| `hu18-chat-saludo.jpeg` | Pantalla de Inicio con el botón flotante del chat | Vigente; el nombre no corresponde al contenido |
+| `hu18-chat-respuesta.jpeg` | Conversación con el asistente: saludo, pregunta y respuesta | Vigente |
+| `hu18-chat-asesor.jpeg` | Formulario "Chatea con un asesor" (nombre y correo, vacío) | Vigente |
+| `hu18-chat-sin-comunicacion.jpeg` | "No hay asesores disponibles" con "Ver contacto" y "Volver al asistente" | Vigente |
+| `hu104-carrusel.jpeg`, `hu104-categorias-marcas.jpeg`, `hu104-contacto-productos.jpeg`, `hu104-error.jpeg`, `hu104-marca-catalogo.jpeg` | Inicio, marcas, banner de contacto con productos, error de carga y catálogo de la marca "Genérico" (iPhone, barra de 4 pestañas) | Vigentes; interfaz anterior (4 pestañas, "Perfil") |
+| `hu105-acceso-perfil.jpeg`, `hu105-hub.jpeg`, `hu105-tabs.jpeg`, `hu105-nosotros.jpeg`, `hu105-contacto.jpeg` | Pestaña "Más", hub "Información", Inicio con la barra de 5 pestañas, "Nosotros" y "Contacto" (iPhone) | Vigentes |
+| `hu105-servicios.jpeg` | Pestaña "Servicios" con "Esta sección estará disponible próximamente" | **Obsoleta:** no corresponde a un criterio vigente; se conserva como historial |
+| `hu116-listado.jpeg`, `hu116-busqueda.jpeg`, `hu116-detalle.jpeg`, `hu116-home-servicios.jpeg`, `hu116-error.jpeg` | Listado, búsqueda, detalle, sección en Inicio y error de Servicios (iPhone) | Vigentes |
 
 ### Capturas no tomadas
-Las que mencionó el reporte y no existen:
+Las que mencionó el reporte y no existen (la columna "Evidencia" de la tabla las cita):
 - `hu16-sin-modelo`
 - `hu17-permiso-notificaciones`
 - `hu17-cambio-estado-pedido`
@@ -219,7 +226,7 @@ Las que mencionó el reporte y no existen:
 - `hu105-politicas`
 - `hu105-faq`
 - `hu116-detalle-video`
-- La actualización de `hu105-servicios` (la actual está obsoleta).
+- No hay capturas de la corrida del 2026-10-27 en SDK 58: la evidencia es de corridas anteriores.
 
 ## 6. Fallas encontradas y correcciones
 
@@ -236,35 +243,35 @@ No se encontraron fallos en código de producción con estas pruebas.
 
 ## 7. Límites conocidos
 
-- **iOS sin probar:** la validación manual de AR, notificaciones y chatbot se hizo en Android.
-- **Push por cambio de estado del pedido sin validar:** solo se probó el envío de una promoción. Límite conocido (dicho por el equipo): el backend no envía push al cambiar el estado del pedido.
+- **iOS:** no se dictó ninguna prueba en iOS. Varias capturas existentes tienen barra de estado de iPhone, pero no se afirma que iOS esté probado ni que Quick Look funcione.
+- **Dispositivo:** Samsung Galaxy A16, Android 16, con una *development build* sobre SDK 58.
+- **Evidencia anterior a SDK 58:** las 27 capturas existentes son del 15 al 26 de octubre; no hay capturas nuevas de la corrida del 2026-10-27.
+- **Teclado en el chat:** al escribir en el chatbot o en atención, el teclado sube y casi no se ve lo que se escribe (observación de diseño dictada por Angel).
+- **Push por cambio de estado del pedido:** #17-1 se dictó como Cumple y Angel lo confirmó el 2026-10-27, pero las capturas existentes solo muestran promociones y el equipo había indicado antes que el backend no lo enviaba. No se dictó qué prueba lo respaldó.
 - **El toque sobre la notificación no está manejado:** no hay un manejador del toque sobre una notificación (no se encontró `addNotificationResponseReceivedListener` en `src`).
 - **Numeración #115/#116:** el issue de Servicios es el #115, pero el PR #118, su commit y los archivos de evidencia (`hu116-*`) usan #116, que no existe.
 - **Capturas faltantes u obsoletas:** `hu105-servicios.jpeg` muestra el marcador "Esta sección estará disponible próximamente" de antes de que existiera Servicios. Según los nombres de los archivos, no hay captura de: el permiso de notificaciones (#17), políticas ni preguntas frecuentes (#105), el resultado de los botones de llamada, correo y WhatsApp (#105), carga, vacío y recarga por arrastre de Inicio (#104), ni paginación, carga y vacío de Servicios (#115).
-- **Aceptación sin ejecutar:** los 24 criterios de #16, #17, #18, #104, #105 y #115 están NO PROBADOS (sección 5). Ninguna historia del sprint tiene validación de aceptación.
-- **Capturas no tomadas:** las ocho de la lista de la sección 5.
+- **Capturas no tomadas:** las de la lista de la sección 5.
 
 ## 8. Pendientes
 
 | Pendiente | Dónde |
 |---|---|
-| Validación manual de la integración real: push en dispositivo físico, push por cambio de estado del pedido, AR en cámara y chatbot contra el backend real (sección 4) | PENDIENTE DE VALIDACIÓN MANUAL |
-| Aceptación #16: los 2 criterios (botón "Ver en AR" abre la cámara con el modelo; funciona en al menos un producto de prueba) | NO PROBADO: PENDIENTE DE VALIDACIÓN MANUAL |
-| Aceptación #17: los 2 criterios (notificación al cambiar estado de un pedido, con el límite de que el backend no envía push al cambiar el estado; permiso de notificaciones) | NO PROBADO: PENDIENTE DE VALIDACIÓN MANUAL |
-| Aceptación #18: los 2 criterios (enviar mensaje y recibir respuesta; historial visible durante la sesión) | NO PROBADO: PENDIENTE DE VALIDACIÓN MANUAL |
-| Aceptación #104 Inicio: los 5 criterios | NO PROBADO: PENDIENTE DE VALIDACIÓN MANUAL |
-| Aceptación #105 Información: los 6 criterios | NO PROBADO: PENDIENTE DE VALIDACIÓN MANUAL |
-| Aceptación #115 Servicios: los 7 criterios | NO PROBADO: PENDIENTE DE VALIDACIÓN MANUAL |
+| Capturas de la corrida del 2026-10-27 en SDK 58: no se tomaron; la evidencia es de corridas anteriores. Tomarlas si se quiere evidencia de SDK 58 | Pendiente |
+| #17-1: qué prueba respaldó el resultado Cumple (no se dictó; ninguna captura muestra un cambio de estado de pedido) | PENDIENTE (Angel) |
+| Validación manual de la integración real que los resultados dictados no cubren: segundo plano, interruptor y cierre de sesión en push; producto sin modelo e iOS en AR; chat en vivo con asesor y reconexión (sección 4) | PENDIENTE DE VALIDACIÓN MANUAL |
 | Tomar las capturas no tomadas (sección 5) | Pendiente |
+| Teclado que tapa el campo de texto en el chatbot y en atención | Observación de diseño; decidir si se abre un issue |
+| Volver a ejecutar lint, tsc y Jest sobre SDK 58 para actualizar las secciones 2 y 3 | Pendiente (los checks del PR corren en CI) |
 
 ## 9. Evidencia
 
-Archivos en `docs/pruebas/evidencia/sprint-4/`: `lint.txt`, `tsc.txt` y `jest.txt` (esta ejecución), además de las capturas de las historias (`hu16-*`, `hu17-*`, `hu18-*`, `hu104-*`, `hu105-*` y `hu116-*`).
+Archivos en `docs/pruebas/evidencia/sprint-4/`: `lint.txt`, `tsc.txt` y `jest.txt` (esta ejecución), además de las capturas de las historias (`hu16-*`, `hu17-*`, `hu18-*`, `hu104-*`, `hu105-*` y `hu116-*`), todas anteriores a SDK 58.
 
 ## 10. Conclusión
 
 - **Análisis estático:** lint y `tsc` sin errores ni advertencias.
 - **Unitarias:** 118 suites y 1498 pruebas pasan, con 99.34 % de cobertura de líneas.
-- **Integración:** 58/58 pasan con servicios simulados. La integración real con servicios externos (push en dispositivo físico, push por cambio de estado del pedido, AR en cámara y chatbot contra el backend real) está PENDIENTE DE VALIDACIÓN MANUAL.
-- **Aceptación: no se ejecutó.** Los 24 criterios de #16, #17, #18, #104, #105 y #115 están NO PROBADOS; ninguno está Cumple, No cumple ni Parcial. Mientras no se ejecuten, las historias del sprint no tienen validación de aceptación.
-- **Límites conocidos:** iOS sin probar; el backend no envía push al cambiar el estado del pedido; el toque sobre una notificación no está manejado; la numeración #115/#116; y las capturas no tomadas u obsoletas.
+- **Integración:** 58/58 pasan con servicios simulados. De la integración real, los resultados dictados cubren AR en cámara y el mensaje con respuesta del chatbot; sigue PENDIENTE DE VALIDACIÓN MANUAL lo que se detalla en la sección 4.
+- **Aceptación:** 24 criterios de #16, #17, #18, #104, #105 y #115: 24 Cumple, 0 No cumple, 0 Parcial y 0 NO PROBADO, según los resultados que dictó Angel el 2026-10-27, en un Samsung Galaxy A16 con Android 16 y una development build sobre SDK 58. No hay capturas nuevas: la evidencia es de corridas anteriores a SDK 58. Observación de diseño: el teclado tapa el campo de texto del chat.
+- **Límites conocidos:** iOS sin una prueba dictada; #17-1 sin captura de un cambio de estado de pedido; el toque sobre una notificación no está manejado; la numeración #115/#116; y las capturas no tomadas u obsoletas.

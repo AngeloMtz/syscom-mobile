@@ -1,0 +1,48 @@
+# Alteraciones a propósito al código de producción (temporales; cada una se restauró con git checkout)
+# Comando por alteración: npx jest --ci --maxWorkers=2 src/__tests__/integration/(ofertasYDescuentoCarrito|resenas|recorridoCompleto)
+
+## M1: el descuento no se deriva de precio_base
+archivo: src/features/cart/cartSelectors.ts
+Tests:       2 failed, 26 passed, 28 total
+● integración: descuento en el carrito › la línea con promoción muestra el precio tachado, el precio con descuento por unidad y «-10 %»
+● integración: recorrido completo de un cliente › login con 2FA → Ofertas → carrito con descuento → pago → pedido → entregado → reseña Pendiente → cierre de sesión
+
+## M2: «Escribir reseña» no depende de can-review
+archivo: src/features/reviews/components/WriteReviewAction.tsx
+Tests:       4 failed, 24 passed, 28 total
+● integración: enviar la reseña y seguirla hasta que se publica › el envío manda el pedido que dio derecho, queda «Pendiente» en Mis reseñas y el detalle avisa «Ya dejaste una reseña»
+● integración: quién puede reseñar › el pedido entregado de otro producto no da derecho a reseñar este
+● integración: quién puede reseñar › sin ninguna compra no hay formulario: el detalle da el motivo del servidor y no ofrece «Escribir reseña»
+● integración: quién puede reseñar › un pedido que aún no se entrega no da derecho a reseñar; al entregarse sí
+
+## M3: el cierre de sesión no limpia la caché
+archivo: src/shared/store/authStore.ts
+Tests:       28 passed, 28 total
+
+## (nota) M3 NO se detectó con la primera versión de recorridoCompleto: el queryClient usaba gcTime 0 y descartaba los datos solo al salir de la pantalla. Se corrigió con gcTime infinito y se repitió M3 abajo (M3b).
+
+## M3b: el cierre de sesión no limpia la caché (con la prueba corregida)
+archivo: src/shared/store/authStore.ts
+Tests:       2 failed, 26 passed, 28 total
+● integración: recorrido completo de un cliente › la cuenta siguiente en el mismo dispositivo no ve nada de la anterior: ni caché, ni perfil, ni reseñas, ni su token
+● integración: recorrido completo de un cliente › login con 2FA → Ofertas → carrito con descuento → pago → pedido → entregado → reseña Pendiente → cierre de sesión
+
+## M4: las ofertas incluyen productos sin promoción
+archivo: src/features/catalog/selectors.ts
+Tests:       5 failed, 23 passed, 28 total
+● integración: descuento en el carrito › al desactivar la promoción desaparece de Ofertas y el carrito vuelve al precio normal
+● integración: ofertas en el Inicio y en «Ver todas» › Promociones lista solo los productos con promoción, del mayor al menor descuento
+● integración: ofertas en el Inicio y en «Ver todas» › Promociones sin ninguna promoción dice que no hay
+● integración: ofertas en el Inicio y en «Ver todas» › con más de 100 productos en oferta pide la segunda página del catálogo y los junta
+● integración: ofertas en el Inicio y en «Ver todas» › sin ninguna promoción vigente el Inicio no pinta la sección Ofertas
+
+## M5: «Reseñar» del pedido aparece aunque no esté entregado
+archivo: src/features/orders/orderFormat.ts
+Tests:       28 passed, 28 total
+
+## (nota) M5 NO se detectó con la primera versión de recorridoCompleto: solo miraba «Reseñar» en la pantalla de confirmación, donde ese botón no se muestra de todos modos. Se añadió el paso 5b (detalle normal de un pedido no entregado) y se repitió M5 abajo (M5b).
+
+## M5b: «Reseñar» del pedido aparece aunque no esté entregado (con la prueba corregida)
+archivo: src/features/orders/orderFormat.ts
+Tests:       1 failed, 27 passed, 28 total
+● integración: recorrido completo de un cliente › login con 2FA → Ofertas → carrito con descuento → pago → pedido → entregado → reseña Pendiente → cierre de sesión

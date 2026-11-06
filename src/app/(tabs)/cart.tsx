@@ -14,13 +14,12 @@ import {
 import { useCheckoutStore } from "@/features/addresses/checkoutStore";
 import { useAddresses } from "@/features/addresses/hooks/useAddresses";
 import RequireAuth from "@/features/auth/components/RequireAuth";
-import { cartUnits, getCartTotal, toCartLineData } from "@/features/cart/cartSelectors";
+import { MAX_CART_LINES, cartUnits, getCartTotal, toCartLineData } from "@/features/cart/cartSelectors";
 import CartItemRow from "@/features/cart/components/CartItemRow";
 import CartSummary from "@/features/cart/components/CartSummary";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { useRemoveCartItem } from "@/features/cart/hooks/useRemoveCartItem";
 import { useUpdateCartItem } from "@/features/cart/hooks/useUpdateCartItem";
-import { MAX_CART_LINES } from "@/features/cart/repositories/cartRepository";
 import { usePaymentStore } from "@/features/payments/paymentStore";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";

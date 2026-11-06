@@ -1,14 +1,19 @@
 // src/features/favorites/favoriteSelectors.ts — Reglas de presentación de favoritos.
 // Funciones puras: no tocan la red ni React.
 
-import { getPrincipalImageUrl } from "@/features/catalog/selectors";
-import type { ProductListItem } from "@/features/catalog/types";
 import type {
   FavoriteCardData,
   FavoriteItem,
   FavoriteProduct,
   FavoritesResult,
 } from "@/features/favorites/types";
+
+/**
+ * Tope de favoritos que la app carga: 4 páginas de 50. El backend no tiene un
+ * endpoint de solo ids, así que los corazones salen de esta lista; con más de
+ * 200 la pantalla avisa y solo se ven los más recientes.
+ */
+export const MAX_FAVORITES = 200;
 
 /** Precio como número; acepta el Decimal serializado como texto. null si no es válido. */
 export function parsePrice(value: unknown): number | null {
@@ -31,23 +36,6 @@ export function toFavoriteCardData(item: FavoriteItem): FavoriteCardData {
     imagenUrl: p.producto_imagenes?.[0]?.url_imagen || undefined,
     envioGratis: p.envio_gratis === true,
     disponible: p.estado === "activo",
-  };
-}
-
-/** Producto de un listado o del detalle en la forma que usa la lista de favoritos. */
-export function toFavoriteProduct(
-  p: Pick<ProductListItem, "id" | "nombre" | "slug" | "precio_base" | "estado" | "envio_gratis" | "marca" | "imagenes">,
-): FavoriteProduct {
-  const imagen = getPrincipalImageUrl(p);
-  return {
-    id_producto: p.id,
-    nombre: p.nombre,
-    slug: p.slug,
-    precio_base: p.precio_base,
-    estado: p.estado,
-    envio_gratis: p.envio_gratis,
-    marcas: p.marca ? { nombre: p.marca.nombre, slug: p.marca.slug } : null,
-    producto_imagenes: imagen ? [{ url_imagen: imagen }] : [],
   };
 }
 

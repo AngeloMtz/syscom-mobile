@@ -11,6 +11,12 @@ import type { CartItem, CartItemStatus, CartLineData, CartResult } from "@/featu
 /** Máximo por producto que acepta el backend (PATCH 0–99, POST bloquea en 99). */
 export const MAX_ITEM_QUANTITY = 99;
 
+/**
+ * Tope de líneas que la app carga: 2 páginas de 50. Si hay más, la pantalla
+ * avisa; el total (`totalPrice`) sigue siendo el del servidor, de todas las líneas.
+ */
+export const MAX_CART_LINES = 100;
+
 /** Precio como centavos enteros. Acepta número o texto (Decimal); null si no es válido. */
 export function toCents(value: unknown): number | null {
   let n: number;

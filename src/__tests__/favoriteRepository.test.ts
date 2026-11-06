@@ -1,8 +1,5 @@
-import {
-  FAVORITES_PAGE_SIZE,
-  MAX_FAVORITES,
-  favoriteRepository,
-} from "@/features/favorites/repositories/favoriteRepository";
+import { MAX_FAVORITES } from "@/features/favorites/favoriteSelectors";
+import { FAVORITES_PAGE_SIZE, favoriteRepository } from "@/features/favorites/repositories/favoriteRepository";
 
 import { makeApiError, makeFavoriteItemFor } from "./fixtures";
 import { crearAxiosFalso } from "./utils/axiosFake";

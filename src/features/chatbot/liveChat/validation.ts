@@ -1,7 +1,7 @@
 // src/features/chatbot/liveChat/validation.ts — Reglas del chat en vivo.
 // Mismos límites que el backend (chatInitSchema y chatMessageSchema).
-import { EMAIL_RE } from "@/features/auth/validation";
 import type { GuestData } from "@/features/chatbot/liveChat/types";
+import { EMAIL_RE } from "@/shared/utils/validation";
 
 export const LIVE_MESSAGE_MAX = 1000;
 export const GUEST_NAME_MAX = 100;

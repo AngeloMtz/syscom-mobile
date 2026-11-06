@@ -1,7 +1,8 @@
 import type { AxiosAdapter, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
-import { authErrorMessage, authRepository } from "@/features/auth/repositories/authRepository";
+import { authRepository } from "@/features/auth/repositories/authRepository";
 import api from "@/shared/api/client";
+import { apiErrorMessage } from "@/shared/api/errorMessage";
 
 import { makeApiError, makeLoginPayload, makeRegisterPayload, makeUser } from "./fixtures";
 
@@ -83,7 +84,7 @@ describe("authRepository.login", () => {
     const error = await authRepository.login(makeLoginPayload()).catch((e) => e);
 
     expect(error).toBeInstanceOf(Error);
-    expect(authErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
+    expect(apiErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
   });
 
   it("rechaza con el error de la API cuando las credenciales son inválidas", async () => {
@@ -91,7 +92,7 @@ describe("authRepository.login", () => {
     adapter.mockRejectedValueOnce(error);
 
     await expect(authRepository.login(makeLoginPayload())).rejects.toBe(error);
-    expect(authErrorMessage(error)).toBe("Credenciales inválidas");
+    expect(apiErrorMessage(error)).toBe("Credenciales inválidas");
   });
 });
 
@@ -120,7 +121,7 @@ describe("authRepository.confirm2FA", () => {
     const error = await authRepository.confirm2FA("ana@example.com", "123456").catch((e) => e);
 
     expect(error).toBeInstanceOf(Error);
-    expect(authErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
+    expect(apiErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
   });
 });
 
@@ -140,7 +141,7 @@ describe("authRepository.register", () => {
     adapter.mockRejectedValueOnce(error);
 
     await expect(authRepository.register(makeRegisterPayload())).rejects.toBe(error);
-    expect(authErrorMessage(error)).toBe("El correo ya está registrado");
+    expect(apiErrorMessage(error)).toBe("El correo ya está registrado");
   });
 
   it("rechaza con el error de validación de la API", async () => {
@@ -148,7 +149,7 @@ describe("authRepository.register", () => {
     adapter.mockRejectedValueOnce(error);
 
     await expect(authRepository.register(makeRegisterPayload())).rejects.toBe(error);
-    expect(authErrorMessage(error)).toBe("La contraseña es muy corta");
+    expect(apiErrorMessage(error)).toBe("La contraseña es muy corta");
   });
 });
 
@@ -177,7 +178,7 @@ describe("authRepository.verifyRegistration", () => {
     const error = await authRepository.verifyRegistration("ana@example.com", "654321").catch((e) => e);
 
     expect(error).toBeInstanceOf(Error);
-    expect(authErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
+    expect(apiErrorMessage(error)).toBe(MENSAJE_INCOMPLETA);
   });
 });
 
@@ -280,8 +281,8 @@ describe("authRepository.getMe", () => {
   });
 });
 
-describe("authErrorMessage", () => {
+describe("apiErrorMessage", () => {
   it("reexporta la traducción de errores de la API", () => {
-    expect(authErrorMessage(makeApiError({ message: "Algo falló" }))).toBe("Algo falló");
+    expect(apiErrorMessage(makeApiError({ message: "Algo falló" }))).toBe("Algo falló");
   });
 });

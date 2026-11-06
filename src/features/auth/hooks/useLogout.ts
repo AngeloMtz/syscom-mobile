@@ -5,8 +5,7 @@
 // igual se cierra la sesión; el token simplemente queda activo en el backend
 // hasta que expire por sí solo o alguien vuelva a iniciar sesión y lo reemplace.
 import { useChatStore } from "@/features/chatbot/chatStore";
-import { getExpoPushToken } from "@/features/notifications/pushNotifications";
-import { notificationRepository } from "@/features/notifications/repositories/notificationRepository";
+import { unregisterDevicePush } from "@/features/notifications/pushRegistration";
 import { useAuthStore } from "@/shared/store/authStore";
 
 export function useLogout(): () => Promise<void> {
@@ -14,8 +13,7 @@ export function useLogout(): () => Promise<void> {
 
   return async () => {
     try {
-      const token = await getExpoPushToken();
-      if (token) await notificationRepository.unregisterPushToken(token);
+      await unregisterDevicePush();
     } catch {
       // Sin bloquear el cierre de sesión por esto.
     }

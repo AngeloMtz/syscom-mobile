@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { useInstitutionalContent, useNewsletter } from "@/features/institutional/hooks/useInstitutional";
-import { EMAIL_RE } from "@/features/auth/validation";
+import { EMAIL_RE } from "@/shared/utils/validation";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import FormField from "@/shared/ui/FormField";
 import { SubmitButton } from "@/features/auth/components/AuthScaffold";

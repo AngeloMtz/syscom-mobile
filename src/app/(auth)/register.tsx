@@ -10,7 +10,7 @@ import { Pressable, StyleSheet, Text, View, type TextInputInstance } from "react
 import AuthScaffold, { FormError, SubmitButton } from "@/features/auth/components/AuthScaffold";
 import PasswordRules from "@/features/auth/components/PasswordRules";
 import { useRegister } from "@/features/auth/hooks/useRegister";
-import { authErrorMessage } from "@/features/auth/repositories/authRepository";
+import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { passwordIsValid, validateEmail } from "@/features/auth/validation";
 import { spacing, useColors } from "@/shared/theme/useColors";
 import FormField from "@/shared/ui/FormField";
@@ -128,7 +128,7 @@ export default function RegisterScreen() {
       <FormError
         message={
           register.error
-            ? authErrorMessage(register.error, "No se pudo crear la cuenta. Intenta de nuevo.")
+            ? apiErrorMessage(register.error, "No se pudo crear la cuenta. Intenta de nuevo.")
             : null
         }
       />

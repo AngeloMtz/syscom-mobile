@@ -1,3 +1,4 @@
+import { toFavoriteProduct } from "@/features/catalog/selectors";
 import {
   applyFavoriteChange,
   dedupeFavorites,
@@ -5,7 +6,6 @@ import {
   isFavorite,
   parsePrice,
   toFavoriteCardData,
-  toFavoriteProduct,
 } from "@/features/favorites/favoriteSelectors";
 
 import {

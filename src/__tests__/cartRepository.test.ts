@@ -1,8 +1,5 @@
-import {
-  CART_PAGE_SIZE,
-  MAX_CART_LINES,
-  cartRepository,
-} from "@/features/cart/repositories/cartRepository";
+import { MAX_CART_LINES } from "@/features/cart/cartSelectors";
+import { CART_PAGE_SIZE, cartRepository } from "@/features/cart/repositories/cartRepository";
 
 import { makeApiError, makeCartItemFor } from "./fixtures";
 import { crearAxiosFalso } from "./utils/axiosFake";

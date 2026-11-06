@@ -5,10 +5,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-import { getPrincipalImageUrl, getTotalStock } from "@/features/catalog/selectors";
+import { getPrincipalImageUrl, getTotalStock, toFavoriteProduct } from "@/features/catalog/selectors";
 import type { ProductListItem } from "@/features/catalog/types";
 import FavoriteButton from "@/features/favorites/components/FavoriteButton";
-import { toFavoriteProduct } from "@/features/favorites/favoriteSelectors";
 import { formatPrice } from "@/shared/utils/format";
 import { cardShadow, radius, spacing, useColors } from "@/shared/theme/useColors";
 

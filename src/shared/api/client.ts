@@ -1,12 +1,13 @@
 // src/shared/api/client.ts — Cliente HTTP de la app (patrón Singleton).
-// Al ser un módulo de TypeScript se evalúa una sola vez: todas las features
-// comparten esta misma instancia, con su base URL, timeout e interceptor.
-import axios from "axios";
+// ApiClient tiene el constructor privado y getInstance() es el único punto de
+// acceso: toda la app comparte una misma instancia de Axios, con su base URL,
+// timeout e interceptores.
+import axios, { type AxiosInstance } from "axios";
 
 import { getTokenSync } from "./secureToken";
 
 // En dispositivo físico localhost no apunta a la PC: definir EXPO_PUBLIC_API_URL
-// en .env con la IP LAN o la URL del backend en Render. En una compilación de
+// en .env con la IP LAN o la URL del backend en Railway. En una compilación de
 // producción la variable es obligatoria (se define como variable de entorno de
 // EAS): sin ella la app apuntaría en silencio a un localhost que nunca responde.
 // Se lee con el nombre completo porque Expo solo la sustituye al empaquetar así.
@@ -27,30 +28,6 @@ function resolveApiUrl(): string {
 }
 
 export const API_URL = resolveApiUrl();
-
-// El default export de axios expone `create`; la regla avisa por el named
-// export homónimo, pero aquí el uso es el correcto.
-// eslint-disable-next-line import/no-named-as-default-member
-const api = axios.create({
-  baseURL: API_URL,
-  timeout: 15000,
-  headers: {
-    "Content-Type": "application/json",
-    // Identifica el canal: el backend solo deja pasar cuentas de rol "usuario"
-    // cuando la petición viene de la app móvil.
-    "X-Client": "mobile",
-    // Evita la página de aviso de ngrok cuando el backend va por túnel.
-    "ngrok-skip-browser-warning": "true",
-  },
-});
-
-// La sesión viaja solo como Bearer. La lectura es síncrona (caché en memoria
-// de secureToken) porque el interceptor no puede esperar a SecureStore.
-api.interceptors.request.use((config) => {
-  const token = getTokenSync();
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
 
 /**
  * Texto exacto con el que el backend rechaza un JWT vencido o inválido: responde 403, no 401
@@ -73,17 +50,6 @@ const PUBLIC_AUTH_ROUTES = [
   "/auth/reset-password",
 ];
 
-let onSessionExpired: (() => void | Promise<void>) | null = null;
-let closingSession = false;
-
-/**
- * Quién cierra la sesión cuando el servidor dice que caducó. Lo registra authStore: así este módulo
- * no importa el store (el store ya importa el cliente) y no hay ciclo de importaciones.
- */
-export function setSessionExpiredHandler(handler: (() => void | Promise<void>) | null): void {
-  onSessionExpired = handler;
-}
-
 /** ¿Esta respuesta de error significa que la sesión que enviaba la petición ya no sirve? */
 function isSessionExpired(error: any): boolean {
   const config = error?.config;
@@ -101,22 +67,79 @@ function isSessionExpired(error: any): boolean {
   return status === 401 || error.response?.data?.message === SESSION_EXPIRED_MESSAGE;
 }
 
-// Sesión caducada: un solo cierre aunque lleguen varias respuestas a la vez. El error SIEMPRE se
-// devuelve a quien hizo la petición; el cierre no puede taparlo ni fallar hacia afuera.
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (onSessionExpired && !closingSession && isSessionExpired(error)) {
-      closingSession = true;
-      Promise.resolve()
-        .then(() => onSessionExpired?.())
-        .catch(() => undefined)
-        .finally(() => {
-          closingSession = false;
-        });
-    }
-    return Promise.reject(error);
-  },
-);
+export class ApiClient {
+  private static instance: ApiClient | null = null;
+
+  /** Instancia de Axios que usan los repositorios. */
+  readonly http: AxiosInstance;
+
+  private onSessionExpired: (() => void | Promise<void>) | null = null;
+  private closingSession = false;
+
+  private constructor() {
+    // El default export de axios expone `create`; la regla avisa por el named
+    // export homónimo, pero aquí el uso es el correcto.
+    // eslint-disable-next-line import/no-named-as-default-member
+    this.http = axios.create({
+      baseURL: API_URL,
+      timeout: 15000,
+      headers: {
+        "Content-Type": "application/json",
+        // Identifica el canal: el backend solo deja pasar cuentas de rol "usuario"
+        // cuando la petición viene de la app móvil.
+        "X-Client": "mobile",
+        // Evita la página de aviso de ngrok cuando el backend va por túnel.
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
+
+    // La sesión viaja solo como Bearer. La lectura es síncrona (caché en memoria
+    // de secureToken) porque el interceptor no puede esperar a SecureStore.
+    this.http.interceptors.request.use((config) => {
+      const token = getTokenSync();
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    });
+
+    // Sesión caducada: un solo cierre aunque lleguen varias respuestas a la vez. El error SIEMPRE se
+    // devuelve a quien hizo la petición; el cierre no puede taparlo ni fallar hacia afuera.
+    this.http.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (this.onSessionExpired && !this.closingSession && isSessionExpired(error)) {
+          this.closingSession = true;
+          Promise.resolve()
+            .then(() => this.onSessionExpired?.())
+            .catch(() => undefined)
+            .finally(() => {
+              this.closingSession = false;
+            });
+        }
+        return Promise.reject(error);
+      },
+    );
+  }
+
+  /** Crea la instancia la primera vez; las siguientes llamadas devuelven la misma. */
+  static getInstance(): ApiClient {
+    if (!ApiClient.instance) ApiClient.instance = new ApiClient();
+    return ApiClient.instance;
+  }
+
+  /** Registra quién cierra la sesión cuando el servidor dice que caducó. */
+  setSessionExpiredHandler(handler: (() => void | Promise<void>) | null): void {
+    this.onSessionExpired = handler;
+  }
+}
+
+/**
+ * Quién cierra la sesión cuando el servidor dice que caducó. Lo registra authStore: así este módulo
+ * no importa el store (el store ya importa el cliente) y no hay ciclo de importaciones.
+ */
+export function setSessionExpiredHandler(handler: (() => void | Promise<void>) | null): void {
+  ApiClient.getInstance().setSessionExpiredHandler(handler);
+}
+
+const api = ApiClient.getInstance().http;
 
 export default api;

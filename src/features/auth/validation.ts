@@ -2,8 +2,7 @@
 // Espejo del validador Zod del backend, que es el que valida de verdad
 // (syscom-backend/src/modules/auth/validation.ts). Aquí solo se evita el
 // viaje de red obvio.
-
-export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { EMAIL_RE } from "@/shared/utils/validation";
 
 /** Reglas del backend, en el mismo orden en que se muestran al usuario. */
 export const PASSWORD_RULES = [

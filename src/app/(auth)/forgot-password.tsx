@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import AuthScaffold, { FormError, SubmitButton } from "@/features/auth/components/AuthScaffold";
 import { useForgotPassword } from "@/features/auth/hooks/usePasswordRecovery";
-import { authErrorMessage } from "@/features/auth/repositories/authRepository";
+import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { validateEmail } from "@/features/auth/validation";
 import FormField from "@/shared/ui/FormField";
 
@@ -44,7 +44,7 @@ export default function ForgotPasswordScreen() {
       <FormError
         message={
           forgot.error
-            ? authErrorMessage(forgot.error, "No se pudo enviar el código de recuperación.")
+            ? apiErrorMessage(forgot.error, "No se pudo enviar el código de recuperación.")
             : null
         }
       />

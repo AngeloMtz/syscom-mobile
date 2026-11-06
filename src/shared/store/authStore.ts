@@ -43,8 +43,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   hydrate: async () => {
     set({ isHydrating: true });
     await restoreToken();
-    // El usuario no se rehidrata: recuperarlo exige HTTP (Fase 3). Aquí la
-    // sesión se reconoce por la presencia del token.
+    // El usuario no se rehidrata aquí: recuperarlo exige HTTP y lo hace useMe.
+    // Aquí la sesión se reconoce por la presencia del token.
     set({ isAuthenticated: !!getTokenSync(), isHydrating: false });
   },
 }));

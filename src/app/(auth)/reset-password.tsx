@@ -8,7 +8,7 @@ import { Text, View, type TextInputInstance } from "react-native";
 import AuthScaffold, { FormError, SubmitButton } from "@/features/auth/components/AuthScaffold";
 import PasswordRules from "@/features/auth/components/PasswordRules";
 import { useResetPassword } from "@/features/auth/hooks/usePasswordRecovery";
-import { authErrorMessage } from "@/features/auth/repositories/authRepository";
+import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { passwordIsValid } from "@/features/auth/validation";
 import { spacing, useColors } from "@/shared/theme/useColors";
 import FormField from "@/shared/ui/FormField";
@@ -73,7 +73,7 @@ export default function ResetPasswordScreen() {
       <FormError
         message={
           reset.error
-            ? authErrorMessage(reset.error, "No se pudo actualizar la contraseña.")
+            ? apiErrorMessage(reset.error, "No se pudo actualizar la contraseña.")
             : null
         }
       />

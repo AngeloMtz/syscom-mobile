@@ -282,7 +282,7 @@ export default function RegisterScreen() {
           Acepto los{" "}
           <Text
             style={estiloEnlace}
-            onPress={() => router.push("/policies")}
+            onPress={() => router.push({ pathname: "/policies", params: { seccion: "terminos_condiciones" } })}
             accessibilityRole="link"
             accessibilityLabel="Términos y Condiciones"
           >
@@ -291,7 +291,7 @@ export default function RegisterScreen() {
           de uso del servicio y la{" "}
           <Text
             style={estiloEnlace}
-            onPress={() => router.push("/policies")}
+            onPress={() => router.push({ pathname: "/policies", params: { seccion: "politicas_privacidad" } })}
             accessibilityRole="link"
             accessibilityLabel="Política de privacidad"
           >

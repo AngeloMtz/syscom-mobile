@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
-import { Alert } from "react-native";
+import { Alert, Linking } from "react-native";
 
 import DeleteAccountScreen from "@/app/profile/delete-account";
 import { profileRepository } from "@/features/profile/repositories/profileRepository";
@@ -60,8 +60,39 @@ describe("Eliminar cuenta", () => {
     await abrir();
 
     expect(screen.getByText("Esta acción no se puede deshacer")).toBeTruthy();
-    expect(screen.getByText(/Tus pedidos terminados se conservan/)).toBeTruthy();
+    expect(screen.getByText(/Tus pedidos terminados y sus pagos se conservan/)).toBeTruthy();
     expect(screen.getByText(/pedidos o servicios en curso/)).toBeTruthy();
+  });
+
+  it("el aviso dice que también se conservan los pagos, sin datos personales", async () => {
+    await abrir();
+
+    expect(screen.getByText(/pedidos terminados y sus pagos se conservan.*obligación legal.*sin tu nombre/)).toBeTruthy();
+  });
+
+  it("el enlace «Política de privacidad» abre la URL correcta", async () => {
+    const abrirUrl = jest.spyOn(Linking, "openURL").mockResolvedValue(undefined);
+    await abrir();
+
+    await fireEvent.press(screen.getByLabelText("Política de privacidad"));
+
+    expect(abrirUrl).toHaveBeenCalledWith("https://syscom-frontend.vercel.app/policies");
+    abrirUrl.mockRestore();
+  });
+
+  it("un 409 muestra siempre el mensaje de pedidos en curso, aunque el backend diga otra cosa", async () => {
+    repo.deleteAccount.mockRejectedValueOnce(makeApiError({ status: 409, message: "Conflicto" }));
+    await abrir();
+    await escribir("Secreta1!");
+    await tocarEliminar();
+
+    await confirmar();
+
+    expect(
+      screen.getByText("Tienes pedidos o servicios en curso. Podrás eliminar tu cuenta cuando terminen."),
+    ).toBeTruthy();
+    expect(screen.queryByText("Conflicto")).toBeNull();
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
   });
 
   it("sin contraseña avisa y no pide confirmación ni llama al servidor", async () => {

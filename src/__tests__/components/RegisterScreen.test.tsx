@@ -62,23 +62,23 @@ describe("Registro: aceptación de términos y política", () => {
     ).toBeTruthy();
   });
 
-  it("«Términos y Condiciones» es un enlace que lleva a /policies", async () => {
+  it("«Términos y Condiciones» es un enlace que abre /policies con su sección", async () => {
     await abrir();
 
     const enlace = screen.getByRole("link", { name: "Términos y Condiciones" });
     await fireEvent.press(enlace);
 
     expect(mockPush).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith("/policies");
+    expect(mockPush).toHaveBeenCalledWith({ pathname: "/policies", params: { seccion: "terminos_condiciones" } });
   });
 
-  it("«Política de privacidad» es un enlace que lleva a /policies", async () => {
+  it("«Política de privacidad» es un enlace que abre /policies con su sección", async () => {
     await abrir();
 
     await fireEvent.press(screen.getByRole("link", { name: "Política de privacidad" }));
 
     expect(mockPush).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith("/policies");
+    expect(mockPush).toHaveBeenCalledWith({ pathname: "/policies", params: { seccion: "politicas_privacidad" } });
   });
 
   it("tocar un enlace no marca la casilla de aceptación", async () => {

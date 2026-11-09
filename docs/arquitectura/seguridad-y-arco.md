@@ -1,11 +1,11 @@
 # Seguridad y derechos ARCO
 
-Compara la evidencia que pide la Actividad 6 con lo que existe hoy en el código. Cubre los criterios 2 y 3 de la rúbrica. Revisado el 2026-11-05 sobre la rama `feature/191-patrones-diseno`.
+Compara la evidencia que pide la Actividad 6 con lo que existe hoy en el código. Cubre los criterios 2 y 3 de la rúbrica. Cancelación actualizada con el issue #200; el resto se revisó el 2026-11-05.
 
 | Criterio | Puntos | Estado |
 |---|---|---|
 | 2. Seguridad Anti-MitM y cifrado | 1.50 | **Parcial:** hay almacenamiento seguro, pero no certificate pinning |
-| 3. Derechos ARCO | 1.50 | **Parcial:** falta Cancelación y un Aviso de Privacidad explícito |
+| 3. Derechos ARCO | 1.50 | **Parcial:** falta un Aviso de Privacidad explícito y guardar el consentimiento |
 
 ## Criterio 2: seguridad Anti-MitM y cifrado
 
@@ -47,13 +47,25 @@ Agregarlo implica:
 
 | Derecho | Estado | Backend | App |
 |---|---|---|---|
-| **Acceso** | Sí | `GET /profile` | [personal-data.tsx:30](../../src/app/profile/personal-data.tsx#L30) |
-| **Rectificación** | Sí | `PUT /profile` | [personal-data.tsx:66](../../src/app/profile/personal-data.tsx#L66) |
-| **Cancelación** | **No** | No existe `DELETE /profile` | No hay pantalla |
+| **Acceso** | Sí | `GET /profile` | [personal-data.tsx:32](../../src/app/profile/personal-data.tsx#L32) |
+| **Rectificación** | Sí | `PUT /profile` | [personal-data.tsx:68](../../src/app/profile/personal-data.tsx#L68) |
+| **Cancelación** | Sí, en la app | `DELETE /profile` | [delete-account.tsx](../../src/app/profile/delete-account.tsx) |
 | **Oposición** | Parcial | `GET` y `PUT /notifications/preferences` | [PreferencesCard.tsx:15](../../src/features/notifications/components/PreferencesCard.tsx#L15) |
 | **Consentimiento** | Parcial | No se guarda | [register.tsx:263](<../../src/app/(auth)/register.tsx#L263>) |
 
-Los endpoints de perfil exigen sesión: `syscom-backend/src/modules/profile/routes.ts`, líneas 31 (`authenticateToken`), 37 (`GET /`) y 43 (`PUT /`). Ese archivo solo tiene `DELETE` para direcciones y foto, no para la cuenta.
+Los endpoints de perfil exigen sesión (`authenticateToken` en `syscom-backend/src/modules/profile/routes.ts`).
+
+### Cancelación
+
+`DELETE /profile` exige la contraseña, solo aplica al rol `usuario` y se rechaza si hay pedidos o servicios en curso. El registro del usuario no se borra, porque los pedidos lo referencian:
+
+| Qué pasa | Datos |
+|---|---|
+| Se borran | Favoritos, carrito, reseñas, notificaciones, tokens de push, 2FA, códigos, preferencias, chats, incidencias, segmento, suscripción al boletín y foto |
+| Se anonimizan | Nombre, correo, teléfono y contraseña del usuario; calle, colonia y referencias de sus direcciones; descripciones de sus servicios; mensajes del chat en vivo |
+| Se conservan | Pedidos, pagos y redenciones de promociones; ciudad, estado y código postal de las direcciones |
+
+La cuenta queda inactiva, así que el token deja de servir y el login se rechaza. El correo queda libre para registrarse otra vez. La opción existe solo en la app, no en el sitio web.
 
 ### Oposición
 
@@ -70,8 +82,7 @@ Los interruptores de correo y push permiten oponerse a recibir notificaciones. N
 
 | Falta | Dónde | Nota |
 |---|---|---|
-| `DELETE /profile` | Backend | Hay que decidir si se borra o se anonimiza, y qué pasa con los pedidos de esa cuenta. Es decisión del Product Owner |
-| Pantalla de cancelar cuenta | App | Con confirmación y cierre de sesión. Google Play también exige este borrado para apps con cuentas |
+| Eliminar la cuenta desde la web | Sitio web | Google Play también pide un enlace web para solicitarlo |
 | Aviso de Privacidad en el registro | App | Enlazar el documento desde la casilla |
 | Registro del consentimiento | Backend y base de datos | Fecha y versión aceptada; requiere una columna nueva |
 

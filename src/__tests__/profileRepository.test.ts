@@ -55,3 +55,34 @@ describe("profileRepository.update", () => {
     await expect(profileRepository.update(makeUpdateProfileDTO())).rejects.toBe(error);
   });
 });
+
+describe("profileRepository.deleteAccount", () => {
+  it("envía DELETE /profile con la contraseña en el cuerpo y no devuelve datos", async () => {
+    responde({ message: "Tu cuenta se eliminó correctamente" });
+
+    await expect(profileRepository.deleteAccount("Secreta1!")).resolves.toBeUndefined();
+
+    expect(ultimaPeticion()).toMatchObject({
+      metodo: "delete",
+      ruta: "/profile",
+      cuerpo: { password: "Secreta1!" },
+    });
+  });
+
+  it("funciona suelto, como lo pasan los hooks", async () => {
+    responde({});
+    const { deleteAccount } = profileRepository;
+
+    await expect(deleteAccount("x")).resolves.toBeUndefined();
+  });
+
+  it.each([
+    [400, "La contraseña es incorrecta"],
+    [409, "Tienes pedidos o servicios en curso. Podrás eliminar tu cuenta cuando terminen."],
+  ])("rechaza con el error %i de la API", async (status, message) => {
+    const error = makeApiError({ status, message });
+    adapter.mockRejectedValueOnce(error);
+
+    await expect(profileRepository.deleteAccount("x")).rejects.toBe(error);
+  });
+});

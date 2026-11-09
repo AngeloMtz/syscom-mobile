@@ -107,9 +107,9 @@ Las referencias al backend son al clon local `syscom-backend` (rama con último 
 | Base de datos y hosting | PostgreSQL en **Neon** (según `CLAUDE.md` del backend); despliegue en **Railway** (`railway.json`). **Confirmar con Luis** la configuración de producción | backend: `CLAUDE.md:10`, `railway.json` |
 | Cifrado en tránsito | La URL del backend sale de `EXPO_PUBLIC_API_URL` (variable de EAS); su valor de producción no está en el repo. El manifiesto no habilita tráfico sin cifrar. **Confirmar** que la URL de producción es `https://` (y el socket `wss://`) | [client.ts:10-27](../src/shared/api/client.ts#L10-L27), [liveChatGateway.ts:52](../src/features/chatbot/liveChat/liveChatGateway.ts#L52) |
 | Respaldo de Android | El manifiesto generado trae `allowBackup="true"` con reglas que excluyen el almacén seguro (`secure_store_backup_rules`) | manifiesto generado (sección 2) |
-| Eliminar la cuenta | **No consta.** No hay pantalla ni `DELETE /profile` (el backend solo borra direcciones y foto) | [seguridad-y-arco.md](arquitectura/seguridad-y-arco.md) (criterio 3); backend: `modules/profile/routes.ts:37-109` |
+| Eliminar la cuenta | Desde la app: Mi cuenta > Datos personales > Eliminar cuenta, con `DELETE /profile`. Borra los datos propios, anonimiza al usuario y conserva pedidos y pagos | [delete-account.tsx](../src/app/profile/delete-account.tsx), [seguridad-y-arco.md](arquitectura/seguridad-y-arco.md) (criterio 3) |
 
-> **Alerta para Play Console:** Google exige, a las apps que permiten crear una cuenta, ofrecer la eliminación de la cuenta desde la app y desde un enlace web. Hoy no consta ninguna de las dos. Esto ya está registrado como pendiente de decisión en [seguridad-y-arco.md](arquitectura/seguridad-y-arco.md). Requisito de Google: confirmarlo en la ayuda de Play Console antes de enviar (no se consultó en esta tarea).
+> **Alerta para Play Console:** Google exige, a las apps que permiten crear una cuenta, ofrecer la eliminación de la cuenta desde la app y desde un enlace web. Desde la app ya existe; el enlace web sigue pendiente. Requisito de Google: confirmarlo en la ayuda de Play Console antes de enviar (no se consultó en esta tarea).
 
 ---
 
@@ -231,7 +231,7 @@ Notas para quien publique:
 | 1 | Confirmar plazos de conservación (chatbot, chat en vivo, pedidos, tokens de push) | Luis |
 | 2 | Confirmar que la URL de producción es `https://` y el socket `wss://` | Luis / Angel |
 | 3 | Confirmar si Stripe en producción es *live* o *test* | Angel |
-| 4 | Decidir la eliminación de cuenta (pantalla y `DELETE /profile`) o declararla como limitación | Equipo / Product Owner |
+| 4 | Definir el enlace web para solicitar la eliminación de cuenta (desde la app ya existe) | Equipo / Product Owner |
 | 5 | Obtener el manifiesto final del AAB y validar permisos (sección 2.2) | Angel |
 | 6 | Contrastar la tabla de la sección 3 con las guías de Stripe, Firebase y Expo para Data safety | Angel |
 | 7 | Definir `<CORREO_DE_CONTACTO>`, `<FECHA>` y la URL pública de la política | Angel |

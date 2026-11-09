@@ -8,17 +8,20 @@ import { useChatStore } from "@/features/chatbot/chatStore";
 import { unregisterDevicePush } from "@/features/notifications/pushRegistration";
 import { useAuthStore } from "@/shared/store/authStore";
 
-export function useLogout(): () => Promise<void> {
-  const logout = useAuthStore((s) => s.logout);
+/** Termina la sesión en este dispositivo, sin hablar con el servidor. */
+export async function endLocalSession(): Promise<void> {
+  await useAuthStore.getState().logout();
+  // La conversación con el chatbot es de esta cuenta: otra no debe verla.
+  useChatStore.getState().reset();
+}
 
+export function useLogout(): () => Promise<void> {
   return async () => {
     try {
       await unregisterDevicePush();
     } catch {
       // Sin bloquear el cierre de sesión por esto.
     }
-    await logout();
-    // La conversación con el chatbot es de esta cuenta: otra no debe verla.
-    useChatStore.getState().reset();
+    await endLocalSession();
   };
 }

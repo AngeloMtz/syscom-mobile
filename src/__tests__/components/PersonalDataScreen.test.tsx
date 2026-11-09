@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
+import { useRouter } from "expo-router";
 
 import PersonalDataScreen from "@/app/profile/personal-data";
 import { useProfile } from "@/features/profile/hooks/useProfile";
@@ -7,6 +8,7 @@ import { useUpdateProfile } from "@/features/profile/hooks/useUpdateProfile";
 import { makeProfile } from "../fixtures";
 
 jest.mock("@expo/vector-icons", () => ({ Ionicons: () => null }));
+jest.mock("expo-router", () => ({ useRouter: jest.fn() }));
 // La sesión no es lo que se prueba aquí: RequireAuth deja pasar a los hijos.
 jest.mock("@/features/auth/components/RequireAuth", () => ({
   __esModule: true,
@@ -16,9 +18,11 @@ jest.mock("@/features/profile/hooks/useProfile", () => ({ useProfile: jest.fn() 
 jest.mock("@/features/profile/hooks/useUpdateProfile", () => ({ useUpdateProfile: jest.fn() }));
 
 const mutateAsync = jest.fn();
+const push = jest.fn();
 
 beforeEach(() => {
   jest.resetAllMocks();
+  (useRouter as jest.Mock).mockReturnValue({ push });
   mutateAsync.mockResolvedValue(makeProfile());
   (useProfile as jest.Mock).mockReturnValue({
     data: makeProfile({ nombre: "Ana" }),
@@ -60,6 +64,17 @@ describe("Datos personales: nombre", () => {
     await fireEvent.press(screen.getByText("Guardar cambios"));
 
     expect(await screen.findByText("El nombre debe tener al menos 3 caracteres")).toBeTruthy();
+    expect(mutateAsync).not.toHaveBeenCalled();
+  });
+});
+
+describe("Datos personales: eliminar cuenta", () => {
+  it("lleva a la pantalla de eliminar cuenta sin guardar el formulario", async () => {
+    await render(<PersonalDataScreen />);
+
+    await fireEvent.press(screen.getByLabelText("Eliminar cuenta"));
+
+    expect(push).toHaveBeenCalledWith("/profile/delete-account");
     expect(mutateAsync).not.toHaveBeenCalled();
   });
 });

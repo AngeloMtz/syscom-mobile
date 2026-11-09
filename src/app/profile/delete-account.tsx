@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
+  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -22,9 +23,18 @@ import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import FormField from "@/shared/ui/FormField";
 
+const POLITICA_PRIVACIDAD_URL = "https://syscom-frontend.vercel.app/policies";
+const MENSAJE_EN_CURSO = "Tienes pedidos o servicios en curso. Podrás eliminar tu cuenta cuando terminen.";
+
+/** Mensaje a mostrar: el 409 (pedidos o servicios en curso) siempre lleva el mismo texto. */
+const mensajeDeError = (error: any): string =>
+  error?.response?.status === 409
+    ? MENSAJE_EN_CURSO
+    : apiErrorMessage(error, "No se pudo eliminar tu cuenta. Intenta de nuevo.");
+
 const CONSECUENCIAS = [
   "Se borran tus datos personales, direcciones guardadas, favoritos, carrito, reseñas y notificaciones.",
-  "Tus pedidos terminados se conservan como registro de venta, sin tu nombre, correo ni teléfono.",
+  "Tus pedidos terminados y sus pagos se conservan como registro de venta y por obligación legal, sin tu nombre, correo ni teléfono.",
   "No podrás recuperar tu cuenta. Podrás registrarte de nuevo con el mismo correo.",
 ];
 
@@ -85,12 +95,20 @@ function DeleteAccountForm() {
           <Text style={{ color: c.textMuted, fontSize: 13, lineHeight: 19 }}>
             Si tienes pedidos o servicios en curso, podrás eliminar tu cuenta cuando terminen.
           </Text>
+          <Pressable
+            onPress={() => Linking.openURL(POLITICA_PRIVACIDAD_URL).catch(() => {})}
+            accessibilityRole="link"
+            accessibilityLabel="Política de privacidad"
+            hitSlop={8}
+          >
+            <Text style={{ color: c.brandPrimary, fontSize: 13, fontWeight: "700", textDecorationLine: "underline" }}>
+              Política de privacidad
+            </Text>
+          </Pressable>
         </View>
 
         <FormError
-          message={
-            eliminar.error ? apiErrorMessage(eliminar.error, "No se pudo eliminar tu cuenta. Intenta de nuevo.") : null
-          }
+          message={eliminar.error ? mensajeDeError(eliminar.error) : null}
         />
 
         <FormField

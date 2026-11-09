@@ -45,6 +45,7 @@ export default function RegisterScreen() {
   const [acepta, setAcepta] = useState(false);
 
   const enviando = register.isPending;
+  const estiloEnlace = { color: c.brandSecondary, fontWeight: "700" as const, textDecorationLine: "underline" as const };
 
   // Refs para encadenar los campos con la tecla "siguiente" del teclado.
   const refPaterno = useRef<TextInputInstance>(null);
@@ -278,7 +279,24 @@ export default function RegisterScreen() {
           {acepta && <Ionicons name="checkmark" size={14} color="#fff" />}
         </View>
         <Text style={{ color: c.textMuted, flex: 1, fontSize: 13, lineHeight: 18 }}>
-          Acepto los Términos y Condiciones de uso del servicio
+          Acepto los{" "}
+          <Text
+            style={estiloEnlace}
+            onPress={() => router.push("/policies")}
+            accessibilityRole="link"
+            accessibilityLabel="Términos y Condiciones"
+          >
+            Términos y Condiciones
+          </Text>{" "}
+          de uso del servicio y la{" "}
+          <Text
+            style={estiloEnlace}
+            onPress={() => router.push("/policies")}
+            accessibilityRole="link"
+            accessibilityLabel="Política de privacidad"
+          >
+            Política de privacidad
+          </Text>
         </Text>
       </Pressable>
 

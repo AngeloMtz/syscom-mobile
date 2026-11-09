@@ -88,7 +88,7 @@ export class ApiClient {
 | Carrito | [L17](../../src/features/cart/repositories/cartRepository.ts#L17) | [L34](../../src/features/cart/repositories/cartRepository.ts#L34) | [L93](../../src/features/cart/repositories/cartRepository.ts#L93) |
 | Pedidos | [L16](../../src/features/orders/repositories/orderRepository.ts#L16) | [L27](../../src/features/orders/repositories/orderRepository.ts#L27) | [L68](../../src/features/orders/repositories/orderRepository.ts#L68) |
 | Pagos | [L11](../../src/features/payments/repositories/paymentRepository.ts#L11) | [L22](../../src/features/payments/repositories/paymentRepository.ts#L22) | [L43](../../src/features/payments/repositories/paymentRepository.ts#L43) |
-| Perfil | [L9](../../src/features/profile/repositories/profileRepository.ts#L9) | [L17](../../src/features/profile/repositories/profileRepository.ts#L17) | [L26](../../src/features/profile/repositories/profileRepository.ts#L26) |
+| Perfil | [L9](../../src/features/profile/repositories/profileRepository.ts#L9) | [L19](../../src/features/profile/repositories/profileRepository.ts#L19) | [L31](../../src/features/profile/repositories/profileRepository.ts#L31) |
 
 ```ts
 export interface ProfileRepository {
@@ -170,7 +170,7 @@ export const useProfile = () => {
 };
 ```
 
-**Dónde:** `src/features/*/hooks`. Ejemplos: [useProfile.ts:8](../../src/features/profile/hooks/useProfile.ts#L8) y su consumo en [personal-data.tsx:30](../../src/app/profile/personal-data.tsx#L30).
+**Dónde:** `src/features/*/hooks`. Ejemplos: [useProfile.ts:8](../../src/features/profile/hooks/useProfile.ts#L8) y su consumo en [personal-data.tsx:32](../../src/app/profile/personal-data.tsx#L32).
 
 ## C2. Store global
 

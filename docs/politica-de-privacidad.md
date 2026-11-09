@@ -80,7 +80,7 @@ Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición
 
 - **Acceso y rectificación:** desde la app, en tu perfil ("Mis datos"), puedes consultar y corregir tu nombre, apellidos y teléfono, y administrar tus direcciones.
 - **Oposición:** en Notificaciones puedes activar o desactivar los avisos por correo y por push. Puedes retirar el permiso de notificaciones en los ajustes de tu teléfono.
-- **Cancelación (eliminar tu cuenta y tus datos):** la app todavía no tiene una función para eliminar la cuenta. **[PENDIENTE DE DECISIÓN del equipo: indicar aquí el medio para solicitarlo — por ejemplo, escribir a <CORREO_DE_CONTACTO> — y el enlace web de eliminación que pide Google Play.]**
+- **Cancelación (eliminar tu cuenta y tus datos):** desde la app, en Mi cuenta > Datos personales > Eliminar cuenta, confirmando tu contraseña. Se borran tus datos personales, direcciones guardadas, favoritos, carrito, reseñas y notificaciones. Tus pedidos se conservan como registro de venta, sin tu nombre, correo ni teléfono. Si tienes pedidos o servicios en curso, podrás eliminarla cuando terminen. **[PENDIENTE: agregar el enlace web de eliminación que pide Google Play.]**
 - **Boletín:** **[PENDIENTE: confirmar cómo darse de baja.]**
 
 ## 8. Menores de edad

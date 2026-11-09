@@ -32,6 +32,8 @@ class InMemoryProfileRepository implements ProfileRepository {
     this.actual = { ...this.actual, ...payload };
     return this.actual;
   };
+
+  deleteAccount = async () => undefined;
 }
 
 describe("patrón Repository", () => {

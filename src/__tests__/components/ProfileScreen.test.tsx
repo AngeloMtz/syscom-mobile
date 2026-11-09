@@ -69,6 +69,12 @@ describe("Mi cuenta", () => {
     expect(push).toHaveBeenCalledWith(ruta);
   });
 
+  it("no muestra «Eliminar cuenta»: la opción vive en Datos personales", async () => {
+    await render(<ProfileTab />);
+
+    expect(screen.queryByText("Eliminar cuenta")).toBeNull();
+  });
+
   it("conserva los tres títulos de sección y el cierre de sesión", async () => {
     await render(<ProfileTab />);
 

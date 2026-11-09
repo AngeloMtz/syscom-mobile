@@ -11,6 +11,8 @@ export interface ProfileRepository {
   get(): Promise<Profile>;
   /** Actualiza los datos personales. El correo no es editable en el backend. */
   update(payload: UpdateProfileDTO): Promise<Profile>;
+  /** Elimina la cuenta. El backend exige la contraseña y rechaza si hay pedidos o servicios en curso. */
+  deleteAccount(password: string): Promise<void>;
 }
 
 /** Implementación sobre la API REST. Funciones flecha: los hooks pasan `get` y `update` sin el objeto. */
@@ -21,6 +23,9 @@ export class HttpProfileRepository implements ProfileRepository {
 
   update = (payload: UpdateProfileDTO): Promise<Profile> =>
     this.http.put("/profile", payload).then((r) => r.data.data);
+
+  deleteAccount = (password: string): Promise<void> =>
+    this.http.delete("/profile", { data: { password } }).then(() => undefined);
 }
 
 export const profileRepository: ProfileRepository = new HttpProfileRepository(ApiClient.getInstance().http);

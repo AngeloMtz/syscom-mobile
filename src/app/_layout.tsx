@@ -70,6 +70,7 @@ export default function RootLayout() {
                   name="profile/personal-data"
                   options={{ title: "Datos personales" }}
                 />
+                <Stack.Screen name="profile/delete-account" options={{ title: "Eliminar cuenta" }} />
                 <Stack.Screen name="informacion" options={{ title: "Información" }} />
                 <Stack.Screen name="about" options={{ title: "Nosotros" }} />
                 <Stack.Screen name="faqs" options={{ title: "Preguntas frecuentes" }} />

@@ -2,11 +2,13 @@
 // Equivale a /client/account/update-data de la web. El correo se muestra pero
 // no se puede modificar, igual que allá.
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -64,6 +66,7 @@ function PersonalData() {
 function PersonalDataForm({ perfil }: { perfil: Profile }) {
   const c = useColors();
   const guardar = useUpdateProfile();
+  const router = useRouter();
 
   const [datos, setDatos] = useState<UpdateProfileDTO>(() => ({
     nombre: perfil.nombre ?? "",
@@ -235,6 +238,17 @@ function PersonalDataForm({ perfil }: { perfil: Profile }) {
           loading={guardar.isPending}
           disabled={!hayCambios}
         />
+
+        <Pressable
+          onPress={() => router.push("/profile/delete-account")}
+          accessibilityRole="button"
+          accessibilityLabel="Eliminar cuenta"
+          accessibilityHint="Abre la pantalla para eliminar tu cuenta de forma permanente"
+          hitSlop={8}
+          style={({ pressed }) => [styles.eliminar, { opacity: pressed ? 0.6 : 1 }]}
+        >
+          <Text style={{ color: c.danger, fontWeight: "700", fontSize: 14 }}>Eliminar cuenta</Text>
+        </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -270,4 +284,5 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     marginBottom: spacing.md,
   },
+  eliminar: { alignItems: "center", paddingVertical: spacing.md, marginTop: spacing.lg },
 });

@@ -2,6 +2,7 @@
 // Solo presentación: los datos y estados vienen de usePolicies; el HTML
 // enriquecido se pinta con HtmlContent.
 import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -18,7 +19,14 @@ const ICONS: Record<string, React.ComponentProps<typeof Ionicons>["name"]> = {
 export default function PoliciesScreen() {
   const c = useColors();
   const { data, isLoading, isError, refetch } = usePolicies();
-  const [open, setOpen] = useState<number | null>(0);
+  // `seccion` (opcional) es el tipo de la política a expandir, p. ej. desde el registro.
+  // Sin ella, o si no existe, se abre la primera como siempre.
+  const { seccion } = useLocalSearchParams<{ seccion?: string }>();
+  // undefined = el usuario aún no ha tocado nada: manda el parámetro (o la primera).
+  const [elegida, setElegida] = useState<number | null | undefined>(undefined);
+  const indiceParam = (data ?? []).findIndex((p) => p.tipo === seccion);
+  const open = elegida !== undefined ? elegida : indiceParam >= 0 ? indiceParam : 0;
+  const setOpen = setElegida;
 
   return (
     <View style={{ flex: 1, backgroundColor: c.background }}>

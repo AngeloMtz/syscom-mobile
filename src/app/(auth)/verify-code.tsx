@@ -11,7 +11,7 @@ import { useConfirm2FA } from "@/features/auth/hooks/useConfirm2FA";
 import { useVerifyRecovery } from "@/features/auth/hooks/usePasswordRecovery";
 import { useResendCode } from "@/features/auth/hooks/useResendCode";
 import { useVerifyRegistration } from "@/features/auth/hooks/useVerifyRegistration";
-import { authErrorMessage } from "@/features/auth/repositories/authRepository";
+import { apiErrorMessage } from "@/shared/api/errorMessage";
 import type { CodeType } from "@/features/auth/types";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 
@@ -111,7 +111,7 @@ export default function VerifyCodeScreen() {
       }
     >
       <FormError
-        message={error ? authErrorMessage(error, "El código no es válido o ya expiró.") : null}
+        message={error ? apiErrorMessage(error, "El código no es válido o ya expiró.") : null}
       />
 
       {aviso ? (

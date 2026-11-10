@@ -2,18 +2,11 @@
 // Todas las rutas exigen sesión (Bearer, lo agrega el interceptor del cliente).
 // El backend pagina por cursor: { success, data, meta: { nextCursor, hasMore, total } }.
 import api from "@/shared/api/client";
-import { dedupeFavorites } from "@/features/favorites/favoriteSelectors";
+import { MAX_FAVORITES, dedupeFavorites } from "@/features/favorites/favoriteSelectors";
 import type { FavoriteItem, FavoritesPage, FavoritesResult } from "@/features/favorites/types";
 
 /** Máximo que acepta el backend por página (1 a 50). */
 export const FAVORITES_PAGE_SIZE = 50;
-
-/**
- * Tope de favoritos que la app carga: 4 páginas de 50. El backend no tiene un
- * endpoint de solo ids, así que los corazones salen de esta lista; con más de
- * 200 la pantalla avisa y solo se ven los más recientes.
- */
-export const MAX_FAVORITES = 200;
 
 const status = (error: unknown) => (error as { response?: { status?: number } } | null)?.response?.status;
 

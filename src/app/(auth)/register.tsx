@@ -10,7 +10,7 @@ import { Pressable, StyleSheet, Text, View, type TextInputInstance } from "react
 import AuthScaffold, { FormError, SubmitButton } from "@/features/auth/components/AuthScaffold";
 import PasswordRules from "@/features/auth/components/PasswordRules";
 import { useRegister } from "@/features/auth/hooks/useRegister";
-import { authErrorMessage } from "@/features/auth/repositories/authRepository";
+import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { passwordIsValid, validateEmail } from "@/features/auth/validation";
 import { spacing, useColors } from "@/shared/theme/useColors";
 import FormField from "@/shared/ui/FormField";
@@ -45,6 +45,7 @@ export default function RegisterScreen() {
   const [acepta, setAcepta] = useState(false);
 
   const enviando = register.isPending;
+  const estiloEnlace = { color: c.brandSecondary, fontWeight: "700" as const, textDecorationLine: "underline" as const };
 
   // Refs para encadenar los campos con la tecla "siguiente" del teclado.
   const refPaterno = useRef<TextInputInstance>(null);
@@ -128,7 +129,7 @@ export default function RegisterScreen() {
       <FormError
         message={
           register.error
-            ? authErrorMessage(register.error, "No se pudo crear la cuenta. Intenta de nuevo.")
+            ? apiErrorMessage(register.error, "No se pudo crear la cuenta. Intenta de nuevo.")
             : null
         }
       />
@@ -278,7 +279,24 @@ export default function RegisterScreen() {
           {acepta && <Ionicons name="checkmark" size={14} color="#fff" />}
         </View>
         <Text style={{ color: c.textMuted, flex: 1, fontSize: 13, lineHeight: 18 }}>
-          Acepto los Términos y Condiciones de uso del servicio
+          Acepto los{" "}
+          <Text
+            style={estiloEnlace}
+            onPress={() => router.push({ pathname: "/policies", params: { seccion: "terminos_condiciones" } })}
+            accessibilityRole="link"
+            accessibilityLabel="Términos y Condiciones"
+          >
+            Términos y Condiciones
+          </Text>{" "}
+          de uso del servicio y la{" "}
+          <Text
+            style={estiloEnlace}
+            onPress={() => router.push({ pathname: "/policies", params: { seccion: "politicas_privacidad" } })}
+            accessibilityRole="link"
+            accessibilityLabel="Política de privacidad"
+          >
+            Política de privacidad
+          </Text>
         </Text>
       </Pressable>
 

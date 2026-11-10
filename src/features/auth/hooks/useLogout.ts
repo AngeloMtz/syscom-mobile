@@ -5,22 +5,23 @@
 // igual se cierra la sesión; el token simplemente queda activo en el backend
 // hasta que expire por sí solo o alguien vuelva a iniciar sesión y lo reemplace.
 import { useChatStore } from "@/features/chatbot/chatStore";
-import { getExpoPushToken } from "@/features/notifications/pushNotifications";
-import { notificationRepository } from "@/features/notifications/repositories/notificationRepository";
+import { unregisterDevicePush } from "@/features/notifications/pushRegistration";
 import { useAuthStore } from "@/shared/store/authStore";
 
-export function useLogout(): () => Promise<void> {
-  const logout = useAuthStore((s) => s.logout);
+/** Termina la sesión en este dispositivo, sin hablar con el servidor. */
+export async function endLocalSession(): Promise<void> {
+  await useAuthStore.getState().logout();
+  // La conversación con el chatbot es de esta cuenta: otra no debe verla.
+  useChatStore.getState().reset();
+}
 
+export function useLogout(): () => Promise<void> {
   return async () => {
     try {
-      const token = await getExpoPushToken();
-      if (token) await notificationRepository.unregisterPushToken(token);
+      await unregisterDevicePush();
     } catch {
       // Sin bloquear el cierre de sesión por esto.
     }
-    await logout();
-    // La conversación con el chatbot es de esta cuenta: otra no debe verla.
-    useChatStore.getState().reset();
+    await endLocalSession();
   };
 }

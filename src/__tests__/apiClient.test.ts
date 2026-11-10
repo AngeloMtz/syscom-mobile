@@ -111,6 +111,40 @@ describe("cliente HTTP: configuración", () => {
   });
 });
 
+describe("cliente HTTP: patrón Singleton", () => {
+  it("getInstance() devuelve siempre la misma instancia", () => {
+    const { ApiClient } = cargarCliente(URL_API);
+    expect(ApiClient.getInstance()).toBe(ApiClient.getInstance());
+  });
+
+  it("el cliente exportado es el Axios de esa única instancia", () => {
+    const { ApiClient, api } = cargarCliente(URL_API);
+    expect(api).toBe(ApiClient.getInstance().http);
+  });
+
+  it("el estado se comparte: el manejador registrado con la función llega a la instancia", async () => {
+    const { ApiClient, api, adapter, saveToken, setSessionExpiredHandler } = cargarCliente(URL_API);
+    const caducada = jest.fn();
+    await saveToken("jwt-actual");
+    setSessionExpiredHandler(caducada);
+    ApiClient.getInstance().setSessionExpiredHandler(null);
+    adapter.mockImplementationOnce(async (config: InternalAxiosRequestConfig) => {
+      throw Object.assign(makeApiError({ status: 401, message: "No autenticado" }), { config });
+    });
+
+    await expect(api.get("/cart")).rejects.toBeDefined();
+
+    expect(caducada).not.toHaveBeenCalled();
+  });
+
+  it("el constructor es privado: TypeScript no deja usar new desde fuera", () => {
+    const { ApiClient } = cargarCliente(URL_API);
+    // @ts-expect-error El constructor de ApiClient es privado.
+    const construir = () => new ApiClient();
+    expect(construir).toBeDefined();
+  });
+});
+
 describe("cliente HTTP: interceptor de autenticación", () => {
   it("agrega Authorization: Bearer <JWT> cuando hay token", async () => {
     const { api, saveToken, peticiones } = cargarCliente(URL_API);

@@ -1,6 +1,7 @@
 // src/features/catalog/selectors.ts — Reglas de presentación sobre las categorías.
 
 import type { Category, ProductListItem } from "@/features/catalog/types";
+import type { FavoriteProduct } from "@/features/favorites/types";
 
 /**
  * Categorías que se muestran en el catálogo: raíz y de productos. Mismo criterio
@@ -17,6 +18,23 @@ export function selectRootProductCategories(categories: Category[]): Category[] 
 export function getPrincipalImageUrl(product: Pick<ProductListItem, "imagenes">): string | undefined {
   const imgs = product.imagenes ?? [];
   return (imgs.find((i) => i.es_principal) ?? imgs[0])?.url || undefined;
+}
+
+/** Producto de un listado o del detalle en la forma que usa la lista de favoritos. */
+export function toFavoriteProduct(
+  p: Pick<ProductListItem, "id" | "nombre" | "slug" | "precio_base" | "estado" | "envio_gratis" | "marca" | "imagenes">,
+): FavoriteProduct {
+  const imagen = getPrincipalImageUrl(p);
+  return {
+    id_producto: p.id,
+    nombre: p.nombre,
+    slug: p.slug,
+    precio_base: p.precio_base,
+    estado: p.estado,
+    envio_gratis: p.envio_gratis,
+    marcas: p.marca ? { nombre: p.marca.nombre, slug: p.marca.slug } : null,
+    producto_imagenes: imagen ? [{ url_imagen: imagen }] : [],
+  };
 }
 
 /** Stock sumado de todas las variantes; el backend no entrega un total. */

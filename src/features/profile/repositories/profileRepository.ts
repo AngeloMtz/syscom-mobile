@@ -1,13 +1,31 @@
 // src/features/profile/repositories/profileRepository.ts — Acceso a /profile.
 // Todas las rutas van protegidas por el JWT que inyecta el client Singleton.
-import api from "@/shared/api/client";
+import type { AxiosInstance } from "axios";
+
+import { ApiClient } from "@/shared/api/client";
 import type { Profile, UpdateProfileDTO } from "@/features/profile/types";
 
-export const profileRepository = {
+/** Contrato: qué operaciones existen sobre el perfil, no cómo se hacen. */
+export interface ProfileRepository {
   /** Perfil completo del usuario autenticado (incluye teléfono y foto). */
-  get: (): Promise<Profile> => api.get("/profile").then((r) => r.data.data),
-
+  get(): Promise<Profile>;
   /** Actualiza los datos personales. El correo no es editable en el backend. */
-  update: (payload: UpdateProfileDTO): Promise<Profile> =>
-    api.put("/profile", payload).then((r) => r.data.data),
-};
+  update(payload: UpdateProfileDTO): Promise<Profile>;
+  /** Elimina la cuenta. El backend exige la contraseña y rechaza si hay pedidos o servicios en curso. */
+  deleteAccount(password: string): Promise<void>;
+}
+
+/** Implementación sobre la API REST. Funciones flecha: los hooks pasan `get` y `update` sin el objeto. */
+export class HttpProfileRepository implements ProfileRepository {
+  constructor(private readonly http: AxiosInstance) {}
+
+  get = (): Promise<Profile> => this.http.get("/profile").then((r) => r.data.data);
+
+  update = (payload: UpdateProfileDTO): Promise<Profile> =>
+    this.http.put("/profile", payload).then((r) => r.data.data);
+
+  deleteAccount = (password: string): Promise<void> =>
+    this.http.delete("/profile", { data: { password } }).then(() => undefined);
+}
+
+export const profileRepository: ProfileRepository = new HttpProfileRepository(ApiClient.getInstance().http);

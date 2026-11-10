@@ -10,7 +10,7 @@ import AuthScaffold, {
   SubmitButton,
 } from "@/features/auth/components/AuthScaffold";
 import { useLogin } from "@/features/auth/hooks/useLogin";
-import { authErrorMessage } from "@/features/auth/repositories/authRepository";
+import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { validateEmail } from "@/features/auth/validation";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 import FormField from "@/shared/ui/FormField";
@@ -86,7 +86,7 @@ export default function LoginScreen() {
       <FormError
         message={
           login.error
-            ? authErrorMessage(login.error, "No se pudo iniciar sesión. Verifica tus datos.")
+            ? apiErrorMessage(login.error, "No se pudo iniciar sesión. Verifica tus datos.")
             : null
         }
       />

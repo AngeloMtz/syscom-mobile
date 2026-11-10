@@ -15,7 +15,7 @@ import VariantSelector from "@/features/catalog/components/VariantSelector";
 import { classifyAddError } from "@/features/cart/cartSelectors";
 import { useAddToCart } from "@/features/cart/hooks/useAddToCart";
 import FavoriteButton from "@/features/favorites/components/FavoriteButton";
-import { toFavoriteProduct } from "@/features/favorites/favoriteSelectors";
+import { toFavoriteProduct } from "@/features/catalog/selectors";
 import { useProduct } from "@/features/catalog/hooks/useProduct";
 import {
   cleanDescription,

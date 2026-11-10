@@ -215,7 +215,7 @@ async function llenarRegistro(payload = makeRegisterPayload({ correo: CORREO, pa
   await escribir("7711234567", payload.telefono);
   await escribir("Crea una contraseña", payload.password);
   await escribir("Repite la contraseña", payload.confirmPassword);
-  await tocar("Acepto los Términos y Condiciones de uso del servicio");
+  await fireEvent.press(screen.getByText(/^Acepto los/));
   await fireEvent.press(screen.getAllByText("Crear cuenta").at(-1) as never);
   await waitFor(() => expect(mockReplace.mock.calls.length + screen.queryAllByText(/ya está registrado/).length).toBeGreaterThan(0));
 }

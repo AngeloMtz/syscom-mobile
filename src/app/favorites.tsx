@@ -8,7 +8,7 @@ import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "
 import RequireAuth from "@/features/auth/components/RequireAuth";
 import FavoriteCard from "@/features/favorites/components/FavoriteCard";
 import { useFavorites } from "@/features/favorites/hooks/useFavorites";
-import { MAX_FAVORITES } from "@/features/favorites/repositories/favoriteRepository";
+import { MAX_FAVORITES } from "@/features/favorites/favoriteSelectors";
 import { apiErrorMessage } from "@/shared/api/errorMessage";
 import { radius, spacing, useColors } from "@/shared/theme/useColors";
 

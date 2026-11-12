@@ -53,6 +53,8 @@ module.exports = {
         "expo-build-properties",
         {
           android: {
+            // R8 reduce y ofusca el código del build Release (minifyEnabled true en build.gradle).
+            enableMinifyInReleaseBuilds: true,
             // R8 no halla las clases de push provisioning de Stripe (compileOnly, no usadas).
             extraProguardRules: "-dontwarn com.stripe.android.pushProvisioning.**",
           },

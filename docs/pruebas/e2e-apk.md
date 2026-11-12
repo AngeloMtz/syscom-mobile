@@ -61,8 +61,7 @@ Resumen: 11 pasos OK (1, 2, 3, 4, 7, 8, 9, 10, 13, 14 y 15), 2 OK con observaci�
 
 - **Síntoma (dictado por Angel):** en el Samsung Galaxy A16 de Angel, al tocar "Ver en tu espacio" la pantalla no abre y la app regresa a la pantalla anterior.
 - **Dato adicional (dictado por Angel):** a Luis, que usa iPhone, le funcionó. Ese dato no lo verificó Angel ni Claude, y no se conoce el método de prueba ni el modelo.
-- **Causa:** NO identificada.
-- **Hipótesis NO verificada:** en Android el visor depende de Google Scene Viewer / servicios de Google para RA ([selectors.ts:46](../../src/features/ar/selectors.ts#L46)). Angel está revisando si esos servicios están en su teléfono.
+- **Estado (actualizado el 2026-11-12): limitación del dispositivo.** En Android, "Ver en tu espacio" abre el servicio de realidad aumentada de Google (Scene Viewer, [selectors.ts:46](../../src/features/ar/selectors.ts#L46)), y ese servicio se cierra ("Google continúa fallando") al abrir el modelo. En una prueba posterior (2026-11-09, app de Google 17.70.11) también ocurrió con los modelos de ejemplo de Google, así que no depende de SYSCOM. Causa en seguimiento; #190 está cerrado y se reabrirá para registrarlo.
 
 ## 6. Observaciones
 
@@ -70,8 +69,8 @@ Hechos dictados por Angel. Las observaciones a) y b) se vieron durante la prueba
 
 - **a) Precio con promoción en la compra: CORREGIDO.** En el detalle del producto (Lenovo ThinkPad X1 Carbon) se mostró el precio con la promoción vigente (10 %, $7,380.00), pero el carrito, el pago de Stripe y el pedido confirmado cobraron $8,200.00 (precio base). Capturas de la prueba original: [detalle](evidencia/sprint-5/e20/e20-03-detalle-producto.jpeg), [carrito](evidencia/sprint-5/e20/e20-04-carrito.jpeg), [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) y [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg). Se corrigió en el backend y el arreglo está desplegado en producción. Angel verificó con el APK que el carrito, el pago de Stripe y el pedido coinciden. Sin captura de la verificación.
 - **b) Repetición con otra promoción vigente: CORREGIDO.** Con otra promoción vigente, en web y móvil se veía en el catálogo y el detalle, pero no en el carrito ni en el pago. Con el mismo arreglo, Angel verificó que al activar o desactivar una promoción en el panel el cambio se refleja en el carrito y en el pago. Sin captura.
-- **c) Promoción vencida con el interruptor activo: EN INVESTIGACIÓN.** Una promoción vencida por fecha pero con el interruptor activo sigue apareciendo en el catálogo y el detalle (web y móvil), mientras el panel de administración la marca "Expirada". Posible explicación, no confirmada: otra promoción vigente cubre esos productos. La causa no está establecida. Sin captura.
-- **d) Pendiente en la app móvil (no es un fallo de esta prueba).** El carrito de la app móvil aún no muestra la etiqueta de descuento ni el precio original tachado. Queda pendiente; el issue está por abrir.
+- **c) Promoción vencida con el interruptor activo: CORREGIDO.** Una promoción vencida por fecha pero con el interruptor activo seguía apareciendo en el catálogo y el detalle (web y móvil), mientras el panel de administración la marcaba "Expirada". El equipo confirmó la corrección el 2026-11-12. Sin captura.
+- **d) Descuento en el carrito de la app móvil: CORREGIDO.** El carrito no mostraba la etiqueta de descuento ni el precio original tachado. Se agregó en #163 (PR #164).
 
 ## 7. Capturas retenidas
 
@@ -100,8 +99,20 @@ Criterios de aceptación: ninguna de las seis aparece como criterio en el cuerpo
 ## 9. Pendiente
 
 - Compartir el APK con los docentes: lo decide y hace Angel. El segundo criterio del #20 no está completo hasta entonces.
-- PR del issue #154 (build): en espera de que se fusione el #153.
 - Pasos opcionales sin probar.
-- Observación c) (promoción vencida con el interruptor activo): en investigación.
-- Etiqueta de descuento y precio original tachado en el carrito de la app móvil: issue por abrir.
+- AR en Android (paso 12): limitación del dispositivo; reabrir #190 para darle seguimiento.
 - Capturas retenidas de la sección 7, a reemplazar o confirmar.
+
+## 10. Seguimiento de errores en Release
+
+Errores encontrados en el APK Release (perfil `preview`, compilado con `assembleRelease`) y en sus builds, con su estado al 2026-11-12.
+
+| ID | Encontrado | Hallazgo | Dónde | Estado | Corrección |
+|---|---|---|---|---|---|
+| E1 | 2026-10-28 | El build Release fallaba en `lintVitalAnalyzeRelease` por una dependencia `compileOnly` de Stripe | Build | **Corregido** | `-x lintVitalAnalyzeRelease` en `eas.json`: #154 (PR #160) para `preview` y #192 (PR #193) para producción |
+| E2 | 2026-10-28 | El build Release fallaba en R8 (`minifyReleaseWithR8`) por clases ausentes de Stripe | Build | **Corregido** | Regla `-dontwarn com.stripe.android.pushProvisioning.**` en `app.config.js`: #154 (PR #160) |
+| E3 | 2026-10-28 | El detalle mostraba el precio con promoción, pero el carrito, el pago y el pedido cobraban el precio base (paso 5 y 6) | Backend | **Corregido** | Arreglo en el backend; Angel lo verificó con el APK (observación a) |
+| E4 | 2026-10-28 | Con otra promoción vigente, el descuento no llegaba al carrito ni al pago | Backend | **Corregido** | Mismo arreglo que E3 (observación b) |
+| E5 | 2026-10-28 | Una promoción vencida con el interruptor activo seguía apareciendo en el catálogo | Backend / panel | **Corregido** | Confirmado por el equipo el 2026-11-12 (observación c) |
+| E6 | 2026-10-28 | El carrito no mostraba la etiqueta de descuento ni el precio original | App | **Corregido** | #163 (PR #164) (observación d) |
+| E7 | 2026-10-28 | "Ver en tu espacio" no abre la RA en el Samsung Galaxy A16 (paso 12) | Dispositivo | **Limitación del dispositivo** | El servicio de RA de Google se cierra también con sus propios modelos; seguimiento en #190, por reabrir (sección 5) |

@@ -44,12 +44,15 @@ export async function configureAndroidChannel(): Promise<void> {
  * Permiso de notificaciones: si ya está concedido no vuelve a preguntar (el
  * propio SO no muestra el diálogo dos veces); si nunca se preguntó, lo pide.
  * Devuelve false también si el usuario ya lo había rechazado antes.
+ * `explicar` se muestra antes del diálogo del sistema; si el usuario no acepta,
+ * el sistema no llega a preguntar.
  */
-export async function ensurePushPermission(): Promise<boolean> {
+export async function ensurePushPermission(explicar?: () => Promise<boolean>): Promise<boolean> {
   if (!Notifications) return false;
   const actual = await Notifications.getPermissionsAsync();
   if (actual.granted) return true;
   if (!actual.canAskAgain) return false;
+  if (explicar && !(await explicar())) return false;
 
   const pedido = await Notifications.requestPermissionsAsync();
   return pedido.granted;

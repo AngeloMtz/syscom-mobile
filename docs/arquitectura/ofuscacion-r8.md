@@ -27,11 +27,12 @@ La prueba [appConfigR8.test.ts](../../src/__tests__/appConfigR8.test.ts) falla s
 
 ## Verificación con JADX
 
-APK descompilado con [JADX](https://github.com/skylot/jadx):
+Se descompiló con [JADX](https://github.com/skylot/jadx) 1.5.6 el AAB de producción de la versión 1.1.0 (build de EAS `2a9da230`, commit `5025c49`, 2026-11-10), compilado con R8 activado.
 
-**[PENDIENTE: capturas de JADX del APK Release y número de build de EAS.]**
+![Clase ofuscada en JADX](../pruebas/evidencia/r8/r8-codigo-ofuscado.png)
 
-Qué se espera observar (se confirma con las capturas):
-- Las clases de las librerías aparecen con nombres sin significado (`a`, `b`, `c`…).
-- Se conservan los nombres que Android necesita, como `MainActivity` y las clases de React Native que exigen sus reglas `-keep`.
-- El código de la app (JavaScript) no está en clases Java: va compilado a bytecode de Hermes en `assets/index.android.bundle`, que no es texto legible.
+Qué se observa:
+- JADX indica `compiled from: r8-map-id-…`: el código pasó por R8.
+- R8 sacó las clases de sus paquetes originales y las renombró: JADX las agrupa en `defpackage` con nombres como `a`, `a0`, `a00`, `a10`.
+- Dentro de cada clase, campos y métodos también quedan renombrados (`b`, `a()`) y las llamadas apuntan a otras clases ofuscadas (`l15.k(...)`).
+- El código de la app (JavaScript) no está en clases Java: va compilado a bytecode de Hermes en `assets/index.android.bundle`.

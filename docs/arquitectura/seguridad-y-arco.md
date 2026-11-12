@@ -1,11 +1,11 @@
 # Seguridad y derechos ARCO
 
-Compara la evidencia que pide la Actividad 6 con lo que existe hoy en el código. Cubre los criterios 2 y 3 de la rúbrica. Cancelación actualizada con el issue #200; el resto se revisó el 2026-11-05.
+Compara la evidencia que pide la Actividad 6 con lo que existe hoy en el código. Cubre los criterios 2 y 3 de la rúbrica. Cancelación actualizada con el issue #200, y Oposición y consentimiento con el #212; el resto se revisó el 2026-11-05.
 
 | Criterio | Puntos | Estado |
 |---|---|---|
 | 2. Seguridad Anti-MitM y cifrado | 1.50 | **Parcial:** hay almacenamiento seguro, pero no certificate pinning |
-| 3. Derechos ARCO | 1.50 | **Parcial:** falta un Aviso de Privacidad explícito y guardar el consentimiento |
+| 3. Derechos ARCO | 1.50 | **Cumple:** pantallas y endpoints de Acceso, Rectificación y Cancelación, switches de Opt-Out y consentimiento explícito en el registro |
 
 ## Criterio 2: seguridad Anti-MitM y cifrado
 
@@ -50,8 +50,8 @@ Agregarlo implica:
 | **Acceso** | Sí | `GET /profile` | [personal-data.tsx:32](../../src/app/profile/personal-data.tsx#L32) |
 | **Rectificación** | Sí | `PUT /profile` | [personal-data.tsx:68](../../src/app/profile/personal-data.tsx#L68) |
 | **Cancelación** | Sí, en la app | `DELETE /profile` | [delete-account.tsx](../../src/app/profile/delete-account.tsx) |
-| **Oposición** | Parcial | `GET` y `PUT /notifications/preferences` | [PreferencesCard.tsx:15](../../src/features/notifications/components/PreferencesCard.tsx#L15) |
-| **Consentimiento** | Parcial | No se guarda | [register.tsx:263](<../../src/app/(auth)/register.tsx#L263>) |
+| **Oposición** | Sí, por correo y push | `GET` y `PUT /notifications/preferences` | [PreferencesCard.tsx:33-45](../../src/features/notifications/components/PreferencesCard.tsx#L33-L45) |
+| **Consentimiento** | Sí, al registrarse | No se guarda | [register.tsx:264-307](<../../src/app/(auth)/register.tsx#L264-L307>) |
 
 Los endpoints de perfil exigen sesión (`authenticateToken` en `syscom-backend/src/modules/profile/routes.ts`).
 
@@ -69,21 +69,23 @@ La cuenta queda inactiva, así que el token deja de servir y el login se rechaza
 
 ### Oposición
 
-Los interruptores de correo y push permiten oponerse a recibir notificaciones. No cubren otros tratamientos de datos, así que el Opt-Out es solo sobre esos dos canales.
+Es un esquema **Opt-Out**: el correo y el push vienen activados por defecto (`@default(true)` en `preferencias_notificacion`) y el usuario los apaga en Mi cuenta > Notificaciones.
+
+- **App:** los dos interruptores ([PreferencesCard.tsx:33-45](../../src/features/notifications/components/PreferencesCard.tsx#L33-L45)) leen y guardan con `GET` y `PUT /notifications/preferences` ([notificationRepository.ts:33-41](../../src/features/notifications/repositories/notificationRepository.ts#L33-L41)).
+- **Backend:** antes de enviar, revisa la preferencia de cada canal en `notifications.service.ts`: pedido confirmado ([L352-L353](https://github.com/AngeloMtz/syscom-backend/blob/28ae22e/src/modules/notifications/notifications.service.ts#L352-L353)), cambio de estado del pedido ([L396-L397](https://github.com/AngeloMtz/syscom-backend/blob/28ae22e/src/modules/notifications/notifications.service.ts#L396-L397)) y promociones ([L550-L551](https://github.com/AngeloMtz/syscom-backend/blob/28ae22e/src/modules/notifications/notifications.service.ts#L550-L551)). El repositorio del backend es privado.
+
+El boletín es una suscripción aparte y no depende de estos interruptores.
 
 ### Consentimiento
 
-- La casilla "Acepto los Términos y Condiciones de uso del servicio" empieza sin marcar y bloquea el botón de registro ([register.tsx:289](<../../src/app/(auth)/register.tsx#L289>)).
-- La casilla no enlaza a ningún documento y no menciona el Aviso de Privacidad.
-- La política de privacidad existe, pero se llega a ella por separado, desde Información ([informacion.tsx:35](../../src/app/informacion.tsx#L35)).
-- El backend no registra el consentimiento: `schema.prisma` no tiene ningún campo de términos ni de consentimiento.
+- La casilla empieza sin marcar ([register.tsx:45](<../../src/app/(auth)/register.tsx#L45>)) y el botón de registro queda bloqueado hasta marcarla ([register.tsx:307](<../../src/app/(auth)/register.tsx#L307>)).
+- El texto "Acepto los Términos y Condiciones de uso del servicio y la Política de privacidad" enlaza a cada documento ([register.tsx:285](<../../src/app/(auth)/register.tsx#L285>) y [register.tsx:294](<../../src/app/(auth)/register.tsx#L294>)), y la pantalla de políticas abre la sección elegida ([policies.tsx:24-27](../../src/app/policies.tsx#L24-L27)).
+- Los dos documentos tienen contenido publicado. Se administran desde el panel web y la app los obtiene de `/institutional/politicas/:tipo`.
+- El backend no registra cuándo ni qué versión se aceptó: `schema.prisma` no tiene un campo de consentimiento.
 
 ### Lo que falta
 
 | Falta | Dónde | Nota |
 |---|---|---|
 | Eliminar la cuenta desde la web | Sitio web | Google Play también pide un enlace web para solicitarlo |
-| Aviso de Privacidad en el registro | App | Enlazar el documento desde la casilla |
-| Registro del consentimiento | Backend y base de datos | Fecha y versión aceptada; requiere una columna nueva |
-
-**Pendiente de decisión:** estos cambios tocan el backend y la base de datos, y el código se congela el 12/11/2026. Lo que no se alcance queda como limitación conocida.
+| Registro del consentimiento (opcional) | Backend y base de datos | Guardar la fecha y la versión aceptada; requiere una columna nueva |

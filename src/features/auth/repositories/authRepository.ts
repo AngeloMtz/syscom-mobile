@@ -36,8 +36,7 @@ function exigirSesion(data: { user?: User; token?: string } | undefined): {
 /** Contrato: qué operaciones existen sobre la sesión y la cuenta, no cómo se hacen. */
 export interface AuthRepository {
   /**
-   * Inicia sesión. El backend tiene dos salidas: si la cuenta usa 2FA corta con
-   * requires2FA y no crea sesión; si no, devuelve user + token.
+   * Inicia sesión. El backend devuelve user + token.
    */
   login(payload: LoginPayload): Promise<LoginResult>;
   /** Segundo paso del login cuando la cuenta tiene 2FA activo. */
@@ -47,11 +46,7 @@ export interface AuthRepository {
   /** Confirma el registro. El backend hace auto-login y devuelve user + token. */
   verifyRegistration(correo: string, code: string): Promise<{ user: User; token: string }>;
   resendCode(correo: string, type: CodeType): Promise<void>;
-  /**
-   * Paso 1 de la recuperación. `method: "code"` envía un código de 6 dígitos
-   * que se verifica dentro de la app; `"link"` manda un enlace que se abre en
-   * la web. El móvil usa "code" para no salir de la app.
-   */
+
   forgotPassword(correo: string, method?: "code" | "link"): Promise<void>;
   /** Paso 2: valida el código antes de dejar escribir la contraseña nueva. */
   verifyRecovery(correo: string, code: string): Promise<void>;

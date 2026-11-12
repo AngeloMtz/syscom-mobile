@@ -1,10 +1,12 @@
 // src/features/notifications/hooks/useRegisterPushToken.ts
 // Registra el token de Expo Push del dispositivo en el backend mientras haya
-// sesión. No pide permiso de forma intrusiva: si el usuario ya lo rechazó
-// antes, no insiste (ensurePushPermission no vuelve a preguntar en ese caso).
+// sesión. No pide permiso de forma intrusiva: antes del diálogo del sistema explica
+// para qué es (explicarPermisoNotificaciones) y, si el usuario ya lo rechazó antes,
+// no insiste (ensurePushPermission no vuelve a preguntar en ese caso).
 // Falla en silencio: sin push el resto de la app funciona igual.
 import { useEffect } from "react";
 
+import { explicarPermisoNotificaciones } from "@/features/notifications/permissionPrompt";
 import { configureAndroidChannel, ensurePushPermission, getExpoPushToken } from "@/features/notifications/pushNotifications";
 import { notificationRepository } from "@/features/notifications/repositories/notificationRepository";
 import { useAuthStore } from "@/shared/store/authStore";
@@ -19,7 +21,7 @@ export function useRegisterPushToken(): void {
 
     (async () => {
       await configureAndroidChannel();
-      const permitido = await ensurePushPermission();
+      const permitido = await ensurePushPermission(explicarPermisoNotificaciones);
       if (!permitido || cancelado) return;
 
       const token = await getExpoPushToken();

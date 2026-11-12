@@ -25,6 +25,13 @@ module.exports = {
         monochromeImage: "./assets/images/adaptive-icon-monochrome.png",
       },
       predictiveBackGestureEnabled: false,
+      // Permisos que agrega la plantilla de Expo y la app no usa: no lee ni guarda archivos
+      // y no dibuja sobre otras apps. Justificación de cada permiso: docs/arquitectura/permisos.md
+      blockedPermissions: [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+      ],
     },
     web: {
       bundler: "metro",

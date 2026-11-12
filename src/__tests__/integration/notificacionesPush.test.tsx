@@ -8,7 +8,7 @@ import { act, fireEvent, render, renderHook, screen, waitFor } from "@testing-li
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { router } from "expo-router";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 
 import NotificationsScreen from "@/app/notifications/index";
 import { useLogout } from "@/features/auth/hooks/useLogout";
@@ -66,6 +66,10 @@ const canal = Notifications.setNotificationChannelAsync as jest.Mock;
 
 const TOKEN_EXPO = "ExponentPushToken[abc123]";
 
+/** Botón que «toca» la persona en la explicación previa al permiso. */
+let respuestaExplicacion: "Permitir" | "Ahora no" = "Permitir";
+let explicacion: jest.SpyInstance;
+
 /** El projectId de EAS que lee getExpoPushToken; las pruebas lo quitan para simular un build sin configurar. */
 const proyectoEas = Constants.expoConfig as unknown as { extra: { eas: { projectId?: string } } };
 
@@ -105,6 +109,10 @@ beforeEach(async () => {
   jest.replaceProperty(Platform, "OS", "android");
   permisos.mockResolvedValue({ granted: true, canAskAgain: true });
   obtenerToken.mockResolvedValue({ data: TOKEN_EXPO });
+  respuestaExplicacion = "Permitir";
+  explicacion = jest.spyOn(Alert, "alert").mockImplementation((_titulo, _mensaje, botones) => {
+    botones?.find((b) => b.text === respuestaExplicacion)?.onPress?.();
+  });
   await useAuthStore.getState().logout();
   useChatStore.getState().reset();
 
@@ -206,7 +214,22 @@ describe("integración push: permiso → token → registro en el backend", () =
     await iniciarSesion();
 
     await waitFor(() => expect(backend.tokens.has(TOKEN_EXPO)).toBe(true));
+    expect(explicacion).toHaveBeenCalledWith("¿Activar notificaciones?", expect.any(String), expect.any(Array), expect.any(Object));
     expect(pedirPermiso).toHaveBeenCalledTimes(1);
+  });
+
+  it("si en la explicación elige «Ahora no», el sistema no pregunta y no se registra nada", async () => {
+    permisos.mockResolvedValue({ granted: false, canAskAgain: true });
+    respuestaExplicacion = "Ahora no";
+    await renderHook(() => useRegisterPushToken());
+
+    await iniciarSesion();
+    await waitFor(() => expect(explicacion).toHaveBeenCalledTimes(1));
+    await asentar();
+
+    expect(pedirPermiso).not.toHaveBeenCalled();
+    expect(obtenerToken).not.toHaveBeenCalled();
+    expect(veces("post", "/notifications/push/expo/register")).toHaveLength(0);
   });
 
   it("si la persona deniega el permiso, no se obtiene token ni se registra nada", async () => {

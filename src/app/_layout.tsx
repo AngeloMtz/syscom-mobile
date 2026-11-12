@@ -2,7 +2,7 @@
 // Agrupa (tabs) y (auth) sin header propio: cada grupo resuelve el suyo.
 //
 // Orden de arranque:
-//   1. hidratar sesión (token) y leer el flag de onboarding
+//   1. activar el certificate pinning; después, hidratar sesión (token) y leer el flag de onboarding
 //   2. mientras alguna de las dos está en curso, no se pinta nada
 //   3. si la bienvenida no se ha visto, se muestra ANTES del guard de auth
 //   4. con la bienvenida vista, el Stack monta y cada grupo aplica su guard
@@ -17,6 +17,7 @@ import { useRegisterPushToken } from "@/features/notifications/hooks/useRegister
 import OnboardingFlow from "@/features/onboarding/components/OnboardingFlow";
 import PaymentsProvider from "@/features/payments/components/PaymentsProvider";
 import { queryClient } from "@/shared/api/queryClient";
+import { enableSslPinning } from "@/shared/api/sslPinning";
 import { useAuthStore } from "@/shared/store/authStore";
 import { useOnboardingStore } from "@/shared/store/onboardingStore";
 import { palette } from "@/shared/theme/colors";
@@ -38,8 +39,11 @@ export default function RootLayout() {
   useRegisterPushToken();
 
   useEffect(() => {
-    hydrate();
-    hydrateOnboarding();
+    // El pinning se activa antes de restaurar la sesión: así ninguna petición sale sin él.
+    void enableSslPinning().then(() => {
+      hydrate();
+      hydrateOnboarding();
+    });
   }, [hydrate, hydrateOnboarding]);
 
   // Sin esto la app parpadearía como "sin sesión" antes de leer el token, o

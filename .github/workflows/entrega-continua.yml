@@ -56,24 +56,11 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REQUERIDOS: "Análisis estático|Pruebas unitarias"
         run: |
+          # El commit de main (fusión del PR de release) tiene su propio CI por el `push` a main.
+          # Si el CI aún corre o falló, el script falla y no se construye nada.
           gh api --paginate "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs?per_page=100" \
-            --jq '.check_runs[]' | jq -s '.' > checks.json
-          IFS='|' read -ra nombres <<< "$REQUERIDOS"
-          fallo=0
-          for nombre in "${nombres[@]}"; do
-            # Si el check se volvió a ejecutar, cuenta el más reciente.
-            estado=$(jq -r --arg n "$nombre" \
-              '[.[] | select(.name == $n)] | sort_by(.started_at) | last | (.conclusion // .status // "no encontrado")' checks.json)
-            if [ "$estado" = "success" ]; then
-              echo "OK: \"$nombre\" en verde."
-            else
-              echo "::error title=CI no está en verde::El check \"$nombre\" del commit ${GITHUB_SHA} está en estado \"$estado\". No se construye ni se envía nada."
-              fallo=1
-            fi
-          done
-          exit $fallo
+            | node scripts/verificar-checks-ci.mjs
 
   construir-y-enviar:
     name: Construir y enviar a la pista interna

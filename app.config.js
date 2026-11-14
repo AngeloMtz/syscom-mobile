@@ -8,7 +8,7 @@ module.exports = {
   expo: {
     name: "SYSCOM",
     slug: "syscom-mobile",
-    version: "1.1.0",
+    version: "1.1.1",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "syscommobile",
@@ -25,6 +25,13 @@ module.exports = {
         monochromeImage: "./assets/images/adaptive-icon-monochrome.png",
       },
       predictiveBackGestureEnabled: false,
+      // Permisos que agrega la plantilla de Expo y la app no usa: no lee ni guarda archivos
+      // y no dibuja sobre otras apps. Justificación de cada permiso: docs/arquitectura/permisos.md
+      blockedPermissions: [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+      ],
     },
     web: {
       bundler: "metro",
@@ -46,6 +53,8 @@ module.exports = {
         "expo-build-properties",
         {
           android: {
+            // R8 reduce y ofusca el código del build Release (minifyEnabled true en build.gradle).
+            enableMinifyInReleaseBuilds: true,
             // R8 no halla las clases de push provisioning de Stripe (compileOnly, no usadas).
             extraProguardRules: "-dontwarn com.stripe.android.pushProvisioning.**",
           },

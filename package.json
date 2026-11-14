@@ -1,6 +1,6 @@
 {
   "name": "syscom-mobile",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -29,6 +29,7 @@
     "react-native": "0.88.0",
     "react-native-safe-area-context": "~5.10.1",
     "react-native-screens": "~4.30.0",
+    "react-native-ssl-public-key-pinning": "^1.2.6",
     "react-native-webview": "14.0.1",
     "socket.io-client": "^4.8.4",
     "zustand": "^5.0.15"
@@ -116,6 +117,7 @@
       "src/features/notifications/components/PreferencesCard.tsx",
       "src/features/notifications/hooks/*.ts",
       "src/features/notifications/notificationSelectors.ts",
+      "src/features/notifications/permissionPrompt.ts",
       "src/features/notifications/pushNotifications.ts",
       "src/features/notifications/pushRegistration.ts",
       "src/features/notifications/repositories/*.ts",
@@ -161,6 +163,7 @@
       "src/shared/api/errorMessage.ts",
       "src/shared/api/queryClient.ts",
       "src/shared/api/secureToken.ts",
+      "src/shared/api/sslPinning.ts",
       "src/shared/hooks/*.ts",
       "src/shared/ui/FormField.tsx",
       "src/shared/ui/BannerCarousel.tsx",

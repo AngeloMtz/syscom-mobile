@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from "@testing-library/react-native";
 
 import { useRegisterPushToken } from "@/features/notifications/hooks/useRegisterPushToken";
+import { explicarPermisoNotificaciones } from "@/features/notifications/permissionPrompt";
 import * as pushNotifications from "@/features/notifications/pushNotifications";
 import { notificationRepository } from "@/features/notifications/repositories/notificationRepository";
 import { useAuthStore } from "@/shared/store/authStore";
@@ -16,6 +17,9 @@ jest.mock("@/features/notifications/pushNotifications", () => ({
   configureAndroidChannel: jest.fn(),
   ensurePushPermission: jest.fn(),
   getExpoPushToken: jest.fn(),
+}));
+jest.mock("@/features/notifications/permissionPrompt", () => ({
+  explicarPermisoNotificaciones: jest.fn(),
 }));
 jest.mock("@/features/notifications/repositories/notificationRepository", () => ({
   notificationRepository: { registerPushToken: jest.fn() },
@@ -47,6 +51,15 @@ describe("useRegisterPushToken", () => {
 
     await waitFor(() => expect(repo.registerPushToken).toHaveBeenCalledWith("ExponentPushToken[abc]"));
     expect(push.configureAndroidChannel).toHaveBeenCalledTimes(1);
+  });
+
+  it("pide el permiso con la explicación previa, no directo al diálogo del sistema", async () => {
+    push.ensurePushPermission.mockResolvedValueOnce(false);
+    useAuthStore.setState({ isAuthenticated: true });
+
+    renderHook(() => useRegisterPushToken());
+
+    await waitFor(() => expect(push.ensurePushPermission).toHaveBeenCalledWith(explicarPermisoNotificaciones));
   });
 
   it("si el permiso es negado, no intenta obtener el token ni registrar", async () => {

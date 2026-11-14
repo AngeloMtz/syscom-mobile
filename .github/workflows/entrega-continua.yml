@@ -1,0 +1,123 @@
+name: Entrega continua
+
+# Flujo de entrega continua a Google Play (pista INTERNA únicamente).
+#  - Push de un tag `v*`: verifica el release, construye el AAB de producción y lo envía a
+#    la pista interna con `eas build --auto-submit` (usa el perfil `submit.production`).
+#  - Ejecución manual (workflow_dispatch): solo construye el perfil `preview`; no envía nada.
+# La promoción a prueba cerrada o producción es siempre manual en Play Console.
+# Documentación: docs/entrega-continua.md
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: read
+
+# Un solo flujo por ref a la vez. No se cancela uno en curso: cancelar un build/envío a la
+# mitad dejaría el release en un estado incierto.
+concurrency:
+  group: entrega-continua-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verificar:
+    name: Verificar el release
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout del código (historial completo)
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verificar que el commit del tag esté en main
+        shell: bash
+        run: |
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error title=Tag fuera de main::El commit ${GITHUB_SHA} del tag ${GITHUB_REF_NAME} no está en origin/main. Los releases se etiquetan solo después de fusionar el PR de release a main."
+            exit 1
+          fi
+          echo "OK: el commit ${GITHUB_SHA} está en origin/main."
+
+      - name: Verificar que el tag sea "v" + la versión de la app
+        run: node scripts/verificar-tag-version.mjs "$GITHUB_REF_NAME"
+
+      - name: Verificar que los checks de CI del commit estén en verde
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # El commit de main (fusión del PR de release) tiene su propio CI por el `push` a main.
+          # Si el CI aún corre o falló, el script falla y no se construye nada.
+          gh api --paginate "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs?per_page=100" \
+            | node scripts/verificar-checks-ci.mjs
+
+  construir-y-enviar:
+    name: Construir y enviar a la pista interna
+    needs: verificar
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v7.0.1
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Configurar Expo y EAS CLI
+        uses: expo/expo-github-action@9.0.2
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Confirmar la sesión de Expo (sin mostrar secretos)
+        run: eas whoami
+
+      - name: Construir (perfil production) y enviar a la pista interna
+        run: eas build --platform android --profile production --non-interactive --auto-submit
+
+  construir-preview:
+    name: Construir preview (sin enviar a Play)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v7.0.1
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Configurar Expo y EAS CLI
+        uses: expo/expo-github-action@9.0.2
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Confirmar la sesión de Expo (sin mostrar secretos)
+        run: eas whoami
+
+      - name: Construir (perfil preview)
+        run: eas build --platform android --profile preview --non-interactive

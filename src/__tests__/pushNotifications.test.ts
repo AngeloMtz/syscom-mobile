@@ -82,6 +82,36 @@ describe("ensurePushPermission", () => {
 
     await expect(ensurePushPermission()).resolves.toBe(false);
   });
+
+  it("con explicación: si el usuario la acepta, entonces pide el permiso al sistema", async () => {
+    mockGetPermissionsAsync.mockResolvedValueOnce({ granted: false, canAskAgain: true, status: "undetermined" });
+    mockRequestPermissionsAsync.mockResolvedValueOnce({ granted: true, canAskAgain: true, status: "granted" });
+    const explicar = jest.fn().mockResolvedValue(true);
+
+    await expect(ensurePushPermission(explicar)).resolves.toBe(true);
+    expect(explicar).toHaveBeenCalledTimes(1);
+    expect(mockRequestPermissionsAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it("con explicación: si el usuario elige «Ahora no», el sistema no llega a preguntar", async () => {
+    mockGetPermissionsAsync.mockResolvedValueOnce({ granted: false, canAskAgain: true, status: "undetermined" });
+    const explicar = jest.fn().mockResolvedValue(false);
+
+    await expect(ensurePushPermission(explicar)).resolves.toBe(false);
+    expect(mockRequestPermissionsAsync).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["ya concedido", { granted: true, canAskAgain: true, status: "granted" }],
+    ["rechazado sin poder volver a preguntar", { granted: false, canAskAgain: false, status: "denied" }],
+  ])("con el permiso %s no muestra la explicación", async (_caso, estado) => {
+    mockGetPermissionsAsync.mockResolvedValueOnce(estado);
+    const explicar = jest.fn();
+
+    await ensurePushPermission(explicar);
+
+    expect(explicar).not.toHaveBeenCalled();
+  });
 });
 
 describe("getExpoPushToken", () => {

@@ -29,7 +29,9 @@ flowchart TD
 |---|---|---|
 | a | El commit del tag está en `origin/main` | `git merge-base --is-ancestor $GITHUB_SHA origin/main` (checkout con `fetch-depth: 0`) |
 | b | El tag es `v` + la versión de la app | `scripts/verificar-tag-version.mjs`: compara con `expo.version` de `app.config.js` y con `version` de `package.json` (deben coincidir entre sí) |
-| c | Los checks de CI del commit están en verde | `gh api .../commits/<sha>/check-runs`; exige `Análisis estático` y `Pruebas unitarias` en `success` (cuenta la ejecución más reciente de cada uno) |
+| c | Los checks de CI del commit están en verde | `gh api --paginate .../commits/<sha>/check-runs` canalizado a `scripts/verificar-checks-ci.mjs`; exige `Análisis estático` y `Pruebas unitarias` en `success` (cuenta la ejecución más reciente de cada uno; pendiente, fallido o ausente es error) |
+
+**Por qué el commit del tag tiene checks:** `ci.yml` corre en `push` a `main`, y el repo permite fusión con commit, squash y rebase; con cualquiera se crea un commit nuevo en `main` que dispara el CI. Conviene esperar a que ese CI termine antes de empujar el tag.
 
 Si algo falla, el flujo se detiene con un mensaje en español y **no se construye ni se envía nada**.
 
@@ -62,7 +64,7 @@ Para solo probar un build sin enviar: *Actions → Entrega continua → Run work
 |---|---|---|
 | `verificar`: tag fuera de main | Se etiquetó antes de fusionar | Borrar el tag (`git push origin :refs/tags/vX.Y.Z`), fusionar y re-etiquetar |
 | `verificar`: tag ≠ versión | Se olvidó subir la versión o el tag tiene otro formato | Corregir la versión por PR, o borrar y recrear el tag correcto |
-| `verificar`: CI no está en verde | Un check falló, o aún no termina | Corregir, o esperar a que termine, y usar *Re-run jobs* |
+| `verificar`: CI no está en verde | Un check falló, o el CI del `push` a `main` aún no termina | Si sigue en curso (`in_progress`), esperar a que termine y usar *Re-run jobs*; si falló, corregir |
 | `construir-y-enviar`: autenticación (`eas whoami`) | `EXPO_TOKEN` ausente, revocado o vencido | Crear un token nuevo y actualizar el secreto (sección 4) |
 | Build falla | Error de compilación o de credenciales en EAS | Revisar el enlace del build en el log y los registros en expo.dev |
 | Submit falla | Llave de Google sin asignar o sin permiso; `versionCode` ya subido | Revisar *Submissions* en expo.dev. Con `--non-interactive`, EAS usa la llave asignada a la app; si no hay, falla |
@@ -82,7 +84,7 @@ Si el build ya se creó pero el envío falló, se puede reintentar a mano (`eas 
 - `releaseStatus: "completed"` publica de inmediato en la pista interna. Si la ficha de la app sigue incompleta, Google puede exigir otro estado; en ese caso usar `draft` y completar el lanzamiento en la consola (así lo indica la doc de Expo).
 - No sube versión ni cambia código: la versión debe estar ya fusionada en `main` antes del tag.
 - `--auto-submit` espera a que termine el build (no se usa `--no-wait`; la doc no confirma que funcionen juntos), así que el job puede durar bastante y consume una compilación de EAS.
-- El flujo completo en GitHub y el filtro de checks con `jq` **no se han probado todavía** (ver sección 6).
+- El flujo completo en GitHub **no se ha probado todavía** (ver sección 6). El script de checks y el de tag/versión sí tienen pruebas locales.
 
 ## 6. Validación manual pendiente (Angel)
 

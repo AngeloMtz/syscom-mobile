@@ -1,0 +1,23 @@
+{
+  "total_count": 3,
+  "check_runs": [
+    {
+      "name": "Análisis estático",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-01T10:00:00Z"
+    },
+    {
+      "name": "Pruebas unitarias",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-01T10:00:01Z"
+    },
+    {
+      "name": "Otro",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-01T10:00:02Z"
+    }
+  ]
+}

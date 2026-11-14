@@ -1,5 +1,7 @@
 # Despliegue en Google Play — syscom-mobile
 
+> **Parcialmente obsoleto (issue #221).** El envío a Google Play ya no es solo manual: el flujo de entrega continua (`.github/workflows/entrega-continua.yml`) construye y envía a la pista interna al empujar un tag `v*`. Ver [entrega-continua.md](entrega-continua.md). Las secciones sobre `eas.json`, el pipeline "propuesto" (sección 4) y "cambios que requeriría" (4.3) quedaron superadas por ese flujo; el resto (estrategia, backend, versionado, lista de verificación) sigue vigente.
+
 - **Fecha de elaboración:** 2026-10-26
 - **Issue:** #145
 - **Base:** `develop` en `faa8d77`

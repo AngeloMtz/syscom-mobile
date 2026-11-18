@@ -74,5 +74,115 @@ Código de salida: `0` terminó; `2` la guarda rechazó el entorno (no se hizo n
 - Un 401 o 403 en una ruta autenticada (token inválido o vencido) omite el resto de las rutas autenticadas.
 - Ejecutarlo lo mínimo necesario: son hasta 200 peticiones de lectura contra producción; no repetirlo en bucle.
 
-## 6. Pendiente de validación manual
-El script no se ha ejecutado contra producción. Sus reglas se probaron con pruebas unitarias (`src/__tests__/perfProduccion.test.ts`) con la red simulada. Los resultados reales los genera Angel con los comandos de la sección 4.
+## 6. Validación manual
+Las reglas del script se probaron con pruebas unitarias (`src/__tests__/perfProduccion.test.ts`) con la red simulada. Angel lo ejecutó contra producción el 17 nov 2026 **solo con las rutas públicas** (sin `PERF_TOKEN`); los resultados están en la sección 7. Las rutas con sesión (7 a 10) siguen **sin medirse**.
+
+## 7. Resultados del 17 nov 2026 (API)
+
+- **Evidencia:** `docs/pruebas/evidencia/actividad-6/rendimiento-produccion-20261118T050809Z.json` (inicio 2026-11-18 05:08:09 UTC, que es la noche del 17 nov en hora local; Node v22.13.0, win32 10.0.26300).
+- **Modo:** público, 6 rutas × 20 repeticiones = 120 peticiones, 0 errores, sin detenciones.
+- **Umbral:** p95 < 1000 ms (sección 1). Tiempos en milisegundos, redondeados al entero; el JSON conserva dos decimales.
+
+| Ruta | n | Mín. | p50 | p95 | Máx. | 1.ª petición | Veredicto |
+|---|---|---|---|---|---|---|---|
+| `GET /catalog/products?page=1&limit=20` | 20 | 812 | 832 | 852 | 3988 | 3988 | cumple |
+| `GET /catalog/products/:id` | 20 | 784 | 790 | 920 | 1398 | 1398 | cumple |
+| `GET /catalog/featured?limit=8` | 20 | 720 | 730 | 746 | 788 | 720 | cumple |
+| `GET /catalog/categories` | 20 | 281 | 292 | 304 | 304 | 303 | cumple |
+| `GET /catalog/services?page=1&limit=12` | 20 | 542 | 562 | 578 | 1602 | 1602 | cumple |
+| `GET /reviews/product/:id?page=1&limit=5` | 20 | 441 | 450 | 462 | 991 | 991 | cumple |
+| `GET /cart` | — | — | — | — | — | — | no medida |
+| `GET /profile/addresses` | — | — | — | — | — | — | no medida |
+| `GET /orders?page=1&limit=10` | — | — | — | — | — | — | no medida |
+| `GET /orders/:id` | — | — | — | — | — | — | no medida |
+
+Las cuatro últimas rutas no se midieron porque no se definió `PERF_TOKEN`.
+
+**Cómo leer estos resultados:**
+- Con n = 20, el p95 es la **19.ª muestra ordenada** de menor a mayor (rango más cercano), así que **excluye el valor máximo**. Por eso una ruta puede «cumplir» por p95 aunque su máximo supere el umbral: pasó en `GET /catalog/products` (máx. 3988 ms), `GET /catalog/products/:id` (1398 ms) y `GET /catalog/services` (1602 ms).
+- En **4 de las 6 rutas medidas la primera petición fue la más lenta** (productos, detalle de producto, servicios y reseñas). Es coherente con el costo de la primera conexión (TLS) y de un servidor que estaba en reposo, pero este documento no lo comprueba: solo registra que el máximo coincide con la primera muestra.
+- Los tiempos incluyen la latencia de red real desde la computadora de Angel (sección 2); no son tiempos de proceso del servidor.
+- Es una sola corrida de 20 muestras por ruta: no mide variación entre horas ni días.
+
+## 8. Mediciones en dispositivo
+
+Medición con `adb` (depuración inalámbrica) de la app instalada desde Google Play en el teléfono de Angel: paquete `com.syscom.mobile`, versión 1.1.1. No se modifica código. Esta sección **empieza con los umbrales, fijados en un commit anterior a medir**, para que no se ajusten a los resultados.
+
+### 8.1 Umbrales (fijados antes de medir)
+
+| Métrica | Cómo se mide | Umbral | Veredicto |
+|---|---|---|---|
+| Memoria | `dumpsys meminfo`, **TOTAL PSS** en Inicio, Catálogo y Detalle de producto | ≤ 300 MB en cada una de las 3 pantallas | cumple / no cumple |
+| Fluidez | `dumpsys gfxinfo`, **cuadros lentos (janky)** durante 20 s de scroll en el Catálogo | ≤ 10 % | cumple / no cumple |
+| CPU | `dumpsys cpuinfo` filtrado por la app, 3 muestras mientras se navega | sin umbral | informativo |
+| Tiempo hasta el primer cuadro | `am start -W`, **TotalTime** (y WaitTime) en 5 arranques en frío | sin umbral | informativo |
+
+Condiciones y límites:
+- Arranque: `force-stop`, espera de 10 s y `am start -W` con la actividad principal. **TotalTime mide hasta el primer cuadro dibujado, no hasta ver datos en pantalla.**
+- Memoria y CPU se miden con la app en la pantalla indicada; son fotos de un momento, no promedios.
+- Es un solo teléfono, una sola versión de la app y una sola sesión: no representa otros dispositivos.
+- Las salidas crudas se guardan en `docs/pruebas/evidencia/actividad-6/adb-<fecha UTC>/` **sin** IP, puerto, serial ni código de vinculación.
+
+### 8.2 Resultados (18 nov 2026, 17:44 a 17:55 UTC)
+
+- **Dispositivo:** Samsung SM-A165M, Android 16, pantalla de hasta 90 Hz. **App:** `com.syscom.mobile` 1.1.1 (versionCode 7), instalada desde Google Play (`com.android.vending`).
+- **Evidencia cruda:** `docs/pruebas/evidencia/actividad-6/adb-20261118T174411Z/` (sin IP, puerto, serial ni código de vinculación; verificado con `grep`).
+- **Conexión:** `adb` 35.0.2 por depuración inalámbrica. `adb` no estaba en el PATH; se usó el del SDK de Android (`platform-tools`).
+
+#### Arranque en frío (informativo, sin umbral)
+`force-stop`, espera de 10 s y `am start -W -n com.syscom.mobile/.MainActivity`. **TotalTime mide hasta el primer cuadro dibujado, no hasta ver datos en pantalla.**
+
+| Arranque | TotalTime (ms) | WaitTime (ms) |
+|---|---|---|
+| 1 | 353 | 364 |
+| 2 | 315 | 327 |
+| 3 | 350 | 357 |
+| 4 | 312 | 322 |
+| 5 | 319 | 324 |
+| **Mín. / media / máx. TotalTime** | **312 / 330 / 353** | |
+
+Veredicto: **informativo**.
+
+#### Memoria (`dumpsys meminfo`, umbral: TOTAL PSS ≤ 300 MB)
+
+| Pantalla | TOTAL PSS | Java Heap | Native Heap | Veredicto |
+|---|---|---|---|---|
+| Inicio | 378 029 KB (369,2 MB) | 20 176 KB (19,7 MB) | 123 548 KB (120,7 MB) | **no cumple** |
+| Catálogo | 365 392 KB (356,8 MB) | 17 932 KB (17,5 MB) | 85 820 KB (83,8 MB) | **no cumple** |
+| Detalle de producto | 405 208 KB (395,7 MB) | 21 168 KB (20,7 MB) | 101 880 KB (99,5 MB) | **no cumple** |
+
+Las tres pantallas superan el umbral de 300 MB (entre 357 y 396 MB). Este documento no investiga la causa; solo registra el resultado. Son tres fotos de un momento, con una sola sesión de uso y sin repetición.
+
+#### CPU (informativo, sin umbral)
+
+| Método | Muestra 1 | Muestra 2 | Muestra 3 | Observación |
+|---|---|---|---|---|
+| `dumpsys cpuinfo` (el pedido) | 0 % | 0 % | 0 % | **No válida**: las tres salidas fueron idénticas (misma carga y mismo TOTAL), el contador estaba en caché y no se refrescó |
+| `top -b -n 2 -d 3 -p <pid>` (complemento) | 57 % | 55 % | 67 % | Porcentaje de **un núcleo** (el teléfono tiene 8, tope 800 %); equivale a 7 a 8 % de la CPU total. Se usó la 2.ª iteración de `top`, que ya es un intervalo de 3 s |
+
+Las muestras de `top` se tomaron mientras se navegaba por la app. Veredicto: **informativo**.
+
+#### Fluidez (`dumpsys gfxinfo`, umbral: cuadros lentos ≤ 10 %)
+`gfxinfo reset`, scroll continuo de unos 20 s en el Catálogo y lectura 25,4 s después del reset.
+
+| Métrica | Valor |
+|---|---|
+| Cuadros lentos (`Janky frames`) | **0 (0,00 %)** |
+| Cuadros lentos, criterio anterior (`Janky frames (legacy)`) | 18 (0,42 %) |
+| Percentil 50 / 90 / 95 / 99 | 13 / 15 / 15 / 17 ms |
+| Percentiles de GPU 50 / 90 / 95 / 99 | 8 / 11 / 11 / 13 ms |
+| Missed Vsync, Slow UI thread, Frame deadline missed | 0, 0, 0 |
+| Total de cuadros (`Total frames rendered`) | 4300 (**ver advertencia**) |
+| **Veredicto** | **cumple** (0,00 %; con el criterio anterior, 0,42 %) |
+
+**Advertencia sobre el total de cuadros:** en la ventana de 25,4 s una pantalla de 90 Hz produce como máximo unos 2290 cuadros y `gfxinfo` reportó 4300, y `Number High input latency` (8600) es exactamente el doble. El conteo absoluto no es confiable (posiblemente se cuenta más de una superficie; no se verificó la causa). Los porcentajes y percentiles no dependen de ese total, pero conviene leer este resultado con cautela. Un percentil 50 de 13 ms es mayor que el presupuesto de un cuadro a 90 Hz (11,1 ms) y menor que el de 60 Hz (16,7 ms).
+
+#### Resumen de veredictos
+
+| Métrica | Veredicto |
+|---|---|
+| Memoria, TOTAL PSS ≤ 300 MB | **no cumple** (3 de 3 pantallas) |
+| Fluidez, cuadros lentos ≤ 10 % | **cumple** |
+| CPU | informativo (`cpuinfo` no válida; `top` 55 a 67 % de un núcleo) |
+| TotalTime (primer cuadro) | informativo (312 a 353 ms) |
+| Tiempo hasta ver datos en pantalla | **no medido** (`TotalTime` no lo cubre) |

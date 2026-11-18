@@ -1,0 +1,67 @@
+Applications Memory Usage (in Kilobytes):
+Uptime: 6471224 Realtime: 6471224
+
+** MEMINFO in pid 16586 [com.syscom.mobile] **
+                   Pss  Private  Private  SwapPss      Rss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty    Total     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------   ------
+  Native Heap   123597   123548       16     7458   124596   149856   142777     7078
+  Dalvik Heap    17532    17116      324      258    18520    22364    11182    11182
+ Dalvik Other     2770     2268       20       57     3668                           
+        Stack     2248     2248        0      308     2252                           
+       Ashmem       23        0        0        0      560                           
+    Other dev        8        0        4        0      460                           
+     .so mmap     8379      200     1988       67    43312                           
+    .jar mmap     3742        0     1040        0    32808                           
+    .apk mmap    36442     1036    33592       76    39248                           
+    .ttf mmap      924        0      860        0     1100                           
+    .dex mmap     6290       48     6224        0     7024                           
+    .oat mmap      605        0       12        0    12676                           
+    .art mmap     3713     2744      316      463    16180                           
+   Other mmap      724        4      380        0     1980                           
+   EGL mtrack    13541    13541        0        0    13541                           
+    GL mtrack   120028   120028        0        0   120028                           
+      Unknown    28217    27916      288      559    28756                           
+        TOTAL   378029   310697    45064     9246   466709   172220   153959    18260
+ 
+ App Summary
+                       Pss(KB)                        Rss(KB)
+                        ------                         ------
+           Java Heap:    20176                          34700
+         Native Heap:   123548                         124596
+                Code:    45004                         137092
+               Stack:     2248                           2252
+            Graphics:   133569                         133569
+       Private Other:    31216
+              System:    22268
+             Unknown:                                   34500
+ 
+           TOTAL PSS:   378029            TOTAL RSS:   466709       TOTAL SWAP PSS:     9246
+ 
+ Objects
+               Views:      678         ViewRootImpl:        1
+         AppContexts:        5           Activities:        1
+              Assets:       44        AssetManagers:        0
+       Local Binders:       24        Proxy Binders:       67
+       Parcel memory:       28         Parcel count:       88
+    Death Recipients:        0             WebViews:        0
+ 
+ Native Allocations
+                         Count                       Total(kB)
+                        ------                         ------
+    Other (malloced):     5988                            571
+ Other (nonmalloced):      111                             80
+   Bitmap (malloced):       68                          63395
+ 
+ SQL
+         MEMORY_USED:       81
+  PAGECACHE_OVERFLOW:       21          MALLOC_SIZE:       46
+ 
+ DATABASES
+      pgsz     dbsz   Lookaside(b) cache hits cache misses cache size  Dbname
+PER CONNECTION STATS
+         4       20             29     1    24     2  /data/user/0/com.syscom.mobile/databases/RKStorage
+POOL STATS
+     cache hits  cache misses    cache size  Dbname
+              1            25             2  /data/user/0/com.syscom.mobile/databases/RKStorage
+ 

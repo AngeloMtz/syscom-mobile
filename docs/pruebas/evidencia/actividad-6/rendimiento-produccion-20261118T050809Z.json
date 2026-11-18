@@ -1,0 +1,958 @@
+{
+  "actividad": "6 · rendimiento de producción, solo lectura (#225)",
+  "fecha_utc": "2026-11-18T05:08:09.608Z",
+  "node": "v22.13.0",
+  "sistema_operativo": "win32 10.0.26300",
+  "destino": "producción (URL no guardada)",
+  "origen": "computadora de Angel (Huejutla, Hidalgo); los tiempos incluyen latencia de red real",
+  "modo": "publico",
+  "umbral_lectura_p95_ms": 1000,
+  "repeticiones_por_ruta": 20,
+  "pausa_ms": 250,
+  "peticiones_realizadas": 120,
+  "detenida": null,
+  "mediciones": [
+    {
+      "nombre": "GET /catalog/products",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 812.14,
+      "p50": 832.17,
+      "p95": 852.37,
+      "max": 3988.07,
+      "media": 988.83,
+      "errores": 0,
+      "muestras": [
+        {
+          "orden": 1,
+          "primera": true,
+          "ms": 3988.07,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 2,
+          "primera": false,
+          "ms": 852.37,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 3,
+          "primera": false,
+          "ms": 846.53,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 4,
+          "primera": false,
+          "ms": 840.37,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 5,
+          "primera": false,
+          "ms": 837.05,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 6,
+          "primera": false,
+          "ms": 832.17,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 7,
+          "primera": false,
+          "ms": 834.07,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 8,
+          "primera": false,
+          "ms": 840.43,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 9,
+          "primera": false,
+          "ms": 833.63,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 10,
+          "primera": false,
+          "ms": 815.91,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 11,
+          "primera": false,
+          "ms": 818.55,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 12,
+          "primera": false,
+          "ms": 849.34,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 13,
+          "primera": false,
+          "ms": 820.08,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 14,
+          "primera": false,
+          "ms": 812.14,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 15,
+          "primera": false,
+          "ms": 822.84,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 16,
+          "primera": false,
+          "ms": 817.44,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 17,
+          "primera": false,
+          "ms": 833.65,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 18,
+          "primera": false,
+          "ms": 819.86,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 19,
+          "primera": false,
+          "ms": 831.46,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 20,
+          "primera": false,
+          "ms": 830.72,
+          "status": 200,
+          "ok": true
+        }
+      ],
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /catalog/products/:id",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 783.99,
+      "p50": 789.92,
+      "p95": 919.79,
+      "max": 1397.64,
+      "media": 827.05,
+      "errores": 0,
+      "muestras": [
+        {
+          "orden": 1,
+          "primera": true,
+          "ms": 1397.64,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 2,
+          "primera": false,
+          "ms": 786.92,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 3,
+          "primera": false,
+          "ms": 783.99,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 4,
+          "primera": false,
+          "ms": 794.88,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 5,
+          "primera": false,
+          "ms": 789.92,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 6,
+          "primera": false,
+          "ms": 796.61,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 7,
+          "primera": false,
+          "ms": 793.98,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 8,
+          "primera": false,
+          "ms": 787.75,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 9,
+          "primera": false,
+          "ms": 787.31,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 10,
+          "primera": false,
+          "ms": 919.79,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 11,
+          "primera": false,
+          "ms": 790.35,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 12,
+          "primera": false,
+          "ms": 798.21,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 13,
+          "primera": false,
+          "ms": 797.65,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 14,
+          "primera": false,
+          "ms": 792.91,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 15,
+          "primera": false,
+          "ms": 787.31,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 16,
+          "primera": false,
+          "ms": 784.47,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 17,
+          "primera": false,
+          "ms": 790.24,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 18,
+          "primera": false,
+          "ms": 788.92,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 19,
+          "primera": false,
+          "ms": 785.97,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 20,
+          "primera": false,
+          "ms": 786.17,
+          "status": 200,
+          "ok": true
+        }
+      ],
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /catalog/featured",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 719.89,
+      "p50": 730.08,
+      "p95": 745.64,
+      "max": 788.21,
+      "media": 733.23,
+      "errores": 0,
+      "muestras": [
+        {
+          "orden": 1,
+          "primera": true,
+          "ms": 719.89,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 2,
+          "primera": false,
+          "ms": 737.91,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 3,
+          "primera": false,
+          "ms": 720.92,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 4,
+          "primera": false,
+          "ms": 731.42,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 5,
+          "primera": false,
+          "ms": 734.05,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 6,
+          "primera": false,
+          "ms": 739.88,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 7,
+          "primera": false,
+          "ms": 745.64,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 8,
+          "primera": false,
+          "ms": 730.08,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 9,
+          "primera": false,
+          "ms": 728.89,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 10,
+          "primera": false,
+          "ms": 788.21,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 11,
+          "primera": false,
+          "ms": 728.36,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 12,
+          "primera": false,
+          "ms": 726.65,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 13,
+          "primera": false,
+          "ms": 732.45,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 14,
+          "primera": false,
+          "ms": 728.16,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 15,
+          "primera": false,
+          "ms": 720.62,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 16,
+          "primera": false,
+          "ms": 729.66,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 17,
+          "primera": false,
+          "ms": 730.76,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 18,
+          "primera": false,
+          "ms": 731.3,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 19,
+          "primera": false,
+          "ms": 725.97,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 20,
+          "primera": false,
+          "ms": 733.88,
+          "status": 200,
+          "ok": true
+        }
+      ],
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /catalog/categories",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 280.72,
+      "p50": 292.09,
+      "p95": 303.5,
+      "max": 304.29,
+      "media": 293.55,
+      "errores": 0,
+      "muestras": [
+        {
+          "orden": 1,
+          "primera": true,
+          "ms": 303.24,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 2,
+          "primera": false,
+          "ms": 282.48,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 3,
+          "primera": false,
+          "ms": 297.45,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 4,
+          "primera": false,
+          "ms": 298.13,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 5,
+          "primera": false,
+          "ms": 298.74,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 6,
+          "primera": false,
+          "ms": 289.57,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 7,
+          "primera": false,
+          "ms": 296.67,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 8,
+          "primera": false,
+          "ms": 290.62,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 9,
+          "primera": false,
+          "ms": 304.29,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 10,
+          "primera": false,
+          "ms": 292.09,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 11,
+          "primera": false,
+          "ms": 281.84,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 12,
+          "primera": false,
+          "ms": 291.63,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 13,
+          "primera": false,
+          "ms": 280.72,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 14,
+          "primera": false,
+          "ms": 287.05,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 15,
+          "primera": false,
+          "ms": 296.81,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 16,
+          "primera": false,
+          "ms": 289.75,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 17,
+          "primera": false,
+          "ms": 303.5,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 18,
+          "primera": false,
+          "ms": 299.24,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 19,
+          "primera": false,
+          "ms": 296.24,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 20,
+          "primera": false,
+          "ms": 291.03,
+          "status": 200,
+          "ok": true
+        }
+      ],
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /catalog/services",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 542.42,
+      "p50": 562.01,
+      "p95": 577.63,
+      "max": 1602.43,
+      "media": 615.74,
+      "errores": 0,
+      "muestras": [
+        {
+          "orden": 1,
+          "primera": true,
+          "ms": 1602.43,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 2,
+          "primera": false,
+          "ms": 542.42,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 3,
+          "primera": false,
+          "ms": 558.2,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 4,
+          "primera": false,
+          "ms": 558,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 5,
+          "primera": false,
+          "ms": 561.38,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 6,
+          "primera": false,
+          "ms": 572.11,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 7,
+          "primera": false,
+          "ms": 559.1,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 8,
+          "primera": false,
+          "ms": 568.67,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 9,
+          "primera": false,
+          "ms": 571.14,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 10,
+          "primera": false,
+          "ms": 561.81,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 11,
+          "primera": false,
+          "ms": 577.63,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 12,
+          "primera": false,
+          "ms": 568.36,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 13,
+          "primera": false,
+          "ms": 559.11,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 14,
+          "primera": false,
+          "ms": 566.58,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 15,
+          "primera": false,
+          "ms": 575.98,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 16,
+          "primera": false,
+          "ms": 566.21,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 17,
+          "primera": false,
+          "ms": 562.01,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 18,
+          "primera": false,
+          "ms": 558.49,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 19,
+          "primera": false,
+          "ms": 564.96,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 20,
+          "primera": false,
+          "ms": 560.22,
+          "status": 200,
+          "ok": true
+        }
+      ],
+      "veredicto": "cumple"
+    },
+    {
+      "nombre": "GET /reviews/product/:id",
+      "umbralMs": 1000,
+      "n": 20,
+      "min": 440.98,
+      "p50": 449.74,
+      "p95": 462.3,
+      "max": 990.96,
+      "media": 477.66,
+      "errores": 0,
+      "muestras": [
+        {
+          "orden": 1,
+          "primera": true,
+          "ms": 990.96,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 2,
+          "primera": false,
+          "ms": 448.26,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 3,
+          "primera": false,
+          "ms": 448.9,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 4,
+          "primera": false,
+          "ms": 445.65,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 5,
+          "primera": false,
+          "ms": 450.05,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 6,
+          "primera": false,
+          "ms": 461.06,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 7,
+          "primera": false,
+          "ms": 441.64,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 8,
+          "primera": false,
+          "ms": 462.3,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 9,
+          "primera": false,
+          "ms": 443.73,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 10,
+          "primera": false,
+          "ms": 459.35,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 11,
+          "primera": false,
+          "ms": 455.03,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 12,
+          "primera": false,
+          "ms": 448.5,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 13,
+          "primera": false,
+          "ms": 440.98,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 14,
+          "primera": false,
+          "ms": 450.12,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 15,
+          "primera": false,
+          "ms": 450.15,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 16,
+          "primera": false,
+          "ms": 444.13,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 17,
+          "primera": false,
+          "ms": 449.74,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 18,
+          "primera": false,
+          "ms": 456.52,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 19,
+          "primera": false,
+          "ms": 448.38,
+          "status": 200,
+          "ok": true
+        },
+        {
+          "orden": 20,
+          "primera": false,
+          "ms": 457.77,
+          "status": 200,
+          "ok": true
+        }
+      ],
+      "veredicto": "cumple"
+    }
+  ],
+  "omitidas": [
+    {
+      "nombre": "GET /cart",
+      "motivo": "no hay PERF_TOKEN"
+    },
+    {
+      "nombre": "GET /profile/addresses",
+      "motivo": "no hay PERF_TOKEN"
+    },
+    {
+      "nombre": "GET /orders",
+      "motivo": "no hay PERF_TOKEN"
+    },
+    {
+      "nombre": "GET /orders/:id",
+      "motivo": "no hay PERF_TOKEN"
+    }
+  ]
+}

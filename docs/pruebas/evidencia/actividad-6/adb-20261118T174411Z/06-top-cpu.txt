@@ -1,0 +1,15 @@
+=== muestra 1 (2026-11-18T17:53:29Z) top -b -n 2 -d 3 (se usa la 2.ª iteración) ===
+Tasks: 1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+800%cpu  94%user  14%nice  64%sys 610%idle   0%iow  16%irq   2%sirq   0%host
+  PID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ ARGS
+16586 u0_a407      10 -10  39G 462M 277M S 57.0  12.6   2:35.85 com.syscom.mobile
+=== muestra 2 (2026-11-18T17:53:33Z) top -b -n 2 -d 3 (se usa la 2.ª iteración) ===
+Tasks: 1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+800%cpu  94%user   1%nice  75%sys 611%idle   0%iow  16%irq   2%sirq   0%host
+  PID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ ARGS
+16586 u0_a407      10 -10  39G 471M 279M S 55.0  12.8   2:37.78 com.syscom.mobile
+=== muestra 3 (2026-11-18T17:53:36Z) top -b -n 2 -d 3 (se usa la 2.ª iteración) ===
+Tasks: 1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+800%cpu 117%user   2%nice  89%sys 569%idle   2%iow  18%irq   3%sirq   0%host
+  PID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ ARGS
+16586 u0_a407      10 -10  39G 457M 279M S 67.0  12.4   2:39.76 com.syscom.mobile

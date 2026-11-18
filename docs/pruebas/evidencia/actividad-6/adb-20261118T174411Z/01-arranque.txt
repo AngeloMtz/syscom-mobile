@@ -1,0 +1,40 @@
+=== arranque 1 (2026-11-18T17:44:11Z) ===
+Starting: Intent { cmp=com.syscom.mobile/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.syscom.mobile/.MainActivity
+TotalTime: 353
+WaitTime: 364
+Complete
+=== arranque 2 (2026-11-18T17:44:25Z) ===
+Starting: Intent { cmp=com.syscom.mobile/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.syscom.mobile/.MainActivity
+TotalTime: 315
+WaitTime: 327
+Complete
+=== arranque 3 (2026-11-18T17:44:39Z) ===
+Starting: Intent { cmp=com.syscom.mobile/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.syscom.mobile/.MainActivity
+TotalTime: 350
+WaitTime: 357
+Complete
+=== arranque 4 (2026-11-18T17:44:54Z) ===
+Starting: Intent { cmp=com.syscom.mobile/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.syscom.mobile/.MainActivity
+TotalTime: 312
+WaitTime: 322
+Complete
+=== arranque 5 (2026-11-18T17:45:08Z) ===
+Starting: Intent { cmp=com.syscom.mobile/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.syscom.mobile/.MainActivity
+TotalTime: 319
+WaitTime: 324
+Complete

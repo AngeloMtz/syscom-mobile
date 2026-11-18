@@ -1,0 +1,12 @@
+=== muestra 1 (2026-11-18T17:53:02Z) ===
+Load: 23.75 / 24.35 / 25.48
+ +0% 16586/com.syscom.mobile: 0% user + 0% kernel
+10% TOTAL: 4.1% user + 4.3% kernel + 0.1% iowait + 1.2% irq + 0.2% softirq
+=== muestra 2 (2026-11-18T17:53:08Z) ===
+Load: 23.75 / 24.35 / 25.48
+ +0% 16586/com.syscom.mobile: 0% user + 0% kernel
+10% TOTAL: 4.1% user + 4.3% kernel + 0.1% iowait + 1.2% irq + 0.2% softirq
+=== muestra 3 (2026-11-18T17:53:15Z) ===
+Load: 23.75 / 24.35 / 25.48
+ +0% 16586/com.syscom.mobile: 0% user + 0% kernel
+10% TOTAL: 4.1% user + 4.3% kernel + 0.1% iowait + 1.2% irq + 0.2% softirq

@@ -1,0 +1,5 @@
+modelo: SM-A165M
+android: 16
+    versionCode=7 minSdk=32 targetSdk=36
+    versionName=1.1.1
+    installerPackageName=com.android.vending

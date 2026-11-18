@@ -103,3 +103,22 @@ Las cuatro últimas rutas no se midieron porque no se definió `PERF_TOKEN`.
 - En **4 de las 6 rutas medidas la primera petición fue la más lenta** (productos, detalle de producto, servicios y reseñas). Es coherente con el costo de la primera conexión (TLS) y de un servidor que estaba en reposo, pero este documento no lo comprueba: solo registra que el máximo coincide con la primera muestra.
 - Los tiempos incluyen la latencia de red real desde la computadora de Angel (sección 2); no son tiempos de proceso del servidor.
 - Es una sola corrida de 20 muestras por ruta: no mide variación entre horas ni días.
+
+## 8. Mediciones en dispositivo
+
+Medición con `adb` (depuración inalámbrica) de la app instalada desde Google Play en el teléfono de Angel: paquete `com.syscom.mobile`, versión 1.1.1. No se modifica código. Esta sección **empieza con los umbrales, fijados en un commit anterior a medir**, para que no se ajusten a los resultados.
+
+### 8.1 Umbrales (fijados antes de medir)
+
+| Métrica | Cómo se mide | Umbral | Veredicto |
+|---|---|---|---|
+| Memoria | `dumpsys meminfo`, **TOTAL PSS** en Inicio, Catálogo y Detalle de producto | ≤ 300 MB en cada una de las 3 pantallas | cumple / no cumple |
+| Fluidez | `dumpsys gfxinfo`, **cuadros lentos (janky)** durante 20 s de scroll en el Catálogo | ≤ 10 % | cumple / no cumple |
+| CPU | `dumpsys cpuinfo` filtrado por la app, 3 muestras mientras se navega | sin umbral | informativo |
+| Tiempo hasta el primer cuadro | `am start -W`, **TotalTime** (y WaitTime) en 5 arranques en frío | sin umbral | informativo |
+
+Condiciones y límites:
+- Arranque: `force-stop`, espera de 10 s y `am start -W` con la actividad principal. **TotalTime mide hasta el primer cuadro dibujado, no hasta ver datos en pantalla.**
+- Memoria y CPU se miden con la app en la pantalla indicada; son fotos de un momento, no promedios.
+- Es un solo teléfono, una sola versión de la app y una sola sesión: no representa otros dispositivos.
+- Las salidas crudas se guardan en `docs/pruebas/evidencia/actividad-6/adb-<fecha UTC>/` **sin** IP, puerto, serial ni código de vinculación.

@@ -74,5 +74,32 @@ Código de salida: `0` terminó; `2` la guarda rechazó el entorno (no se hizo n
 - Un 401 o 403 en una ruta autenticada (token inválido o vencido) omite el resto de las rutas autenticadas.
 - Ejecutarlo lo mínimo necesario: son hasta 200 peticiones de lectura contra producción; no repetirlo en bucle.
 
-## 6. Pendiente de validación manual
-El script no se ha ejecutado contra producción. Sus reglas se probaron con pruebas unitarias (`src/__tests__/perfProduccion.test.ts`) con la red simulada. Los resultados reales los genera Angel con los comandos de la sección 4.
+## 6. Validación manual
+Las reglas del script se probaron con pruebas unitarias (`src/__tests__/perfProduccion.test.ts`) con la red simulada. Angel lo ejecutó contra producción el 17 nov 2026 **solo con las rutas públicas** (sin `PERF_TOKEN`); los resultados están en la sección 7. Las rutas con sesión (7 a 10) siguen **sin medirse**.
+
+## 7. Resultados del 17 nov 2026 (API)
+
+- **Evidencia:** `docs/pruebas/evidencia/actividad-6/rendimiento-produccion-20261118T050809Z.json` (inicio 2026-11-18 05:08:09 UTC, que es la noche del 17 nov en hora local; Node v22.13.0, win32 10.0.26300).
+- **Modo:** público, 6 rutas × 20 repeticiones = 120 peticiones, 0 errores, sin detenciones.
+- **Umbral:** p95 < 1000 ms (sección 1). Tiempos en milisegundos, redondeados al entero; el JSON conserva dos decimales.
+
+| Ruta | n | Mín. | p50 | p95 | Máx. | 1.ª petición | Veredicto |
+|---|---|---|---|---|---|---|---|
+| `GET /catalog/products?page=1&limit=20` | 20 | 812 | 832 | 852 | 3988 | 3988 | cumple |
+| `GET /catalog/products/:id` | 20 | 784 | 790 | 920 | 1398 | 1398 | cumple |
+| `GET /catalog/featured?limit=8` | 20 | 720 | 730 | 746 | 788 | 720 | cumple |
+| `GET /catalog/categories` | 20 | 281 | 292 | 304 | 304 | 303 | cumple |
+| `GET /catalog/services?page=1&limit=12` | 20 | 542 | 562 | 578 | 1602 | 1602 | cumple |
+| `GET /reviews/product/:id?page=1&limit=5` | 20 | 441 | 450 | 462 | 991 | 991 | cumple |
+| `GET /cart` | — | — | — | — | — | — | no medida |
+| `GET /profile/addresses` | — | — | — | — | — | — | no medida |
+| `GET /orders?page=1&limit=10` | — | — | — | — | — | — | no medida |
+| `GET /orders/:id` | — | — | — | — | — | — | no medida |
+
+Las cuatro últimas rutas no se midieron porque no se definió `PERF_TOKEN`.
+
+**Cómo leer estos resultados:**
+- Con n = 20, el p95 es la **19.ª muestra ordenada** de menor a mayor (rango más cercano), así que **excluye el valor máximo**. Por eso una ruta puede «cumplir» por p95 aunque su máximo supere el umbral: pasó en `GET /catalog/products` (máx. 3988 ms), `GET /catalog/products/:id` (1398 ms) y `GET /catalog/services` (1602 ms).
+- En **4 de las 6 rutas medidas la primera petición fue la más lenta** (productos, detalle de producto, servicios y reseñas). Es coherente con el costo de la primera conexión (TLS) y de un servidor que estaba en reposo, pero este documento no lo comprueba: solo registra que el máximo coincide con la primera muestra.
+- Los tiempos incluyen la latencia de red real desde la computadora de Angel (sección 2); no son tiempos de proceso del servidor.
+- Es una sola corrida de 20 muestras por ruta: no mide variación entre horas ni días.

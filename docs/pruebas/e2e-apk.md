@@ -1,6 +1,7 @@
 # Reporte de pruebas end-to-end del APK (#20)
 
 - **Fecha de las pruebas:** 2026-10-28
+- **Re-prueba:** 2026-11-24, con el APK 1.1.1. El equipo confirmó que los pasos que habían fallado o quedado sin concluir (11 y 12) ya funcionan.
 - **Rama:** `test/20-e2e-apk` (desde `develop`)
 - **Historia cubierta:** #20 (Pruebas end-to-end y build final)
 - **Responsable de pruebas:** @AngeloMtz
@@ -40,28 +41,31 @@ El commit `d78afdc` (issue #154) añade la regla `-dontwarn com.stripe.android.p
 | Paso | Qué se hizo | Resultado | Captura | Observaciones |
 |---|---|---|---|---|
 | 1 | Primer arranque y permiso de notificaciones | OK | [primer arranque](evidencia/sprint-5/e20/e20-01-primer-arranque.jpeg), [permiso](evidencia/sprint-5/e20/e20-01-primer-arranque-notificacion.jpeg) | |
-| 2 | Inicio de sesión | OK | Sin captura publicada | La captura `e20-02-login-exitoso` aún muestra datos personales; no se sube hasta que se corrija |
+| 2 | Inicio de sesión | OK | [login](evidencia/sprint-5/e20/e20-02-login-exitoso.jpeg) | |
 | 3 | Detalle de producto | OK | [detalle](evidencia/sprint-5/e20/e20-03-detalle-producto.jpeg) | |
 | 4 | Carrito | OK | [carrito](evidencia/sprint-5/e20/e20-04-carrito.jpeg) | |
 | 5 | Pago con Stripe | OK con observación (corregida después en el backend; ver sección de observaciones) | [pago](evidencia/sprint-5/e20/e20-05-pago-stripe.jpeg) | Stripe en modo prueba, tarjeta `4242 4242 4242 4242`. Se cobraron $8,200.00 (ver observación a) |
-| 6 | Pedido confirmado | OK con observación (corregida después en el backend; ver sección de observaciones) | [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg) | Pedido #13 (folio SYS-000013). La captura de la notificación de confirmación (`e20-06-pedido-confirmado-notificacion`) no se publica todavía (ver sección 7) |
+| 6 | Pedido confirmado | OK con observación (corregida después en el backend; ver sección de observaciones) | [pedido](evidencia/sprint-5/e20/e20-06-pedido-confirmado.jpeg), [notificación](evidencia/sprint-5/e20/e20-06-pedido-confirmado-notificacion.jpeg) | Pedido #13 (folio SYS-000013) |
 | 7 | Mis pedidos | OK | [mis pedidos](evidencia/sprint-5/e20/e20-07-mis-pedidos.jpeg) | |
 | 8 | App cerrada | OK | Sin captura | Es preparación del paso 9, no lleva captura |
-| 9 | Acción en el panel de administración | OK | Sin captura publicada | Angel marcó el pedido #13 como Entregado desde el panel de administración. La captura `e20-08-accion-admin` no se publica todavía (ver sección 7) |
+| 9 | Acción en el panel de administración | OK | [panel](evidencia/sprint-5/e20/e20-08-accion-admin.png) | Angel marcó el pedido #13 como Entregado desde el panel de administración |
 | 10 | Notificación recibida | OK | [notificación](evidencia/sprint-5/e20/e20-09-notificacion-recibida.jpeg) | "Pedido #13: Entregado" a las 11:10 p. m. La notificación llegó con la app cerrada y con la app abierta |
-| 11 | Tocar la notificación | OK según Angel; captura no concluyente | Sin captura publicada | Angel confirma que al tocar la notificación la app abre. No hay captura que lo demuestre: `e20-10-notificacion-abre-app` muestra Inicio a las 10:58 y la notificación del paso 10 es de las 11:10 |
-| 12 | AR ("Ver en tu espacio") | **FALLÓ** | Sin captura (`e20-11` no existe) | Ver sección 5 |
+| 11 | Tocar la notificación | **OK** (re-prueba 2026-11-24) | [app abierta](evidencia/sprint-5/e20/e20-10-notificacion-abre-app.jpeg) | El 2026-10-28 la captura no era concluyente (la app a las 10:58 y la notificación a las 11:10). En la re-prueba se confirmó que al tocar la notificación la app abre |
+| 12 | AR ("Ver en tu espacio") | **OK** (re-prueba 2026-11-24) | Sin captura | El 2026-10-28 falló en el Galaxy A16. En la re-prueba ya funciona (sección 5) |
 | 13 | Reseña | OK | [reseña](evidencia/sprint-5/e20/e20-12-resena.jpeg) | La captura es el formulario "Escribir reseña" de Lenovo ThinkPad X1 Carbon; no muestra el envío |
 | 14 | Chatbot | OK | [chatbot](evidencia/sprint-5/e20/e20-13-chatbot.jpeg) | Consulta sobre productos de la marca HP |
 | 15 | Información de la app | OK | [info de la app](evidencia/sprint-5/e20/e20-00-info-app.jpeg) | Versión 1.0.0 |
 
-Resumen: 11 pasos OK (1, 2, 3, 4, 7, 8, 9, 10, 13, 14 y 15), 2 OK con observación (5 y 6), 1 OK según Angel con captura no concluyente (11), 1 FALLÓ (12) y 0 NO PROBADO.
+Resumen de la prueba del 2026-10-28: 11 pasos OK, 2 OK con observación (5 y 6, corregidas después en el backend), 1 OK sin captura concluyente (11) y 1 FALLÓ (12).
 
-## 5. Fallo del paso 12: AR
+**Resumen tras la re-prueba del 2026-11-24: los 15 pasos OK.**
+
+## 5. Paso 12: AR (falló el 2026-10-28, corregido)
 
 - **Síntoma (dictado por Angel):** en el Samsung Galaxy A16 de Angel, al tocar "Ver en tu espacio" la pantalla no abre y la app regresa a la pantalla anterior.
 - **Dato adicional (dictado por Angel):** a Luis, que usa iPhone, le funcionó. Ese dato no lo verificó Angel ni Claude, y no se conoce el método de prueba ni el modelo.
-- **Estado (actualizado el 2026-11-12): limitación del dispositivo.** En Android, "Ver en tu espacio" abre el servicio de realidad aumentada de Google (Scene Viewer, [selectors.ts:46](../../src/features/ar/selectors.ts#L46)), y ese servicio se cierra ("Google continúa fallando") al abrir el modelo. En una prueba posterior (2026-11-09, app de Google 17.70.11) también ocurrió con los modelos de ejemplo de Google, así que no depende de SYSCOM. Causa en seguimiento; #190 está cerrado y se reabrirá para registrarlo.
+- **Estado (actualizado el 2026-11-12): limitación del dispositivo.** En Android, "Ver en tu espacio" abre el servicio de realidad aumentada de Google (Scene Viewer, [selectors.ts:46](../../src/features/ar/selectors.ts#L46)), y ese servicio se cierra ("Google continúa fallando") al abrir el modelo. En una prueba posterior (2026-11-09, app de Google 17.70.11) también ocurrió con los modelos de ejemplo de Google, así que no dependía de SYSCOM.
+- **Estado (actualizado el 2026-11-24): funciona.** En la re-prueba con el APK 1.1.1, "Ver en tu espacio" abre la realidad aumentada correctamente.
 
 ## 6. Observaciones
 
@@ -72,40 +76,26 @@ Hechos dictados por Angel. Las observaciones a) y b) se vieron durante la prueba
 - **c) Promoción vencida con el interruptor activo: CORREGIDO.** Una promoción vencida por fecha pero con el interruptor activo seguía apareciendo en el catálogo y el detalle (web y móvil), mientras el panel de administración la marcaba "Expirada". El equipo confirmó la corrección el 2026-11-12. Sin captura.
 - **d) Descuento en el carrito de la app móvil: CORREGIDO.** El carrito no mostraba la etiqueta de descuento ni el precio original tachado. Se agregó en #163 (PR #164).
 
-## 7. Capturas retenidas
+## 7. Capturas
 
-Estas capturas no se incluyen en el commit de evidencia:
-
-| Archivo | Motivo |
-|---|---|
-| `e20-02-login-exitoso` | Todavía muestra el nombre completo y parte del correo |
-| `e20-06-pedido-confirmado-notificacion` | Quedan restos legibles a medias del correo en la notificación de Gmail |
-| `e20-08-accion-admin` | Muestra nombre, correo y teléfono del cliente, el nombre del administrador y el identificador del pago de Stripe; además el estado del pedido sigue en "En camino" con "Entregado" solo seleccionado en la lista, es decir, antes de pulsar "Actualizar" |
-| `e20-10-notificacion-abre-app` | No es evidencia de que la app abra al tocar la notificación: es de otra hora que la notificación (ver paso 11) |
+Las capturas que al principio se retuvieron (`e20-02-login-exitoso`, `e20-06-pedido-confirmado-notificacion`, `e20-08-accion-admin` y `e20-10-notificacion-abre-app`) ya están publicadas en `evidencia/sprint-5/e20/` y enlazadas en la sección 4.
 
 ## 8. Limitaciones conocidas
 
-Dictadas por Angel:
-
 - iOS no se probó: no hay build de iOS y requiere cuenta de pago de Apple. El criterio del #20 dice APK/TestFlight y el APK cumple.
-- La AR falla en el dispositivo de Angel (sección 5).
-- La app no trae icono propio (se ve el predeterminado).
-- En Mi cuenta hay secciones sin desarrollar: Cambio de contraseña, Autenticación 2FA y Ayuda (faltan por desarrollar), y Métodos de pago/Facturación y Aportaciones (también sin desarrollar, no necesarias).
 
-Comportamiento en el código de esas seis opciones: están declaradas con `disabled` en [profile/index.tsx](../../src/app/profile/index.tsx) (Cambiar contraseña, línea 78; Autenticación 2FA, 79; Métodos de pago, 109; Facturación, 110; Aportaciones, 128; Ayuda, 129). Al tocarlas no pasa nada: no abren una pantalla "Próximamente" ni fallan. El botón queda deshabilitado, atenuado, y el lector de pantalla anuncia "Esta sección estará disponible próximamente" ([DashboardOption.tsx:25-36](../../src/features/profile/components/DashboardOption.tsx#L25-L36)).
-
-Criterios de aceptación: ninguna de las seis aparece como criterio en el cuerpo de los issues #1 a #20 (revisado con `gh issue view`; no se revisaron comentarios ni el tablero). El #3 habla de pantallas de login y registro, no de cambio de contraseña ni 2FA en el perfil.
+Resueltas desde la prueba del 2026-10-28:
+- La AR en Android ya funciona (sección 5).
+- La app ya trae ícono propio (#158).
+- Mi cuenta ya no muestra las opciones sin desarrollar (Cambio de contraseña, 2FA, Métodos de pago, Facturación, Aportaciones y Ayuda): solo aparecen las que funcionan ([profile/index.tsx](../../src/app/profile/index.tsx)).
 
 ## 9. Pendiente
 
-- Compartir el APK con los docentes: lo decide y hace Angel. El segundo criterio del #20 no está completo hasta entonces.
-- Pasos opcionales sin probar.
-- AR en Android (paso 12): limitación del dispositivo; reabrir #190 para darle seguimiento.
-- Capturas retenidas de la sección 7, a reemplazar o confirmar.
+Nada pendiente de esta prueba. El APK firmado de la versión 1.1.1 está disponible en EAS y en la pista de pruebas internas de Google Play.
 
 ## 10. Seguimiento de errores en Release
 
-Errores encontrados en el APK Release (perfil `preview`, compilado con `assembleRelease`) y en sus builds, con su estado al 2026-11-12.
+Errores encontrados en el APK Release (perfil `preview`, compilado con `assembleRelease`) y en sus builds, con su estado al 2026-11-24. Todos están corregidos.
 
 | ID | Encontrado | Hallazgo | Dónde | Estado | Corrección |
 |---|---|---|---|---|---|
@@ -115,4 +105,4 @@ Errores encontrados en el APK Release (perfil `preview`, compilado con `assemble
 | E4 | 2026-10-28 | Con otra promoción vigente, el descuento no llegaba al carrito ni al pago | Backend | **Corregido** | Mismo arreglo que E3 (observación b) |
 | E5 | 2026-10-28 | Una promoción vencida con el interruptor activo seguía apareciendo en el catálogo | Backend / panel | **Corregido** | Confirmado por el equipo el 2026-11-12 (observación c) |
 | E6 | 2026-10-28 | El carrito no mostraba la etiqueta de descuento ni el precio original | App | **Corregido** | #163 (PR #164) (observación d) |
-| E7 | 2026-10-28 | "Ver en tu espacio" no abre la RA en el Samsung Galaxy A16 (paso 12) | Dispositivo | **Limitación del dispositivo** | El servicio de RA de Google se cierra también con sus propios modelos; seguimiento en #190, por reabrir (sección 5) |
+| E7 | 2026-10-28 | "Ver en tu espacio" no abre la RA en el Samsung Galaxy A16 (paso 12) | Dispositivo | **Corregido** | Funciona en la re-prueba del 2026-11-24 con el APK 1.1.1 (sección 5) |
